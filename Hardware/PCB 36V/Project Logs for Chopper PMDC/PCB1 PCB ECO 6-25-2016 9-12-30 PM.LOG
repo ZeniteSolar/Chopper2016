@@ -1,0 +1,45 @@
+Removed Pin From Net: NetName=NetLS1_1 Pin=LS1-1A
+Removed Pin From Net: NetName=SOURCE Pin=LS1-2A
+Change Component Footprint: Designator=LS1 Old Footprint=ABSM-1574 New Footprint=CapEltr-Rad4.1-Dpp3.0
+Added Component: Designator=Cs1(cap4u7)
+Added Component: Designator=DS1(SOD87)
+Added Component: Designator=P3(HDR2X2)
+Added Component: Designator=P5(HDR2X2)
+Added Component: Designator=P7(HDR2X2)
+Added Component: Designator=P8(HDR2X2)
+Added Component: Designator=S1(SOT-227B)
+Added Component: Designator=S2(SOT-227B)
+Added Component: Designator=S*1(LA150-P)
+Added Pin To Net: NetName=SOURCE Pin=Cs1-1
+Added Pin To Net: NetName=NetCs1_2 Pin=Cs1-2
+Added Pin To Net: NetName=NetDS1_1 Pin=DS1-A
+Added Pin To Net: NetName=NetCs1_2 Pin=DS1-K
+Added Pin To Net: NetName=+VBAT Pin=P3-1
+Added Pin To Net: NetName=+VBAT Pin=P3-2
+Added Pin To Net: NetName=+VBAT Pin=P3-3
+Added Pin To Net: NetName=+VBAT Pin=P3-4
+Added Pin To Net: NetName=NetDS1_1 Pin=P5-1
+Added Pin To Net: NetName=NetDS1_1 Pin=P5-2
+Added Pin To Net: NetName=NetDS1_1 Pin=P5-3
+Added Pin To Net: NetName=NetDS1_1 Pin=P5-4
+Added Pin To Net: NetName=NetP7_1 Pin=P7-1
+Added Pin To Net: NetName=NetP7_2 Pin=P7-2
+Added Pin To Net: NetName=NetP7_1 Pin=P7-3
+Added Pin To Net: NetName=NetP7_2 Pin=P7-4
+Added Pin To Net: NetName=NetP8_1 Pin=P8-1
+Added Pin To Net: NetName=SOURCE Pin=P8-2
+Added Pin To Net: NetName=NetP8_1 Pin=P8-3
+Added Pin To Net: NetName=SOURCE Pin=P8-4
+Added Pin To Net: NetName=NetC13_1 Pin=S*1-1
+Added Pin To Net: NetName=SOURCE Pin=S*1-2
+Added Pin To Net: NetName=+24V Pin=S*1-3
+Added Member To Class: ClassName=Chopper PMDC Member=Component Cs1 Cap
+Added Member To Class: ClassName=Chopper PMDC Member=Component DS1 BYD77
+Added Member To Class: ClassName=Chopper PMDC Member=Component P3 Header 2X2
+Added Member To Class: ClassName=Chopper PMDC Member=Component P5 Header 2X2
+Added Member To Class: ClassName=Chopper PMDC Member=Component P7 Header 2X2
+Added Member To Class: ClassName=Chopper PMDC Member=Component P8 Header 2X2
+Added Member To Class: ClassName=Chopper PMDC Member=Component S1 IXFN420N10T
+Added Member To Class: ClassName=Chopper PMDC Member=Component S2 IXFN420N10T
+Added Member To Class: ClassName=Chopper PMDC Member=Component S*1 LA150-P
+Added Room: Name=Chopper PMDC

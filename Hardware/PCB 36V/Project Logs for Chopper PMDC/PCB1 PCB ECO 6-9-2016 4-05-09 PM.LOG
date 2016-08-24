@@ -1,0 +1,13 @@
+Change Component Designator: OldDesignator=P13 NewDesignator=P14
+Added Component: Designator=P13(HDR1X4)
+Added Pin To Net: NetName=VCC Pin=P13-1
+Added Pin To Net: NetName=SOURCE Pin=P13-4
+Added Pin To Net: NetName=NetP13_2 Pin=P13-2
+Added Pin To Net: NetName=NetP13_2 Pin=R16-1
+Added Pin To Net: NetName=NetP13_2 Pin=U8-7
+Added Net: Name=NetP13_2
+Added Pin To Net: NetName=NetP13_3 Pin=P13-3
+Added Pin To Net: NetName=NetP13_3 Pin=R16-2
+Added Pin To Net: NetName=NetP13_3 Pin=U8-6
+Added Net: Name=NetP13_3
+Added Member To Class: ClassName=Chopper PMDC Member=Component P14 POWER RElAY

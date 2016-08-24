@@ -1,0 +1,29 @@
+Added Component: Designator=S1(SOT-227B)
+Added Component: Designator=S2(SOT-227B)
+Added Component: Designator=U1(TO-220AB)
+Added Component: Designator=U2(SO8_M)
+Added Component: Designator=U3(TO-220AB)
+Added Component: Designator=U4(TO-220AB)
+Added Pin To Net: NetName=NetC6_2 Pin=U1-1
+Added Pin To Net: NetName=+24V Pin=U1-2
+Added Pin To Net: NetName=NetC2_2 Pin=U1-3
+Added Pin To Net: NetName=+15V Pin=U2-1
+Added Pin To Net: NetName=PWM Pin=U2-2
+Added Pin To Net: NetName=FAULT Pin=U2-3
+Added Pin To Net: NetName=SOURCE Pin=U2-4
+Added Pin To Net: NetName=SOURCE Pin=U2-5
+Added Pin To Net: NetName=NetR4_2 Pin=U2-6
+Added Pin To Net: NetName=NetR3_2 Pin=U2-7
+Added Pin To Net: NetName=NetCbs1_2 Pin=U2-8
+Added Pin To Net: NetName=+24V Pin=U3-1
+Added Pin To Net: NetName=SOURCE Pin=U3-2
+Added Pin To Net: NetName=+15V Pin=U3-3
+Added Pin To Net: NetName=+15V Pin=U4-1
+Added Pin To Net: NetName=SOURCE Pin=U4-2
+Added Pin To Net: NetName=+5V Pin=U4-3
+Added Member To Class: ClassName=Chopper PMDC Member=Component S1 IXFN420N10T
+Added Member To Class: ClassName=Chopper PMDC Member=Component S2 IXFN420N10T
+Added Member To Class: ClassName=Chopper PMDC Member=Component U1 LM317
+Added Member To Class: ClassName=Chopper PMDC Member=Component U2 IR2127S
+Added Member To Class: ClassName=Chopper PMDC Member=Component U3 LM7815
+Added Member To Class: ClassName=Chopper PMDC Member=Component U4 LM7805

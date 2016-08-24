@@ -1,0 +1,7 @@
+Change Component Footprint: Designator=C7 Old Footprint=CAPNTO3.18-4.83x2.67 New Footprint=Cap330nF
+Added Component: Designator=P3(HDR2X2)
+Added Pin To Net: NetName=+VBAT Pin=P3-1
+Added Pin To Net: NetName=+VBAT Pin=P3-2
+Added Pin To Net: NetName=+VBAT Pin=P3-3
+Added Pin To Net: NetName=+VBAT Pin=P3-4
+Added Member To Class: ClassName=Chopper PMDC Member=Component P3 Header 2X2

@@ -1,0 +1,15 @@
+Added Component: Designator=LS?(ABSM-1574)
+Added Pin To Net: NetName=NetDz2_2 Pin=C13-1
+Added Pin To Net: NetName=NetDz3_2 Pin=C13-1
+Added Pin To Net: NetName=SOURCE Pin=C13-2
+Added Pin To Net: NetName=SOURCE Pin=C13-2
+Added Pin To Net: NetName=SOURCE Pin=C13-2
+Added Pin To Net: NetName=SOURCE Pin=LS?-2A
+Added Pin To Net: NetName=SOURCE Pin=LS?-2
+Change Net Name : Old Net Name=NetDz2_2 New Net Name=NetC13_1
+Change Net Name : Old Net Name=NetDz3_2 New Net Name=NetC13_1
+Added Pin To Net: NetName=NetLS?_1 Pin=LS?-1
+Added Pin To Net: NetName=NetLS?_1 Pin=LS?-1A
+Added Pin To Net: NetName=NetLS?_1 Pin=U5-27
+Added Net: Name=NetLS?_1
+Added Member To Class: ClassName=Chopper PMDC Member=Component LS? Buzzer

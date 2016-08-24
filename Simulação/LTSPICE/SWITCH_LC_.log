@@ -1,0 +1,26 @@
+Circuit: * E:\DROPBOX\IFSC\PROJETOS\ZÊNITE SOLAR\ELETRÔNICA\2016\CHOPPER-PMDC\SIMULAÇÃO\LTSPICE\SWITCH_LC_.asc
+
+C2: Increased Cpar to 2.8e-008
+WARNING: Node N008 is floating.
+
+Per .tran options, skipping operating point for transient analysis.
+Heightened Def Con from 0.0005 ++++++++++++++++++++++++++++++++to 0.0005
+
+Date: Tue May 10 21:00:26 2016
+Total elapsed time: 1.469 seconds.
+
+tnom = 27
+temp = 27
+method = modified trap
+totiter = 145589
+traniter = 145589
+tranpoints = 71496
+accept = 70761
+rejected = 768
+matrix size = 21
+fillins = 12
+solver = Normal
+Matrix Compiler1: 1.48 KB object code size  1.0/0.5/[0.4]
+Matrix Compiler2: 1.63 KB object code size  0.5/0.6/[0.4]
+
+

@@ -1,0 +1,18 @@
+Removed Pin From Net: NetName=GATE Pin=P4-2
+Removed Pin From Net: NetName=GATE Pin=P4-4
+Added Component: Designator=P7(HDR2X2)
+Added Component: Designator=P8(HDR2X2)
+Added Pin To Net: NetName=NetP7_1 Pin=P7-1
+Added Pin To Net: NetName=NetP7_2 Pin=P7-2
+Added Pin To Net: NetName=NetP7_1 Pin=P7-3
+Added Pin To Net: NetName=NetP7_2 Pin=P7-4
+Added Pin To Net: NetName=NetP8_1 Pin=P8-1
+Added Pin To Net: NetName=SOURCE Pin=P8-2
+Added Pin To Net: NetName=NetP8_1 Pin=P8-3
+Added Pin To Net: NetName=SOURCE Pin=P8-4
+Change Net Name : Old Net Name=NetD3_2 New Net Name=DRAIN
+Added Pin To Net: NetName=NetP4_2 Pin=P4-2
+Added Pin To Net: NetName=NetP4_2 Pin=P4-4
+Added Net: Name=NetP4_2
+Added Member To Class: ClassName=Chopper PMDC Member=Component P7 Header 2X2
+Added Member To Class: ClassName=Chopper PMDC Member=Component P8 Header 2X2
