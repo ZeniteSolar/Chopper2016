@@ -1,0 +1,34 @@
+/*****************************************************
+*
+* Desenvolvedor: Marcio Antonio Augusto
+* E-mail: marcioantonioaugusto@hotmail.com
+*
+* Zênite Solar 2016
+*
+******************************************************/
+
+//Include header files
+#include "placaAdicionalChopper.h"   											//header file do projeto, contém todas as definições necessárias
+
+// Main function
+int main(void){
+
+	//adc configuration
+	adcConfig(ADC_MODE_AUTO_TIMER0_OVERFLOW, 
+		ADC_REFRENCE_POWER_SUPPLY, ADC_PRESCALER_128);
+	adcSelectChannel(ADC_CHANNEL_0);
+	adcClearInterruptRequest();
+	adcActivateInterrupt();
+	adcEnable();
+
+	//timer0 configuration
+	timer0Config(TIMER_A_MODE_NORMAL,TIMER_A_PRESCALER_1024);					//inicia o contador do timer0
+	
+	
+}
+
+// Interrupt handlers
+ISR(ADC_vect){
+	
+}
+			tc = NOTHING;
