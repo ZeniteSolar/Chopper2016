@@ -65,10 +65,12 @@ void seta_dc(uint8 d_cycle)		//função para definição do Duty Cicle do PWM
 	dcReq = d_cycle;
 	if(dcReq < minDC)				// Comparação com o valor mínimo de Duty Cicle
 		dc = 0;
-	else{
+	else
+	{
 		if(dcReq > maxDC)			//Comparação com o valor máximo de Duty Cicle
 			dc = 100;
-		else{
+		else
+		{
 			dc = dcReq;
 			timer1SetCompareBValue((dc * (timer1GetCompareAValue()))/100);		//seta o valor do comparador B para gerar o DC requerido
 		}
@@ -99,9 +101,12 @@ int main(void)
 	setBit(ON_PORT,ON_BIT);				//habilita o pull-up da chave on
 	setBit(DMS_PORT,DMS_BIT);			//habilita o pull-up da chave dms
 
-
+//
+	//pino usado somente para teste no proteus
 	setBit(DDRD,PD0);			
 	setBit(PORTD,PD0);			
+//
+
     while(1)
     {
     	setBit(PIND,PD0);
@@ -120,7 +125,8 @@ int main(void)
 }
 
 ISR(ADC_vect){
-	switch (channel){
+	switch (channel)
+	{
 		case CURRENT_CHANNEL:
 			current = ADC / 5;
 			break;
@@ -136,9 +142,8 @@ ISR(ADC_vect){
 		default: 
 			break;
 	}
-	if(channel == LAST_CHANNEL){
+	if(channel == LAST_CHANNEL)
 		channel = FIRST_CHANNEL;
-	}
 	else
 		channel ++;
 	adcSelectChannel(channel);
