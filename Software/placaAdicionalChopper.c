@@ -17,6 +17,7 @@
 #define VOLTAGE_CHANNEL ADC_CHANNEL_2
 #define TEMP_CHANNEL	ADC_CHANNEL_3
 
+#define FIRST_CHANNEL	CURRENT_CHANNEL
 #define LAST_CHANNEL	TEMP_CHANNEL
 
 #define CURRENT_BIT 	PC0
@@ -25,6 +26,8 @@
 
 #define ON_PIN			PINB
 #define DMS_PIN			PINB
+#define ON_PORT			PORTB
+#define DMS_PORT		PORTB
 #define ON_BIT 			PB2
 #define DMS_BIT 		PB3
 
@@ -38,11 +41,11 @@
 #define SERIAL 			1
 #define POT 			2
 
+uint8 channel = POT_CHANNEL;
 
-uint8 channel = CURRENT_CHANNEL;
 uint8 mode = SERIAL;
 
-uint16 freq = 1000;
+uint16 freq = 500;
 uint8 current = 0;
 uint8 maxCurrent = 100;
 uint8 minDC = 10;
@@ -92,18 +95,27 @@ int main(void)
 	
 	sei();
 	
-	setBit(PWM_DDR,PWM_BIT);		//define o pino do pwm como saída
-	
+	setBit(PWM_DDR,PWM_BIT);			//define o pino do pwm como saída
+	setBit(ON_PORT,ON_BIT);				//habilita o pull-up da chave on
+	setBit(DMS_PORT,DMS_BIT);			//habilita o pull-up da chave dms
+
+
+	setBit(DDRD,PD0);			
+	setBit(PORTD,PD0);			
     while(1)
     {
+    	setBit(PIND,PD0);
+    	on = isBitClr(ON_PIN,ON_BIT);
+    	dms = isBitClr(DMS_PIN,DMS_BIT);
     	if(on && dms){
 	    	if(dc != dcReq){
 	    		seta_dc(dcReq);			//definição do Duty Cicle do PWM
 	    	}
     	}
-    	else
-    		seta_dc(0);					//desliga o sistema
-
+    	else{
+    		if(dc != 0)					//se o sistema ainda nao esta desligado
+    			seta_dc(0);				//desliga o sistema
+    	}
     }
 }
 
@@ -124,6 +136,12 @@ ISR(ADC_vect){
 		default: 
 			break;
 	}
+	if(channel == LAST_CHANNEL){
+		channel = FIRST_CHANNEL;
+	}
+	else
+		channel ++;
+	adcSelectChannel(channel);
 	adcStartConversion();
 }
 
