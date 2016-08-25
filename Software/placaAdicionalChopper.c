@@ -23,6 +23,7 @@
 #define CURRENT_BIT 	PC0
 #define POT_BIT 		PC1
 #define VOLTAGE_BIT 	PC2
+#define TEMP_BIT		PC3
 
 #define ON_PIN			PINB
 #define DMS_PIN			PINB
@@ -36,15 +37,24 @@
 #define PWM_PORT 		PORTB
 #define PWM_BIT 		PB1
 
+/*
+#define BUZZER_DDR 		DDRB
+#define BUZZER_PORT 	PORTB
+#define BUZZER_BIT 		PB4
+*/
+
 //modos de operação, definem quem controla o acionamento
 #define CAN 			0
 #define SERIAL 			1
 #define POT 			2
 
+#define maxCont 		16
+
+//uint8 mode = SERIAL;
+
+int16 cont = 0;
+
 uint8 channel = POT_CHANNEL;
-
-uint8 mode = SERIAL;
-
 uint16 freq = 500;
 uint8 current = 0;
 uint8 maxCurrent = 100;
@@ -52,11 +62,12 @@ uint8 minDC = 10;
 uint8 dc = 0;
 uint8 dcReq = 0;				//armazena o valor do dc requisitado
 uint8 maxDC = 90;
-uint8 maxDV = 10;				//define a variação máxima, x V/s
+uint8 maxDV = 7;				//define a variação máxima, x V/s
 uint8 on = 1;					
 uint8 dms = 1;					
 uint8 temperature = 50;
-uint8 maxTemp = 70;
+uint8 maxTemp = 70;				//temperatura maxima, desliga o sistema
+uint8 criticalTemp = 60;		//temperatura critica
 uint8 voltage = 36;
 uint8 minVotage = 30;
 
@@ -98,6 +109,7 @@ int main(void)
 	sei();
 	
 	setBit(PWM_DDR,PWM_BIT);			//define o pino do pwm como saída
+
 	setBit(ON_PORT,ON_BIT);				//habilita o pull-up da chave on
 	setBit(DMS_PORT,DMS_BIT);			//habilita o pull-up da chave dms
 
@@ -114,13 +126,30 @@ int main(void)
     	dms = isBitClr(DMS_PIN,DMS_BIT);
     	if(on && dms){
 	    	if(dc != dcReq){
-	    		seta_dc(dcReq);			//definição do Duty Cicle do PWM
+	    		if(dcReq > dc)
+	    			if(cont == maxCont){
+	    				if(dc == 0)
+	    					dc = minDC;
+	    				seta_dc(dc+1);
+	    				cont = 0;
+	    			}
+	    			else
+	    				cont++;
+	    		else
+	    			seta_dc(dcReq);			//definição do Duty Cicle do PWM
 	    	}
     	}
     	else{
     		if(dc != 0)					//se o sistema ainda nao esta desligado
     			seta_dc(0);				//desliga o sistema
     	}
+    	/*if(temperature > criticalTemp){
+    		setBit(BUZZER_PORT,BUZZER_BIT);
+    		if(temperature > maxTemp){
+    			seta_dc(0);
+    		}
+    	}
+    	*/
     }
 }
 

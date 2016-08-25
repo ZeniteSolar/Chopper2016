@@ -3,29 +3,29 @@ placaAdicionalChopper.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         0000001c  00800100  0000149e  00001532  2**0
+  0 .data         0000001c  00800100  000014da  0000156e  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         0000149e  00000000  00000000  00000094  2**1
+  1 .text         000014da  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          0000003e  0080011c  0080011c  0000154e  2**0
+  2 .bss          00000040  0080011c  0080011c  0000158a  2**0
                   ALLOC
-  3 .comment      00000011  00000000  00000000  0000154e  2**0
+  3 .comment      00000011  00000000  00000000  0000158a  2**0
                   CONTENTS, READONLY
-  4 .debug_aranges 00000048  00000000  00000000  0000155f  2**0
+  4 .debug_aranges 00000048  00000000  00000000  0000159b  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00002aa9  00000000  00000000  000015a7  2**0
+  5 .debug_info   00002acf  00000000  00000000  000015e3  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000532  00000000  00000000  00004050  2**0
+  6 .debug_abbrev 00000532  00000000  00000000  000040b2  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000704  00000000  00000000  00004582  2**0
+  7 .debug_line   0000070d  00000000  00000000  000045e4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000c8c  00000000  00000000  00004c88  2**2
+  8 .debug_frame  00000c8c  00000000  00000000  00004cf4  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00002436  00000000  00000000  00005914  2**0
+  9 .debug_str    00002448  00000000  00000000  00005980  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    000014a0  00000000  00000000  00007d4a  2**0
+ 10 .debug_loc    000014a0  00000000  00000000  00007dc8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000030  00000000  00000000  000091ea  2**0
+ 11 .debug_ranges 00000030  00000000  00000000  00009268  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -94,7 +94,7 @@ Disassembly of section .text:
       a4:	11 e0       	ldi	r17, 0x01	; 1
       a6:	a0 e0       	ldi	r26, 0x00	; 0
       a8:	b1 e0       	ldi	r27, 0x01	; 1
-      aa:	ee e9       	ldi	r30, 0x9E	; 158
+      aa:	ea ed       	ldi	r30, 0xDA	; 218
       ac:	f4 e1       	ldi	r31, 0x14	; 20
       ae:	02 c0       	rjmp	.+4      	; 0xb4 <__do_copy_data+0x10>
       b0:	05 90       	lpm	r0, Z+
@@ -113,17 +113,17 @@ Disassembly of section .text:
       c2:	1d 92       	st	X+, r1
 
 000000c4 <.do_clear_bss_start>:
-      c4:	aa 35       	cpi	r26, 0x5A	; 90
+      c4:	ac 35       	cpi	r26, 0x5C	; 92
       c6:	b2 07       	cpc	r27, r18
       c8:	e1 f7       	brne	.-8      	; 0xc2 <.do_clear_bss_loop>
       ca:	0e 94 8c 09 	call	0x1318	; 0x1318 <main>
-      ce:	0c 94 4d 0a 	jmp	0x149a	; 0x149a <_exit>
+      ce:	0c 94 6b 0a 	jmp	0x14d6	; 0x14d6 <_exit>
 
 000000d2 <__bad_interrupt>:
       d2:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 000000d6 <seta_dc>:
-uint8 maxTemp = 70;
+uint8 criticalTemp = 60;		//temperatura critica
 uint8 voltage = 36;
 uint8 minVotage = 30;
 
@@ -134,22 +134,24 @@ void seta_dc(uint8 d_cycle)		//função para definição do Duty Cicle do PWM
 	dcReq = d_cycle;
       da:	80 93 1c 01 	sts	0x011C, r24
 	if(dcReq < minDC)				// Comparação com o valor mínimo de Duty Cicle
-      de:	80 91 08 01 	lds	r24, 0x0108
+      de:	80 91 09 01 	lds	r24, 0x0109
       e2:	c8 17       	cp	r28, r24
       e4:	18 f4       	brcc	.+6      	; 0xec <seta_dc+0x16>
 		dc = 0;
       e6:	10 92 1d 01 	sts	0x011D, r1
       ea:	1a c0       	rjmp	.+52     	; 0x120 <seta_dc+0x4a>
-	else{
+	else
+	{
 		if(dcReq > maxDC)			//Comparação com o valor máximo de Duty Cicle
-      ec:	80 91 07 01 	lds	r24, 0x0107
+      ec:	80 91 08 01 	lds	r24, 0x0108
       f0:	8c 17       	cp	r24, r28
       f2:	20 f4       	brcc	.+8      	; 0xfc <seta_dc+0x26>
 			dc = 100;
       f4:	84 e6       	ldi	r24, 0x64	; 100
       f6:	80 93 1d 01 	sts	0x011D, r24
       fa:	12 c0       	rjmp	.+36     	; 0x120 <seta_dc+0x4a>
-		else{
+		else
+		{
 			dc = dcReq;
       fc:	c0 93 1d 01 	sts	0x011D, r28
 			timer1SetCompareBValue((dc * (timer1GetCompareAValue()))/100);		//seta o valor do comparador B para gerar o DC requerido
@@ -162,16 +164,16 @@ void seta_dc(uint8 d_cycle)		//função para definição do Duty Cicle do PWM
      10e:	11 24       	eor	r1, r1
      110:	64 e6       	ldi	r22, 0x64	; 100
      112:	70 e0       	ldi	r23, 0x00	; 0
-     114:	0e 94 f3 09 	call	0x13e6	; 0x13e6 <__udivmodhi4>
+     114:	0e 94 11 0a 	call	0x1422	; 0x1422 <__udivmodhi4>
      118:	cb 01       	movw	r24, r22
 		}
 	}
 }
      11a:	cf 91       	pop	r28
-	else{
 		if(dcReq > maxDC)			//Comparação com o valor máximo de Duty Cicle
 			dc = 100;
-		else{
+		else
+		{
 			dc = dcReq;
 			timer1SetCompareBValue((dc * (timer1GetCompareAValue()))/100);		//seta o valor do comparador B para gerar o DC requerido
      11c:	0c 94 94 06 	jmp	0xd28	; 0xd28 <timer1SetCompareBValue>
@@ -182,8 +184,8 @@ void seta_dc(uint8 d_cycle)		//função para definição do Duty Cicle do PWM
      122:	08 95       	ret
 
 00000124 <__vector_21>:
-    			seta_dc(0);				//desliga o sistema
     	}
+    	*/
     }
 }
 
@@ -205,7 +207,7 @@ ISR(ADC_vect){
      140:	bf 93       	push	r27
      142:	ef 93       	push	r30
      144:	ff 93       	push	r31
-	switch (channel){
+	switch (channel)
      146:	20 91 0d 01 	lds	r18, 0x010D
      14a:	21 30       	cpi	r18, 0x01	; 1
      14c:	d9 f0       	breq	.+54     	; 0x184 <__vector_21+0x60>
@@ -224,26 +226,26 @@ ISR(ADC_vect){
      15c:	90 91 79 00 	lds	r25, 0x0079
      160:	96 95       	lsr	r25
      162:	87 95       	ror	r24
-     164:	80 93 03 01 	sts	0x0103, r24
+     164:	80 93 04 01 	sts	0x0104, r24
 			break;
 		default: 
 			break;
 	}
-	if(channel == LAST_CHANNEL){
+	if(channel == LAST_CHANNEL)
 		channel = FIRST_CHANNEL;
      168:	10 92 0d 01 	sts	0x010D, r1
      16c:	23 c0       	rjmp	.+70     	; 0x1b4 <__vector_21+0x90>
-}
 
 ISR(ADC_vect){
-	switch (channel){
+	switch (channel)
+	{
 		case CURRENT_CHANNEL:
 			current = ADC / 5;
      16e:	80 91 78 00 	lds	r24, 0x0078
      172:	90 91 79 00 	lds	r25, 0x0079
      176:	65 e0       	ldi	r22, 0x05	; 5
      178:	70 e0       	ldi	r23, 0x00	; 0
-     17a:	0e 94 f3 09 	call	0x13e6	; 0x13e6 <__udivmodhi4>
+     17a:	0e 94 11 0a 	call	0x1422	; 0x1422 <__udivmodhi4>
      17e:	60 93 1e 01 	sts	0x011E, r22
 			break;
      182:	15 c0       	rjmp	.+42     	; 0x1ae <__vector_21+0x8a>
@@ -253,7 +255,7 @@ ISR(ADC_vect){
      188:	90 91 79 00 	lds	r25, 0x0079
      18c:	6a e0       	ldi	r22, 0x0A	; 10
      18e:	70 e0       	ldi	r23, 0x00	; 0
-     190:	0e 94 f3 09 	call	0x13e6	; 0x13e6 <__udivmodhi4>
+     190:	0e 94 11 0a 	call	0x1422	; 0x1422 <__udivmodhi4>
      194:	60 93 1c 01 	sts	0x011C, r22
 			break;
      198:	0a c0       	rjmp	.+20     	; 0x1ae <__vector_21+0x8a>
@@ -263,12 +265,12 @@ ISR(ADC_vect){
      19e:	90 91 79 00 	lds	r25, 0x0079
      1a2:	6e e1       	ldi	r22, 0x1E	; 30
      1a4:	70 e0       	ldi	r23, 0x00	; 0
-     1a6:	0e 94 f3 09 	call	0x13e6	; 0x13e6 <__udivmodhi4>
+     1a6:	0e 94 11 0a 	call	0x1422	; 0x1422 <__udivmodhi4>
      1aa:	60 93 01 01 	sts	0x0101, r22
+			break;
 	}
-	if(channel == LAST_CHANNEL){
+	if(channel == LAST_CHANNEL)
 		channel = FIRST_CHANNEL;
-	}
 	else
 		channel ++;
      1ae:	2f 5f       	subi	r18, 0xFF	; 255
@@ -310,10 +312,10 @@ ISR(TIMER1_COMPA_vect){
      1ee:	80 91 1d 01 	lds	r24, 0x011D
      1f2:	88 23       	and	r24, r24
      1f4:	41 f0       	breq	.+16     	; 0x206 <__vector_11+0x24>
-     1f6:	80 91 05 01 	lds	r24, 0x0105
+     1f6:	80 91 06 01 	lds	r24, 0x0106
      1fa:	88 23       	and	r24, r24
      1fc:	21 f0       	breq	.+8      	; 0x206 <__vector_11+0x24>
-     1fe:	80 91 04 01 	lds	r24, 0x0104
+     1fe:	80 91 05 01 	lds	r24, 0x0105
      202:	81 11       	cpse	r24, r1
 		setBit(PWM_PORT,PWM_BIT);		//Inicia o período em nível alto do PWM
      204:	29 9a       	sbi	0x05, 1	; 5
@@ -405,7 +407,7 @@ resultValue_t systemClockSetPrescaler(systemPrescalerValue_t prescaler)
      254:	fc 01       	movw	r30, r24
      256:	ec 5c       	subi	r30, 0xCC	; 204
      258:	ff 4f       	sbci	r31, 0xFF	; 255
-     25a:	0c 94 29 0a 	jmp	0x1452	; 0x1452 <__tablejump2__>
+     25a:	0c 94 47 0a 	jmp	0x148e	; 0x148e <__tablejump2__>
 		case SYSTEM_PRESCALER_OFF:		aux8 = 0;	break;
      25e:	80 e0       	ldi	r24, 0x00	; 0
      260:	0f c0       	rjmp	.+30     	; 0x280 <systemClockSetPrescaler+0x34>
@@ -2808,7 +2810,7 @@ resultValue_t timer0Config(timerModeA_t mode, timerPrescalerValueA_t prescaler)
      aa0:	fa 01       	movw	r30, r20
      aa2:	e3 5c       	subi	r30, 0xC3	; 195
      aa4:	ff 4f       	sbci	r31, 0xFF	; 255
-     aa6:	0c 94 29 0a 	jmp	0x1452	; 0x1452 <__tablejump2__>
+     aa6:	0c 94 47 0a 	jmp	0x148e	; 0x148e <__tablejump2__>
 			case TIMER_A_CLOCK_DISABLE:					break;
 			case TIMER_A_PRESCALER_OFF:					regB |= (1 << CS00);	break;
      aaa:	91 60       	ori	r25, 0x01	; 1
@@ -4152,7 +4154,7 @@ resultValue_t adcConfig(adcMode_t mode, adcReference_t reference, adcPrescaler_t
      eb0:	d0 f4       	brcc	.+52     	; 0xee6 <adcConfig+0x7e>
      eb2:	eb 5b       	subi	r30, 0xBB	; 187
      eb4:	ff 4f       	sbci	r31, 0xFF	; 255
-     eb6:	0c 94 29 0a 	jmp	0x1452	; 0x1452 <__tablejump2__>
+     eb6:	0c 94 47 0a 	jmp	0x148e	; 0x148e <__tablejump2__>
 				case ADC_MODE_AUTO_ANALOG_COMP:		reg |= (1 << ADTS0);	break;
      eba:	21 60       	ori	r18, 0x01	; 1
      ebc:	0b c0       	rjmp	.+22     	; 0xed4 <adcConfig+0x6c>
@@ -4586,7 +4588,7 @@ resultValue_t usartConfig(usartMode_t mode, usartBaudRate_t baudRate, usartDataB
     1042:	90 e0       	ldi	r25, 0x00	; 0
     1044:	a5 01       	movw	r20, r10
     1046:	94 01       	movw	r18, r8
-    1048:	0e 94 07 0a 	call	0x140e	; 0x140e <__udivmodsi4>
+    1048:	0e 94 25 0a 	call	0x144a	; 0x144a <__udivmodsi4>
     104c:	21 50       	subi	r18, 0x01	; 1
     104e:	31 09       	sbc	r19, r1
     1050:	41 09       	sbc	r20, r1
@@ -4623,7 +4625,7 @@ resultValue_t usartConfig(usartMode_t mode, usartBaudRate_t baudRate, usartDataB
     1074:	b6 01       	movw	r22, r12
     1076:	c7 01       	movw	r24, r14
     1078:	08 e0       	ldi	r16, 0x08	; 8
-    107a:	0e 94 31 0a 	call	0x1462	; 0x1462 <__lshrdi3>
+    107a:	0e 94 4f 0a 	call	0x149e	; 0x149e <__lshrdi3>
     107e:	2f 70       	andi	r18, 0x0F	; 15
     1080:	20 93 c5 00 	sts	0x00C5, r18
 		UBRR0L = (0xFF & aux64);
@@ -4843,12 +4845,12 @@ resultValue_t usartStdio(void)
 	stdin = stdout = stderr = &usartStream;
     1134:	8e e0       	ldi	r24, 0x0E	; 14
     1136:	91 e0       	ldi	r25, 0x01	; 1
-    1138:	90 93 59 01 	sts	0x0159, r25
-    113c:	80 93 58 01 	sts	0x0158, r24
-    1140:	90 93 57 01 	sts	0x0157, r25
-    1144:	80 93 56 01 	sts	0x0156, r24
-    1148:	90 93 55 01 	sts	0x0155, r25
-    114c:	80 93 54 01 	sts	0x0154, r24
+    1138:	90 93 5b 01 	sts	0x015B, r25
+    113c:	80 93 5a 01 	sts	0x015A, r24
+    1140:	90 93 59 01 	sts	0x0159, r25
+    1144:	80 93 58 01 	sts	0x0158, r24
+    1148:	90 93 57 01 	sts	0x0157, r25
+    114c:	80 93 56 01 	sts	0x0156, r24
 	return RESULT_OK;
 }
     1150:	80 e0       	ldi	r24, 0x00	; 0
@@ -5131,7 +5133,7 @@ void usartAddDataToReceiverBuffer(uint8 data)
     1250:	df 93       	push	r29
     1252:	f8 2e       	mov	r15, r24
 	if(((usartReceiverBufferNextWrite + 1) % USART_RECEIVER_BUFFER_SIZE) != usartReceiverBufferNextRead){
-    1254:	c0 91 51 01 	lds	r28, 0x0151
+    1254:	c0 91 53 01 	lds	r28, 0x0153
     1258:	d0 e0       	ldi	r29, 0x00	; 0
     125a:	be 01       	movw	r22, r28
     125c:	6f 5f       	subi	r22, 0xFF	; 255
@@ -5144,8 +5146,8 @@ void usartAddDataToReceiverBuffer(uint8 data)
     126a:	30 e0       	ldi	r19, 0x00	; 0
     126c:	40 e0       	ldi	r20, 0x00	; 0
     126e:	50 e0       	ldi	r21, 0x00	; 0
-    1270:	0e 94 07 0a 	call	0x140e	; 0x140e <__udivmodsi4>
-    1274:	00 91 53 01 	lds	r16, 0x0153
+    1270:	0e 94 25 0a 	call	0x144a	; 0x144a <__udivmodsi4>
+    1274:	00 91 55 01 	lds	r16, 0x0155
     1278:	10 e0       	ldi	r17, 0x00	; 0
     127a:	20 e0       	ldi	r18, 0x00	; 0
     127c:	30 e0       	ldi	r19, 0x00	; 0
@@ -5155,15 +5157,15 @@ void usartAddDataToReceiverBuffer(uint8 data)
     1284:	93 07       	cpc	r25, r19
     1286:	51 f0       	breq	.+20     	; 0x129c <usartAddDataToReceiverBuffer+0x54>
 		usartReceiverBuffer[usartReceiverBufferNextWrite] = data;
-    1288:	c1 5e       	subi	r28, 0xE1	; 225
+    1288:	cf 5d       	subi	r28, 0xDF	; 223
     128a:	de 4f       	sbci	r29, 0xFE	; 254
     128c:	f8 82       	st	Y, r15
 		usartReceiverBufferNextWrite = (usartReceiverBufferNextWrite + 1) % USART_RECEIVER_BUFFER_SIZE;
-    128e:	60 93 51 01 	sts	0x0151, r22
+    128e:	60 93 53 01 	sts	0x0153, r22
 		usartReceiverBufferLength++;
-    1292:	80 91 52 01 	lds	r24, 0x0152
+    1292:	80 91 54 01 	lds	r24, 0x0154
     1296:	8f 5f       	subi	r24, 0xFF	; 255
-    1298:	80 93 52 01 	sts	0x0152, r24
+    1298:	80 93 54 01 	sts	0x0154, r24
 	}
 	return;
 }
@@ -5184,14 +5186,14 @@ uint8 usartGetDataFromReceiverBuffer(void)
     12a8:	cf 93       	push	r28
     12aa:	df 93       	push	r29
 	uint8 data = usartReceiverBuffer[usartReceiverBufferNextRead];
-    12ac:	60 91 53 01 	lds	r22, 0x0153
+    12ac:	60 91 55 01 	lds	r22, 0x0155
     12b0:	70 e0       	ldi	r23, 0x00	; 0
     12b2:	fb 01       	movw	r30, r22
-    12b4:	e1 5e       	subi	r30, 0xE1	; 225
+    12b4:	ef 5d       	subi	r30, 0xDF	; 223
     12b6:	fe 4f       	sbci	r31, 0xFE	; 254
     12b8:	d0 81       	ld	r29, Z
 	if(usartReceiverBufferLength > 0){
-    12ba:	c0 91 52 01 	lds	r28, 0x0152
+    12ba:	c0 91 54 01 	lds	r28, 0x0154
     12be:	cc 23       	and	r28, r28
     12c0:	89 f0       	breq	.+34     	; 0x12e4 <usartGetDataFromReceiverBuffer+0x3c>
 		usartReceiverBufferNextRead = (usartReceiverBufferNextRead + 1) % USART_RECEIVER_BUFFER_SIZE;
@@ -5205,11 +5207,11 @@ uint8 usartGetDataFromReceiverBuffer(void)
     12d0:	30 e0       	ldi	r19, 0x00	; 0
     12d2:	40 e0       	ldi	r20, 0x00	; 0
     12d4:	50 e0       	ldi	r21, 0x00	; 0
-    12d6:	0e 94 07 0a 	call	0x140e	; 0x140e <__udivmodsi4>
-    12da:	60 93 53 01 	sts	0x0153, r22
+    12d6:	0e 94 25 0a 	call	0x144a	; 0x144a <__udivmodsi4>
+    12da:	60 93 55 01 	sts	0x0155, r22
 		usartReceiverBufferLength--;
     12de:	c1 50       	subi	r28, 0x01	; 1
-    12e0:	c0 93 52 01 	sts	0x0152, r28
+    12e0:	c0 93 54 01 	sts	0x0154, r28
 	}
 	return data;
 }
@@ -5226,7 +5228,7 @@ uint8 usartIsReceiverBufferEmpty(void)
 {
 	if(usartReceiverBufferLength == 0)
     12ec:	81 e0       	ldi	r24, 0x01	; 1
-    12ee:	90 91 52 01 	lds	r25, 0x0152
+    12ee:	90 91 54 01 	lds	r25, 0x0154
     12f2:	91 11       	cpse	r25, r1
     12f4:	80 e0       	ldi	r24, 0x00	; 0
 		return TRUE;
@@ -5325,15 +5327,15 @@ int main(void)
 	timer1ActivateCompareAInterrupt();									//ativa a interrupcao do compB
     134e:	0e 94 37 06 	call	0xc6e	; 0xc6e <timer1ActivateCompareAInterrupt>
 	timer1SetCompareAValue((F_CPU/64)/freq);							//valor do comparador A,  define a frequencia
-    1352:	20 91 0a 01 	lds	r18, 0x010A
-    1356:	30 91 0b 01 	lds	r19, 0x010B
+    1352:	20 91 0b 01 	lds	r18, 0x010B
+    1356:	30 91 0c 01 	lds	r19, 0x010C
     135a:	40 e0       	ldi	r20, 0x00	; 0
     135c:	50 e0       	ldi	r21, 0x00	; 0
     135e:	60 e9       	ldi	r22, 0x90	; 144
     1360:	70 ed       	ldi	r23, 0xD0	; 208
     1362:	83 e0       	ldi	r24, 0x03	; 3
     1364:	90 e0       	ldi	r25, 0x00	; 0
-    1366:	0e 94 07 0a 	call	0x140e	; 0x140e <__udivmodsi4>
+    1366:	0e 94 25 0a 	call	0x144a	; 0x144a <__udivmodsi4>
     136a:	c9 01       	movw	r24, r18
     136c:	0e 94 86 06 	call	0xd0c	; 0xd0c <timer1SetCompareAValue>
 	timer1SetCompareBValue((dc * (timer1GetCompareAValue()))/100);		//valor do comparador B,  define Duty Cicle
@@ -5350,7 +5352,7 @@ int main(void)
     1388:	11 24       	eor	r1, r1
     138a:	64 e6       	ldi	r22, 0x64	; 100
     138c:	70 e0       	ldi	r23, 0x00	; 0
-    138e:	0e 94 f3 09 	call	0x13e6	; 0x13e6 <__udivmodhi4>
+    138e:	0e 94 11 0a 	call	0x1422	; 0x1422 <__udivmodhi4>
     1392:	cb 01       	movw	r24, r22
     1394:	0e 94 94 06 	call	0xd28	; 0xd28 <timer1SetCompareBValue>
 	
@@ -5359,17 +5361,21 @@ int main(void)
 	
 	setBit(PWM_DDR,PWM_BIT);			//define o pino do pwm como saída
     139a:	21 9a       	sbi	0x04, 1	; 4
+
 	setBit(ON_PORT,ON_BIT);				//habilita o pull-up da chave on
     139c:	2a 9a       	sbi	0x05, 2	; 5
 	setBit(DMS_PORT,DMS_BIT);			//habilita o pull-up da chave dms
     139e:	2b 9a       	sbi	0x05, 3	; 5
 
-
+//
+	//pino usado somente para teste no proteus
 	setBit(DDRD,PD0);			
     13a0:	50 9a       	sbi	0x0a, 0	; 10
 	setBit(PORTD,PD0);			
     13a2:	58 9a       	sbi	0x0b, 0	; 11
     13a4:	c1 e0       	ldi	r28, 0x01	; 1
+//
+
     while(1)
     {
     	setBit(PIND,PD0);
@@ -5380,149 +5386,179 @@ int main(void)
     13ac:	99 27       	eor	r25, r25
     13ae:	90 f9       	bld	r25, 0
     13b0:	9c 27       	eor	r25, r28
-    13b2:	90 93 05 01 	sts	0x0105, r25
+    13b2:	90 93 06 01 	sts	0x0106, r25
     	dms = isBitClr(DMS_PIN,DMS_BIT);
     13b6:	83 b1       	in	r24, 0x03	; 3
     13b8:	83 fb       	bst	r24, 3
     13ba:	88 27       	eor	r24, r24
     13bc:	80 f9       	bld	r24, 0
     13be:	8c 27       	eor	r24, r28
-    13c0:	80 93 04 01 	sts	0x0104, r24
+    13c0:	80 93 05 01 	sts	0x0105, r24
     13c4:	20 91 1d 01 	lds	r18, 0x011D
     	if(on && dms){
     13c8:	99 23       	and	r25, r25
-    13ca:	39 f0       	breq	.+14     	; 0x13da <main+0xc2>
+    13ca:	29 f1       	breq	.+74     	; 0x1416 <main+0xfe>
     13cc:	88 23       	and	r24, r24
-    13ce:	29 f0       	breq	.+10     	; 0x13da <main+0xc2>
+    13ce:	19 f1       	breq	.+70     	; 0x1416 <main+0xfe>
 	    	if(dc != dcReq){
     13d0:	80 91 1c 01 	lds	r24, 0x011C
-    13d4:	28 13       	cpse	r18, r24
-    13d6:	04 c0       	rjmp	.+8      	; 0x13e0 <main+0xc8>
-    13d8:	e6 cf       	rjmp	.-52     	; 0x13a6 <main+0x8e>
-	    		seta_dc(dcReq);			//definição do Duty Cicle do PWM
+    13d4:	28 17       	cp	r18, r24
+    13d6:	39 f3       	breq	.-50     	; 0x13a6 <main+0x8e>
+	    		if(dcReq > dc)
+    13d8:	28 17       	cp	r18, r24
+    13da:	00 f5       	brcc	.+64     	; 0x141c <main+0x104>
+	    			if(cont == maxCont){
+    13dc:	80 91 1f 01 	lds	r24, 0x011F
+    13e0:	90 91 20 01 	lds	r25, 0x0120
+    13e4:	80 31       	cpi	r24, 0x10	; 16
+    13e6:	91 05       	cpc	r25, r1
+    13e8:	81 f4       	brne	.+32     	; 0x140a <main+0xf2>
+	    				if(dc == 0)
+    13ea:	21 11       	cpse	r18, r1
+    13ec:	04 c0       	rjmp	.+8      	; 0x13f6 <main+0xde>
+	    					dc = minDC;
+    13ee:	80 91 09 01 	lds	r24, 0x0109
+    13f2:	80 93 1d 01 	sts	0x011D, r24
+	    				seta_dc(dc+1);
+    13f6:	80 91 1d 01 	lds	r24, 0x011D
+    13fa:	8f 5f       	subi	r24, 0xFF	; 255
+    13fc:	0e 94 6b 00 	call	0xd6	; 0xd6 <seta_dc>
+	    				cont = 0;
+    1400:	10 92 20 01 	sts	0x0120, r1
+    1404:	10 92 1f 01 	sts	0x011F, r1
+    1408:	ce cf       	rjmp	.-100    	; 0x13a6 <main+0x8e>
+	    			}
+	    			else
+	    				cont++;
+    140a:	01 96       	adiw	r24, 0x01	; 1
+    140c:	90 93 20 01 	sts	0x0120, r25
+    1410:	80 93 1f 01 	sts	0x011F, r24
+    1414:	c8 cf       	rjmp	.-112    	; 0x13a6 <main+0x8e>
+	    		else
+	    			seta_dc(dcReq);			//definição do Duty Cicle do PWM
 	    	}
     	}
     	else{
     		if(dc != 0)					//se o sistema ainda nao esta desligado
-    13da:	22 23       	and	r18, r18
-    13dc:	21 f3       	breq	.-56     	; 0x13a6 <main+0x8e>
+    1416:	22 23       	and	r18, r18
+    1418:	31 f2       	breq	.-116    	; 0x13a6 <main+0x8e>
     			seta_dc(0);				//desliga o sistema
-    13de:	80 e0       	ldi	r24, 0x00	; 0
-    13e0:	0e 94 6b 00 	call	0xd6	; 0xd6 <seta_dc>
-    13e4:	e0 cf       	rjmp	.-64     	; 0x13a6 <main+0x8e>
+    141a:	80 e0       	ldi	r24, 0x00	; 0
+    141c:	0e 94 6b 00 	call	0xd6	; 0xd6 <seta_dc>
+    1420:	c2 cf       	rjmp	.-124    	; 0x13a6 <main+0x8e>
 
-000013e6 <__udivmodhi4>:
-    13e6:	aa 1b       	sub	r26, r26
-    13e8:	bb 1b       	sub	r27, r27
-    13ea:	51 e1       	ldi	r21, 0x11	; 17
-    13ec:	07 c0       	rjmp	.+14     	; 0x13fc <__udivmodhi4_ep>
+00001422 <__udivmodhi4>:
+    1422:	aa 1b       	sub	r26, r26
+    1424:	bb 1b       	sub	r27, r27
+    1426:	51 e1       	ldi	r21, 0x11	; 17
+    1428:	07 c0       	rjmp	.+14     	; 0x1438 <__udivmodhi4_ep>
 
-000013ee <__udivmodhi4_loop>:
-    13ee:	aa 1f       	adc	r26, r26
-    13f0:	bb 1f       	adc	r27, r27
-    13f2:	a6 17       	cp	r26, r22
-    13f4:	b7 07       	cpc	r27, r23
-    13f6:	10 f0       	brcs	.+4      	; 0x13fc <__udivmodhi4_ep>
-    13f8:	a6 1b       	sub	r26, r22
-    13fa:	b7 0b       	sbc	r27, r23
+0000142a <__udivmodhi4_loop>:
+    142a:	aa 1f       	adc	r26, r26
+    142c:	bb 1f       	adc	r27, r27
+    142e:	a6 17       	cp	r26, r22
+    1430:	b7 07       	cpc	r27, r23
+    1432:	10 f0       	brcs	.+4      	; 0x1438 <__udivmodhi4_ep>
+    1434:	a6 1b       	sub	r26, r22
+    1436:	b7 0b       	sbc	r27, r23
 
-000013fc <__udivmodhi4_ep>:
-    13fc:	88 1f       	adc	r24, r24
-    13fe:	99 1f       	adc	r25, r25
-    1400:	5a 95       	dec	r21
-    1402:	a9 f7       	brne	.-22     	; 0x13ee <__udivmodhi4_loop>
-    1404:	80 95       	com	r24
-    1406:	90 95       	com	r25
-    1408:	bc 01       	movw	r22, r24
-    140a:	cd 01       	movw	r24, r26
-    140c:	08 95       	ret
-
-0000140e <__udivmodsi4>:
-    140e:	a1 e2       	ldi	r26, 0x21	; 33
-    1410:	1a 2e       	mov	r1, r26
-    1412:	aa 1b       	sub	r26, r26
-    1414:	bb 1b       	sub	r27, r27
-    1416:	fd 01       	movw	r30, r26
-    1418:	0d c0       	rjmp	.+26     	; 0x1434 <__udivmodsi4_ep>
-
-0000141a <__udivmodsi4_loop>:
-    141a:	aa 1f       	adc	r26, r26
-    141c:	bb 1f       	adc	r27, r27
-    141e:	ee 1f       	adc	r30, r30
-    1420:	ff 1f       	adc	r31, r31
-    1422:	a2 17       	cp	r26, r18
-    1424:	b3 07       	cpc	r27, r19
-    1426:	e4 07       	cpc	r30, r20
-    1428:	f5 07       	cpc	r31, r21
-    142a:	20 f0       	brcs	.+8      	; 0x1434 <__udivmodsi4_ep>
-    142c:	a2 1b       	sub	r26, r18
-    142e:	b3 0b       	sbc	r27, r19
-    1430:	e4 0b       	sbc	r30, r20
-    1432:	f5 0b       	sbc	r31, r21
-
-00001434 <__udivmodsi4_ep>:
-    1434:	66 1f       	adc	r22, r22
-    1436:	77 1f       	adc	r23, r23
+00001438 <__udivmodhi4_ep>:
     1438:	88 1f       	adc	r24, r24
     143a:	99 1f       	adc	r25, r25
-    143c:	1a 94       	dec	r1
-    143e:	69 f7       	brne	.-38     	; 0x141a <__udivmodsi4_loop>
-    1440:	60 95       	com	r22
-    1442:	70 95       	com	r23
-    1444:	80 95       	com	r24
-    1446:	90 95       	com	r25
-    1448:	9b 01       	movw	r18, r22
-    144a:	ac 01       	movw	r20, r24
-    144c:	bd 01       	movw	r22, r26
-    144e:	cf 01       	movw	r24, r30
-    1450:	08 95       	ret
+    143c:	5a 95       	dec	r21
+    143e:	a9 f7       	brne	.-22     	; 0x142a <__udivmodhi4_loop>
+    1440:	80 95       	com	r24
+    1442:	90 95       	com	r25
+    1444:	bc 01       	movw	r22, r24
+    1446:	cd 01       	movw	r24, r26
+    1448:	08 95       	ret
 
-00001452 <__tablejump2__>:
-    1452:	ee 0f       	add	r30, r30
-    1454:	ff 1f       	adc	r31, r31
+0000144a <__udivmodsi4>:
+    144a:	a1 e2       	ldi	r26, 0x21	; 33
+    144c:	1a 2e       	mov	r1, r26
+    144e:	aa 1b       	sub	r26, r26
+    1450:	bb 1b       	sub	r27, r27
+    1452:	fd 01       	movw	r30, r26
+    1454:	0d c0       	rjmp	.+26     	; 0x1470 <__udivmodsi4_ep>
 
-00001456 <__tablejump__>:
-    1456:	05 90       	lpm	r0, Z+
-    1458:	f4 91       	lpm	r31, Z
-    145a:	e0 2d       	mov	r30, r0
-    145c:	09 94       	ijmp
+00001456 <__udivmodsi4_loop>:
+    1456:	aa 1f       	adc	r26, r26
+    1458:	bb 1f       	adc	r27, r27
+    145a:	ee 1f       	adc	r30, r30
+    145c:	ff 1f       	adc	r31, r31
+    145e:	a2 17       	cp	r26, r18
+    1460:	b3 07       	cpc	r27, r19
+    1462:	e4 07       	cpc	r30, r20
+    1464:	f5 07       	cpc	r31, r21
+    1466:	20 f0       	brcs	.+8      	; 0x1470 <__udivmodsi4_ep>
+    1468:	a2 1b       	sub	r26, r18
+    146a:	b3 0b       	sbc	r27, r19
+    146c:	e4 0b       	sbc	r30, r20
+    146e:	f5 0b       	sbc	r31, r21
 
-0000145e <__ashrdi3>:
-    145e:	97 fb       	bst	r25, 7
-    1460:	10 f8       	bld	r1, 0
+00001470 <__udivmodsi4_ep>:
+    1470:	66 1f       	adc	r22, r22
+    1472:	77 1f       	adc	r23, r23
+    1474:	88 1f       	adc	r24, r24
+    1476:	99 1f       	adc	r25, r25
+    1478:	1a 94       	dec	r1
+    147a:	69 f7       	brne	.-38     	; 0x1456 <__udivmodsi4_loop>
+    147c:	60 95       	com	r22
+    147e:	70 95       	com	r23
+    1480:	80 95       	com	r24
+    1482:	90 95       	com	r25
+    1484:	9b 01       	movw	r18, r22
+    1486:	ac 01       	movw	r20, r24
+    1488:	bd 01       	movw	r22, r26
+    148a:	cf 01       	movw	r24, r30
+    148c:	08 95       	ret
 
-00001462 <__lshrdi3>:
-    1462:	16 94       	lsr	r1
-    1464:	00 08       	sbc	r0, r0
-    1466:	0f 93       	push	r16
-    1468:	08 30       	cpi	r16, 0x08	; 8
-    146a:	98 f0       	brcs	.+38     	; 0x1492 <__lshrdi3+0x30>
-    146c:	08 50       	subi	r16, 0x08	; 8
-    146e:	23 2f       	mov	r18, r19
-    1470:	34 2f       	mov	r19, r20
-    1472:	45 2f       	mov	r20, r21
-    1474:	56 2f       	mov	r21, r22
-    1476:	67 2f       	mov	r22, r23
-    1478:	78 2f       	mov	r23, r24
-    147a:	89 2f       	mov	r24, r25
-    147c:	90 2d       	mov	r25, r0
-    147e:	f4 cf       	rjmp	.-24     	; 0x1468 <__lshrdi3+0x6>
-    1480:	05 94       	asr	r0
-    1482:	97 95       	ror	r25
-    1484:	87 95       	ror	r24
-    1486:	77 95       	ror	r23
-    1488:	67 95       	ror	r22
-    148a:	57 95       	ror	r21
-    148c:	47 95       	ror	r20
-    148e:	37 95       	ror	r19
-    1490:	27 95       	ror	r18
-    1492:	0a 95       	dec	r16
-    1494:	aa f7       	brpl	.-22     	; 0x1480 <__lshrdi3+0x1e>
-    1496:	0f 91       	pop	r16
-    1498:	08 95       	ret
+0000148e <__tablejump2__>:
+    148e:	ee 0f       	add	r30, r30
+    1490:	ff 1f       	adc	r31, r31
 
-0000149a <_exit>:
-    149a:	f8 94       	cli
+00001492 <__tablejump__>:
+    1492:	05 90       	lpm	r0, Z+
+    1494:	f4 91       	lpm	r31, Z
+    1496:	e0 2d       	mov	r30, r0
+    1498:	09 94       	ijmp
 
-0000149c <__stop_program>:
-    149c:	ff cf       	rjmp	.-2      	; 0x149c <__stop_program>
+0000149a <__ashrdi3>:
+    149a:	97 fb       	bst	r25, 7
+    149c:	10 f8       	bld	r1, 0
+
+0000149e <__lshrdi3>:
+    149e:	16 94       	lsr	r1
+    14a0:	00 08       	sbc	r0, r0
+    14a2:	0f 93       	push	r16
+    14a4:	08 30       	cpi	r16, 0x08	; 8
+    14a6:	98 f0       	brcs	.+38     	; 0x14ce <__lshrdi3+0x30>
+    14a8:	08 50       	subi	r16, 0x08	; 8
+    14aa:	23 2f       	mov	r18, r19
+    14ac:	34 2f       	mov	r19, r20
+    14ae:	45 2f       	mov	r20, r21
+    14b0:	56 2f       	mov	r21, r22
+    14b2:	67 2f       	mov	r22, r23
+    14b4:	78 2f       	mov	r23, r24
+    14b6:	89 2f       	mov	r24, r25
+    14b8:	90 2d       	mov	r25, r0
+    14ba:	f4 cf       	rjmp	.-24     	; 0x14a4 <__lshrdi3+0x6>
+    14bc:	05 94       	asr	r0
+    14be:	97 95       	ror	r25
+    14c0:	87 95       	ror	r24
+    14c2:	77 95       	ror	r23
+    14c4:	67 95       	ror	r22
+    14c6:	57 95       	ror	r21
+    14c8:	47 95       	ror	r20
+    14ca:	37 95       	ror	r19
+    14cc:	27 95       	ror	r18
+    14ce:	0a 95       	dec	r16
+    14d0:	aa f7       	brpl	.-22     	; 0x14bc <__lshrdi3+0x1e>
+    14d2:	0f 91       	pop	r16
+    14d4:	08 95       	ret
+
+000014d6 <_exit>:
+    14d6:	f8 94       	cli
+
+000014d8 <__stop_program>:
+    14d8:	ff cf       	rjmp	.-2      	; 0x14d8 <__stop_program>
