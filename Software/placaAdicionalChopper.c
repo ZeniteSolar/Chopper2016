@@ -4,32 +4,54 @@
  * Created: 18/8/2016 13:25:59
  *  Author: Augusto D. Rodrigues
  *	Equipe Zênite Solar - Projeto Chopper MPDC 2016
- */ 
+ */
 
 //Include header files
 #include "bibliotecas/globalDefines.h"
 #include "bibliotecas/ATmega328.h"
 
-#define F_CPU 16000000UL
+#define F_CPU 			16000000UL
 
-#define POT_CHANNEL ADC_CHANNEL_1		
-#define POT_BIT PC1
+#define CURRENT_CHANNEL ADC_CHANNEL_0
+#define POT_CHANNEL 	ADC_CHANNEL_1
+#define VOLTAGE_CHANNEL ADC_CHANNEL_2
+#define TEMP_CHANNEL	ADC_CHANNEL_3
 
-#define PWM_DDR DDRB
-#define PWM_PORT PORTB
-#define PWM_BIT PB1
+#define LAST_CHANNEL	TEMP_CHANNEL
 
+#define CURRENT_BIT 	PC0
+#define POT_BIT 		PC1
+#define VOLTAGE_BIT 	PC2
+
+#define ON_PIN			PINB
+#define DMS_PIN			PINB
+#define ON_BIT 			PB2
+#define DMS_BIT 		PB3
+
+//definem em qual pino sairá o PWM
+#define PWM_DDR 		DDRB
+#define PWM_PORT 		PORTB
+#define PWM_BIT 		PB1
+
+//modos de operação, definem quem controla o acionamento
+#define CAN 			0
+#define SERIAL 			1
+#define POT 			2
+
+
+uint8 channel = CURRENT_CHANNEL;
+uint8 mode = SERIAL;
 
 uint16 freq = 1000;
-uint8 current = 80;
+uint8 current = 0;
 uint8 maxCurrent = 100;
 uint8 minDC = 10;
 uint8 dc = 0;
 uint8 dcReq = 0;				//armazena o valor do dc requisitado
 uint8 maxDC = 90;
-uint8 maxDV = 10;
-uint8 on = 1;					//false
-uint8 DMS = 1;					//false
+uint8 maxDV = 10;				//define a variação máxima, x V/s
+uint8 on = 1;					
+uint8 dms = 1;					
 uint8 temperature = 50;
 uint8 maxTemp = 70;
 uint8 voltage = 36;
@@ -44,12 +66,12 @@ void seta_dc(uint8 d_cycle)		//função para definição do Duty Cicle do PWM
 	else
 		if(dc > maxDC)			//Comparação com o valor máximo de Duty Cicle
 			dc = 100;
-	timer1SetCompareBValue((dc * (timer1GetCompareAValue()))/100);//set o valor do comparador B para gerar o DC requerido
+	timer1SetCompareBValue((dc * (timer1GetCompareAValue()))/100);		//seta o valor do comparador B para gerar o DC requerido
 }
 
 int main(void)
 {
-	clrBit(DDRC,POT_BIT);	//SETA O PINO DO ADC COMO ENTRADA
+	clrBit(DDRC,POT_BIT);		//SETA O PINO DO ADC COMO ENTRADA
 	adcConfig(ADC_MODE_SINGLE_CONVERSION, ADC_REFRENCE_POWER_SUPPLY , ADC_PRESCALER_128);
 	adcSelectChannel(POT_CHANNEL);
 	adcClearInterruptRequest();
@@ -71,18 +93,35 @@ int main(void)
 	
     while(1)
     {
-       
+    	if(dc != dcReq){
+    		seta_dc(ADC/10);			//definição do Duty Cicle do PWM
+
+    	}
     }
 }
 
 ISR(ADC_vect){
-	if(dc != ADC/10)					//se houve variação no pot
-		seta_dc(ADC/10);				//definição do Duty Cicle do PWM
+	switch (channel){
+		case CURRENT_CHANNEL:
+			current = ADC / 5;
+			break;
+		case POT_CHANNEL:
+			dcReq = ADC / 10;
+			break;
+		case VOLTAGE_CHANNEL:
+			voltage = ADC / 30;
+			break;
+		case TEMP_CHANNEL:
+			temperature = ADC / 2;
+			break;
+		default: 
+			break;
+	}
 	adcStartConversion();
 }
 
 ISR(TIMER1_COMPA_vect){
-	if(dc > 0)
+	if(dc > 0 && on && dms)
 		setBit(PWM_PORT,PWM_BIT);		//Inicia o período em nível alto do PWM
 }
 
