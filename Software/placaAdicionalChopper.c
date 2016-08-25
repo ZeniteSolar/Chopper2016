@@ -60,13 +60,16 @@ uint8 minVotage = 30;
 void seta_dc(uint8 d_cycle)		//função para definição do Duty Cicle do PWM
 {
 	dcReq = d_cycle;
-	dc = dcReq;
-	if(dc < minDC)				// Comparação com o valor mínimo de Duty Cicle
+	if(dcReq < minDC)				// Comparação com o valor mínimo de Duty Cicle
 		dc = 0;
-	else
-		if(dc > maxDC)			//Comparação com o valor máximo de Duty Cicle
+	else{
+		if(dcReq > maxDC)			//Comparação com o valor máximo de Duty Cicle
 			dc = 100;
-	timer1SetCompareBValue((dc * (timer1GetCompareAValue()))/100);		//seta o valor do comparador B para gerar o DC requerido
+		else{
+			dc = dcReq;
+			timer1SetCompareBValue((dc * (timer1GetCompareAValue()))/100);		//seta o valor do comparador B para gerar o DC requerido
+		}
+	}
 }
 
 int main(void)
@@ -93,10 +96,14 @@ int main(void)
 	
     while(1)
     {
-    	if(dc != dcReq){
-    		seta_dc(ADC/10);			//definição do Duty Cicle do PWM
-
+    	if(on && dms){
+	    	if(dc != dcReq){
+	    		seta_dc(dcReq);			//definição do Duty Cicle do PWM
+	    	}
     	}
+    	else
+    		seta_dc(0);					//desliga o sistema
+
     }
 }
 
