@@ -25,37 +25,40 @@
 #define VOLTAGE_BIT 	PC2
 #define TEMP_BIT		PC3
 
-#define ON_PIN			PINB
-#define DMS_PIN			PINB
-#define ON_PORT			PORTB
-#define DMS_PORT		PORTB
-#define ON_BIT 			PB2
-#define DMS_BIT 		PB3
+#define ON_PIN			PIND
+#define DMS_PIN			PIND
+#define ON_PORT			PORTD
+#define DMS_PORT		PORTD
+#define ON_BIT 			PD5
+#define DMS_BIT 		PD4
 
 //definem em qual pino sairá o PWM
 #define PWM_DDR 		DDRB
 #define PWM_PORT 		PORTB
 #define PWM_BIT 		PB1
 
-/*
-#define BUZZER_DDR 		DDRB
-#define BUZZER_PORT 	PORTB
-#define BUZZER_BIT 		PB4
-*/
+
+#define BUZZER_DDR 		DDRC
+#define BUZZER_PORT 	PORTC
+#define BUZZER_BIT 		PC4
+
+ #define LED_DDR 		DDRC
+#define LED_PORT 		PORTC
+#define LED_BIT 		PC5
 
 //modos de operação, definem quem controla o acionamento
 #define CAN 			0
 #define SERIAL 			1
 #define POT 			2
 
-#define maxCont 		16
+#define maxCont 		3
 
 //uint8 mode = SERIAL;
 
 int16 cont = 0;
 
-uint8 channel = POT_CHANNEL;
-uint16 freq = 500;
+uint8 channel = POT_CHANNEL;	//canal do ad
+uint16 freq = 1000;				//freq do pwm
 uint8 current = 0;
 uint8 maxCurrent = 100;
 uint8 minDC = 10;
@@ -63,8 +66,8 @@ uint8 dc = 0;
 uint8 dcReq = 0;				//armazena o valor do dc requisitado
 uint8 maxDC = 90;
 uint8 maxDV = 7;				//define a variação máxima, x V/s
-uint8 on = 1;					
-uint8 dms = 1;					
+uint8 on = 0;					
+uint8 dms = 0;					
 uint8 temperature = 50;
 uint8 maxTemp = 70;				//temperatura maxima, desliga o sistema
 uint8 criticalTemp = 60;		//temperatura critica
@@ -90,6 +93,8 @@ void seta_dc(uint8 d_cycle)		//função para definição do Duty Cicle do PWM
 
 int main(void)
 {
+	
+	// CONFIGURA ADC
 	clrBit(DDRC,POT_BIT);		//SETA O PINO DO ADC COMO ENTRADA
 	adcConfig(ADC_MODE_SINGLE_CONVERSION, ADC_REFRENCE_POWER_SUPPLY , ADC_PRESCALER_128);
 	adcSelectChannel(POT_CHANNEL);
@@ -98,6 +103,7 @@ int main(void)
 	adcEnable();
 	adcStartConversion();
 	
+	// CONFIGURA PWM
 	timer1Config(TIMER_B_MODE_CTC, TIMER_A_PRESCALER_64);
 	timer1ClearCompareBInterruptRequest();									
 	timer1ClearCompareAInterruptRequest();
@@ -105,7 +111,12 @@ int main(void)
 	timer1ActivateCompareAInterrupt();									//ativa a interrupcao do compB
 	timer1SetCompareAValue((F_CPU/64)/freq);							//valor do comparador A,  define a frequencia
 	timer1SetCompareBValue((dc * (timer1GetCompareAValue()))/100);		//valor do comparador B,  define Duty Cicle
-	
+
+	// CONFIGURA A INTERRUPÇÃO DE CONTROLE(60Hz)
+	timer0Config(TIMER_A_MODE_NORMAL, TIMER_A_PRESCALER_1024);			
+	timer0ClearOverflowInterruptRequest();								//limpa a interrupcao de OVF
+	timer0ActivateOverflowInterrupt();							
+		
 	sei();
 	
 	setBit(PWM_DDR,PWM_BIT);			//define o pino do pwm como saída
@@ -113,43 +124,21 @@ int main(void)
 	setBit(ON_PORT,ON_BIT);				//habilita o pull-up da chave on
 	setBit(DMS_PORT,DMS_BIT);			//habilita o pull-up da chave dms
 
-//
+//configura o buzzer
+	setBit(BUZZER_DDR,BUZZER_BIT);			
+	setBit(BUZZER_PORT,BUZZER_BIT);
+	_delay_ms(1000);
+	clrBit(BUZZER_PORT,BUZZER_BIT);
+
+/*
 	//pino usado somente para teste no proteus
 	setBit(DDRD,PD0);			
 	setBit(PORTD,PD0);			
-//
+*/
 
     while(1)
     {
-    	setBit(PIND,PD0);
-    	on = isBitClr(ON_PIN,ON_BIT);
-    	dms = isBitClr(DMS_PIN,DMS_BIT);
-    	if(on && dms){
-	    	if(dc != dcReq){
-	    		if(dcReq > dc)
-	    			if(cont == maxCont){
-	    				if(dc == 0)
-	    					dc = minDC;
-	    				seta_dc(dc+1);
-	    				cont = 0;
-	    			}
-	    			else
-	    				cont++;
-	    		else
-	    			seta_dc(dcReq);			//definição do Duty Cicle do PWM
-	    	}
-    	}
-    	else{
-    		if(dc != 0)					//se o sistema ainda nao esta desligado
-    			seta_dc(0);				//desliga o sistema
-    	}
-    	/*if(temperature > criticalTemp){
-    		setBit(BUZZER_PORT,BUZZER_BIT);
-    		if(temperature > maxTemp){
-    			seta_dc(0);
-    		}
-    	}
-    	*/
+    	
     }
 }
 
@@ -171,11 +160,12 @@ ISR(ADC_vect){
 		default: 
 			break;
 	}
-	if(channel == LAST_CHANNEL)
+	/*if(channel == LAST_CHANNEL)
 		channel = FIRST_CHANNEL;
 	else
 		channel ++;
 	adcSelectChannel(channel);
+	*/
 	adcStartConversion();
 }
 
@@ -187,4 +177,45 @@ ISR(TIMER1_COMPA_vect){
 ISR(TIMER1_COMPB_vect){
 	if(dc < 100)
 		clrBit(PWM_PORT,PWM_BIT);		//Inicia o período em nível baixo do PWM
+}
+
+//60Hz
+ISR(TIMER0_OVF_vect){
+	//setBit(PIND,PD0);
+    	on = isBitClr(ON_PIN,ON_BIT);
+    	dms = isBitClr(DMS_PIN,DMS_BIT);
+    	if(on && dms)
+    	{
+	    	if(dc != dcReq)
+	    	{
+	    		if(dcReq > dc && dcReq > (minDC + 5))
+	    		{
+	    			if(cont == maxCont)
+	    			{
+	    				if(dc == 0)
+	    					seta_dc(minDC);
+	    				else
+	    					seta_dc(dc+1);
+	    				cont = 0;
+	    			}
+	    			else
+	    				cont++;
+	    		}
+	    		else
+	    			if (dcReq < dc)
+	    				seta_dc(dcReq);			//definição do Duty Cicle do PWM
+	    	}
+    	}
+    	else
+    	{
+    		if(dc != 0)					//se o sistema ainda nao esta desligado
+    			seta_dc(0);				//desliga o sistema
+    	}
+    	/*if(temperature > criticalTemp){
+    		setBit(BUZZER_PORT,BUZZER_BIT);
+    		if(temperature > maxTemp){
+    			seta_dc(0);
+    		}
+    	}
+    	*/
 }
