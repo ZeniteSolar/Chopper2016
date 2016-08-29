@@ -1,7 +1,0 @@
-Removed Pin From Net: NetName=+VBAT Pin=R13-1
-Added Component: Designator=P15(t-block)
-Added Pin To Net: NetName=SOURCE Pin=P15-1
-Added Pin To Net: NetName=NetC13_1 Pin=P15-2
-Added Pin To Net: NetName=+24V Pin=P15-3
-Added Member To Class: ClassName=Chopper PMDC Member=Component P15 WE-Terminal Blocks Screw Type 691103110003
-Added Room: Name=Chopper PMDC
