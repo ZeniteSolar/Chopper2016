@@ -62,62 +62,76 @@
 
 #define maxCont 		3
 
+#define MAX_FREQ 		1000
+#define MIN_FREQ 		500
 //uint8 mode = SERIAL;
 
  // Bit field flags
-struct system_flags{
-	uint8 warnnig		: 1;
+struct system_flags
+{
+	uint8 warning		: 1;
 	uint8 erro 			: 1;
-	uint8 mode			: 2;
+	uint8 mode			: 2;//modos de operação, definem quem controla o acionamento
 	uint8 on			: 1;
 	uint8 dms	    	: 1;
 	uint8 				: 0;//completa a variavel
 };
 typedef struct system_flags flags_t;
 
+struct system_status
+{
+	uint16 freq;				//freq do pwm
+	uint8 current;
+	uint8 dc;
+	uint8 temperature;
+	uint8 voltage;
+	uint8 on;
+};
+typedef struct system_status status_t;
+
+
 flags_t flags;
+status_t status;
 int16 cont = 0;
 
 uint8 channel = POT_CHANNEL;	//canal do ad
-uint16 freq = 1000;				//freq do pwm
-uint8 current = 0;
+uint16 freqReq = 0;				//frequencia requisitada
 uint8 maxCurrent = 100;
 uint8 minDC = 10;
-uint8 dc = 0;
 uint8 dcReq = 0;				//armazena o valor do dc requisitado
 uint8 maxDC = 90;
 uint8 maxDV = 7;				//define a variação máxima, x V/s				
-uint8 temperature = 0;
 uint8 maxTemp = 70;				//temperatura maxima, desliga o sistema
 uint8 criticalTemp = 60;		//temperatura critica
-uint8 voltage = 0;
 uint8 minVotage = 30;
 
 void seta_dc(uint8 d_cycle)		//função para definição do Duty Cicle do PWM
 {
 	dcReq = d_cycle;
 	if(dcReq < minDC)				// Comparação com o valor mínimo de Duty Cicle
-		dc = 0;
+		status.dc = 0;
 	else
 	{
 		if(dcReq > maxDC)			//Comparação com o valor máximo de Duty Cicle
-			dc = 100;
+			status.dc = 100;
 		else
 		{
-			dc = dcReq;
-			timer1SetCompareBValue((dc * (timer1GetCompareAValue()))/100);		//seta o valor do comparador B para gerar o DC requerido
+			status.dc = dcReq;
+			timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);		//seta o valor do comparador B para gerar o DC requerido
 		}
 	}
 }
 
 //esvazia o buffer de entrada da usart
-void esvaziaBuffer(){
+void esvaziaBuffer()
+{
 	while(!usartIsReceiverBufferEmpty())
 		usartGetDataFromReceiverBuffer();
 }
 
 //envia uma msg usando o protocolo GUI
-void stringTransmit(char* texto){
+void stringTransmit(char* texto)
+{
 	uint8 i = 0;
 	usartTransmit(INICIODOPACOTE);
 	for(i = 0; texto[i] != '\0'; i++)
@@ -126,7 +140,8 @@ void stringTransmit(char* texto){
 }
 
 //convert uint16 to string of 4 characters
-void uint16ToString4(char* str,uint16 value){
+void uint16ToString4(char* str,uint16 value)
+{
 	str[4] = '\0';
 	str[3] = (char ) (value%10 + 48);
 	str[2] = (char) ((value%100) / 10 + 48);
@@ -135,7 +150,8 @@ void uint16ToString4(char* str,uint16 value){
 }
 
 //convert uint8 to string of 4 characters
-void uint8ToString4(char* str,uint16 value){
+void uint8ToString4(char* str,uint16 value)
+{
 	str[4] = '\0';
 	str[3] = (char ) (value%10 + 48);
 	str[2] = (char) ((value%100) / 10 + 48);
@@ -144,7 +160,8 @@ void uint8ToString4(char* str,uint16 value){
 }
 
 //convert string of 4 characters uint16
-uint16 string4ToUint16(char* str){
+uint16 string4ToUint16(char* str)
+{
 	uint16 value;
 	value = (uint16) (str[0]-48)*1000 + (str[1]-48)*100 
 	+ (str[2]-48)*10 + str[3]-48;
@@ -152,7 +169,8 @@ uint16 string4ToUint16(char* str){
 }
 
 //convert string of 4 characters uint8
-uint8 string4Touint8(char* str){
+uint8 string4Touint8(char* str)
+{
 	uint8 value;
 	value = (uint8) ((str[1]-48)*100 
 	+ (str[2]-48)*10 + str[3]-48);
@@ -162,6 +180,7 @@ uint8 string4Touint8(char* str){
 int main(void)
 {
 	flags.mode = POT_MODE;
+	status.freq = 1000;
 	// VARIAVEIS LOCAIS;
 	char frameData[50];
 	uint8 frameIndex = 0;
@@ -184,19 +203,21 @@ int main(void)
 	timer1ClearCompareAInterruptRequest();
 	timer1ActivateCompareBInterrupt();									//ativa a interrupcao do compA
 	timer1ActivateCompareAInterrupt();									//ativa a interrupcao do compB
-	timer1SetCompareAValue((F_CPU/64)/freq);							//valor do comparador A,  define a frequencia
-	timer1SetCompareBValue((dc * (timer1GetCompareAValue()))/100);		//valor do comparador B,  define Duty Cicle
+	timer1SetCompareAValue((F_CPU/64)/status.freq);							//valor do comparador A,  define a frequencia
+	timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);		//valor do comparador B,  define Duty Cicle
 
 	// CONFIGURA A INTERRUPÇÃO DE CONTROLE(60Hz)
 	timer0Config(TIMER_A_MODE_NORMAL, TIMER_A_PRESCALER_1024);			
 	timer0ClearOverflowInterruptRequest();								//limpa a interrupcao de OVF
 	timer0ActivateOverflowInterrupt();							
-	
-	// CONFIGURA A USART
-	usartConfig(USART_MODE_ASYNCHRONOUS,USART_BAUD_9600 ,USART_DATA_BITS_8,USART_PARITY_NONE,USART_STOP_BIT_SINGLE);
-	usartEnableReceiver();
-	usartEnableTransmitter();
-	usartActivateReceptionCompleteInterrupt();
+	if (flags.mode == SERIAL_MODE)
+	{
+		// CONFIGURA A USART
+		usartConfig(USART_MODE_ASYNCHRONOUS,USART_BAUD_9600 ,USART_DATA_BITS_8,USART_PARITY_NONE,USART_STOP_BIT_SINGLE);
+		usartEnableReceiver();
+		usartEnableTransmitter();
+		usartActivateReceptionCompleteInterrupt();
+	}
 
 	sei();
 	
@@ -221,21 +242,26 @@ int main(void)
     {
     	if(flags.mode == SERIAL_MODE)
     	{
-	    	while(!usartIsReceiverBufferEmpty()){
+	    	while(!usartIsReceiverBufferEmpty())
+	    	{
 				frameData[frameIndex++] = usartGetDataFromReceiverBuffer();
-				if ((frameData[frameIndex-1] == FINALDOPACOTE)){//se esta no final da palavra
-					if(frameData[0] == INICIODOPACOTE ){//verifica se o inicio da palavra esta correto
+				if ((frameData[frameIndex-1] == FINALDOPACOTE))
+				{//se esta no final da palavra
+					if(frameData[0] == INICIODOPACOTE )
+					{//verifica se o inicio da palavra esta correto
 						strcpy(recebido,frameData);
 						pos = (recebido[2]-48) + (recebido[1] - 48)*10;
-						if(frameIndex == GETWORDSIZE){
+						if(frameIndex == GETWORDSIZE)
+						{
 							memcpy( recebido,  (recebido+1), 2);
 							recebido[2] = '\0';//isola o id
-							switch (pos){
+							switch (pos)
+							{
 								case 0:
 									strcpy(msgToSend,"OK");
 									break;
 								case 1:
-									uint16ToString4(msgToSend,freq);
+									uint16ToString4(msgToSend,status.freq);
 									break;
 								case 2:
 									uint8ToString4(msgToSend,maxCurrent);
@@ -268,16 +294,16 @@ int main(void)
 									uint8ToString4(msgToSend,minVotage);
 									break;
 								case 10:
-									uint8ToString4(msgToSend,dc);
+									uint8ToString4(msgToSend,status.dc);
 									break;
 								case 11:
-									uint8ToString4(msgToSend,temperature);
+									uint8ToString4(msgToSend,status.temperature);
 									break;
 								case 12:
-									uint8ToString4(msgToSend,current);
+									uint8ToString4(msgToSend,status.current);
 									break;
 								case 13:
-									uint8ToString4(msgToSend,voltage);
+									uint8ToString4(msgToSend,status.voltage);
 									break;
 								default:
 									strcpy(msgToSend,"ERRO");
@@ -287,17 +313,22 @@ int main(void)
 
 							stringTransmit(msgToSend);
 						}
-						else{
-							if(frameIndex == SETWORDSIZE){
-							
+						else
+						{
+							if(frameIndex == SETWORDSIZE)
+							{
 								memcpy((void *) recebido, (void *) (recebido+3), 4);//isola somente o valor, usando 4 caracteres
 								recebido[4] = '\0';
 
 								switch (pos){
 									case 1:
-										freq = string4ToUint16(recebido);
-										timer1SetCompareAValue((F_CPU/1024)/freq);
-										timer1SetCompareBValue((dc * (timer1GetCompareAValue()))/100);//bota o dc
+										freqReq = string4ToUint16(recebido);
+										if (freqReq >= MIN_FREQ && freqReq <= MAX_FREQ)
+										{
+											status.freq = freqReq;
+											timer1SetCompareAValue((F_CPU/1024)/status.freq);
+											timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
+										}
 										break;
 									case 2:
 										maxCurrent = string4Touint8(recebido);
@@ -305,35 +336,39 @@ int main(void)
 									case 3:
 										maxDC = string4Touint8(recebido);
 										if(dcReq > maxDC)
-											dc = 100;
+											status.dc = 100;
 										else
-											dc = dcReq;
-										timer1SetCompareBValue((dc * (timer1GetCompareAValue()))/100);//bota o dc
+											status.dc = dcReq;
+										timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
 										break;
 									case 4:
 										minDC = string4Touint8(recebido);
 										if(dcReq < minDC)
-											dc = 0;
+											status.dc = 0;
 										else
-											dc = dcReq;
-										timer1SetCompareBValue((dc * (timer1GetCompareAValue()))/100);//bota o dc
+											status.dc = dcReq;
+										timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
 										break;
 									case 5:
 										maxDV = string4Touint8(recebido);
 										break;
 									case 6 :
-										if(recebido[3] == '1'){
+										if(recebido[3] == '1')
+										{
 											flags.on = 1;
 										}
-										if(recebido[3] == '0'){
+										if(recebido[3] == '0')
+										{
 											flags.on = 0;
 										}
 										break;
 									case 7:
-										if(recebido[3] == '1'){
+										if(recebido[3] == '1')
+										{
 											flags.dms = 1;
 										}
-										if(recebido[3] == '0'){
+										if(recebido[3] == '0')
+										{
 											flags.dms = 0;
 										}
 										break;
@@ -345,13 +380,13 @@ int main(void)
 										break;
 									case 10:
 										dcReq = string4Touint8(recebido);
-										dc = dcReq;
-										if(dc < minDC)
-											dc = 0;
+										status.dc = dcReq;
+										if(status.dc < minDC)
+											status.dc = 0;
 										else
-											if(dc > maxDC)
-												dc = 100;
-										timer1SetCompareBValue((dc * (timer1GetCompareAValue()))/100);//bota o dc
+											if(status.dc > maxDC)
+												status.dc = 100;
+										timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
 										break;
 									case 11:
 									case 12:
@@ -361,13 +396,15 @@ int main(void)
 										stringTransmit("ERRO");
 								}
 							}
-							else{
+							else
+							{
 								stringTransmit("wrong size");	
 								esvaziaBuffer();
 							}
 						}
 					}
-					else{//se o inicio da palavra nao esta correto
+					else
+					{//se o inicio da palavra nao esta correto
 						esvaziaBuffer();
 					}
 					frameIndex = 0;
@@ -377,11 +414,12 @@ int main(void)
     }
 }
 
-ISR(ADC_vect){
+ISR(ADC_vect)
+{
 	switch (channel)
 	{
 		case CURRENT_CHANNEL:
-			current = ADC / 5;
+			status.current = ADC / 5;
 			break;
 		case POT_CHANNEL:
 			if(flags.mode == POT_MODE)
@@ -389,10 +427,10 @@ ISR(ADC_vect){
 			channel = TEMP_CHANNEL;
 			break;
 		case VOLTAGE_CHANNEL:
-			voltage = ADC / 30;
+			status.voltage = ADC / 30;
 			break;
 		case TEMP_CHANNEL:
-			temperature = ADC / 2;
+			status.temperature = ADC / 2;
 			channel = POT_CHANNEL;
 			break;
 		default: 
@@ -409,13 +447,13 @@ ISR(ADC_vect){
 
 ISR(TIMER1_COMPA_vect)
 {
-	if(dc > 0 && flags.on && flags.dms)
+	if(status.dc > 0 && flags.on && flags.dms)
 		setBit(PWM_PORT,PWM_BIT);		//Inicia o período em nível alto do PWM
 }
 
 ISR(TIMER1_COMPB_vect)
 {
-	if(dc < 100)
+	if(status.dc < 100)
 		clrBit(PWM_PORT,PWM_BIT);		//Inicia o período em nível baixo do PWM
 }
 
@@ -427,40 +465,40 @@ ISR(TIMER0_OVF_vect)
 	flags.dms = isBitClr(DMS_PIN,DMS_BIT);
 	if(flags.on && flags.dms)
 	{
-    	if(dc != dcReq)
+    	if(status.dc != dcReq)
     	{
-    		if(dcReq > dc && dcReq > (minDC + 5))
+    		if(dcReq > status.dc && dcReq > (minDC + 5))
     		{
     			if(cont == maxCont)
     			{
-    				if(dc == 0)
+    				if(status.dc == 0)
     					seta_dc(minDC);
     				else
-    					seta_dc(dc+1);
+    					seta_dc(status.dc+1);
     				cont = 0;
     			}
     			else
     				cont++;
     		}
     		else
-    			if (dcReq < dc)
+    			if (dcReq < status.dc)
     				seta_dc(dcReq);			//definição do Duty Cicle do PWM
     	}
 	}
 	else
 	{
-		if(dc != 0)					//se o sistema ainda nao esta desligado
+		if(status.dc != 0)					//se o sistema ainda nao esta desligado
 			seta_dc(0);				//desliga o sistema
 	}
-	if(temperature > criticalTemp && !flags.warnnig)
+	if(status.temperature > criticalTemp && !flags.warning)
 	{
-		flags.warnnig = 1;
+		flags.warning = 1;
 		setBit(BUZZER_PORT,BUZZER_BIT);
 	}
 	else
-		if(temperature < criticalTemp && flags.warnnig)
+		if(status.temperature < criticalTemp && flags.warning)
 		{
-			flags.warnnig = 0;
+			flags.warning = 0;
 			clrBit(BUZZER_PORT,BUZZER_BIT);
 		}
 }
