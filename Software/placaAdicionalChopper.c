@@ -95,7 +95,6 @@ status_t status;
 int16 cont = 0;
 
 uint8 channel = POT_CHANNEL;	//canal do ad
-uint16 freqReq = 0;				//frequencia requisitada
 uint8 maxCurrent = 100;
 uint8 minDC = 10;
 uint8 dcReq = 0;				//armazena o valor do dc requisitado
@@ -120,6 +119,19 @@ void seta_dc(uint8 d_cycle)		//função para definição do Duty Cicle do PWM
 			timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);		//seta o valor do comparador B para gerar o DC requerido
 		}
 	}
+}
+
+void seta_freq(uint16 freqReq)		//função para definição da frequencia do PWM
+{
+	if(freqReq < MIN_FREQ)
+		status.freq = MIN_FREQ;
+	else
+		if(freqReq > MAX_FREQ)
+			status.freq = MAX_FREQ;
+		else
+			status.freq = freqReq;
+	timer1SetCompareAValue((F_CPU/1024)/status.freq);
+	timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
 }
 
 //esvazia o buffer de entrada da usart
@@ -322,55 +334,32 @@ int main(void)
 
 								switch (pos){
 									case 1:
-										freqReq = string4ToUint16(recebido);
-										if (freqReq >= MIN_FREQ && freqReq <= MAX_FREQ)
-										{
-											status.freq = freqReq;
-											timer1SetCompareAValue((F_CPU/1024)/status.freq);
-											timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
-										}
+										seta_freq(string4ToUint16(recebido));
 										break;
 									case 2:
 										maxCurrent = string4Touint8(recebido);
 										break;
 									case 3:
 										maxDC = string4Touint8(recebido);
-										if(dcReq > maxDC)
-											status.dc = 100;
-										else
-											status.dc = dcReq;
-										timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
 										break;
 									case 4:
 										minDC = string4Touint8(recebido);
-										if(dcReq < minDC)
-											status.dc = 0;
-										else
-											status.dc = dcReq;
-										timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
+										seta_dc(dcReq);
 										break;
 									case 5:
 										maxDV = string4Touint8(recebido);
 										break;
 									case 6 :
 										if(recebido[3] == '1')
-										{
 											flags.on = 1;
-										}
 										if(recebido[3] == '0')
-										{
 											flags.on = 0;
-										}
 										break;
 									case 7:
 										if(recebido[3] == '1')
-										{
 											flags.dms = 1;
-										}
 										if(recebido[3] == '0')
-										{
 											flags.dms = 0;
-										}
 										break;
 									case 8:
 										maxTemp = string4Touint8(recebido);
@@ -379,14 +368,7 @@ int main(void)
 										minVotage = string4Touint8(recebido);
 										break;
 									case 10:
-										dcReq = string4Touint8(recebido);
-										status.dc = dcReq;
-										if(status.dc < minDC)
-											status.dc = 0;
-										else
-											if(status.dc > maxDC)
-												status.dc = 100;
-										timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
+										seta_dc(string4Touint8(recebido));
 										break;
 									case 11:
 									case 12:
