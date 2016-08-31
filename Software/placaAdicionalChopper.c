@@ -10,6 +10,7 @@
 #include "bibliotecas/globalDefines.h"
 #include "bibliotecas/ATmega328.h"
 #include <string.h>
+//#include "bibliotecas/can.h"
 
 #define BYTES_TO_RECEIVE 	18 // Number of bytes that uC have to receive on communication
 
@@ -179,6 +180,7 @@ uint8 string4Touint8(char* str)
 
 int main(void)
 {
+	_delay_ms(1000);
 	flags.mode = POT_MODE;
 	status.freq = 1000;
 	// VARIAVEIS LOCAIS;
@@ -488,7 +490,7 @@ ISR(TIMER0_OVF_vect)
 	else
 	{
 		if(status.dc != 0)					//se o sistema ainda nao esta desligado
-			seta_dc(0);				//desliga o sistema
+			seta_dc(0);						//desliga o sistema
 	}
 	if(status.temperature > criticalTemp && !flags.warning)
 	{
