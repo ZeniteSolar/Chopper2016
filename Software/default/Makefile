@@ -53,6 +53,7 @@ ATmega328.o: ../bibliotecas/ATmega328.c
 	
 ##Link
 $(TARGET): $(OBJECTS)
+	echo "aqui"
 	 $(CC) $(LDFLAGS) $(OBJECTS) $(LINKONLYOBJECTS) $(LIBDIRS) $(LIBS) -o $(TARGET)
 
 %.hex: $(TARGET)

@@ -22,7 +22,7 @@
 #define F_CPU 			16000000UL
 
 #define CURRENT_CHANNEL ADC_CHANNEL_0
-#define POT_CHANNEL 	ADC_CHANNEL_1
+#define POT_CHANNEL 	ADC_CHANNEL_1 
 #define VOLTAGE_CHANNEL ADC_CHANNEL_2
 #define TEMP_CHANNEL	ADC_CHANNEL_3
 
@@ -94,7 +94,7 @@ flags_t flags;
 status_t status;
 int16 cont = 0;
 
-uint8 channel = POT_CHANNEL;	//canal do ad
+uint8 channel = TEMP_CHANNEL;	//canal do ad
 uint8 maxCurrent = 100;
 uint8 minDC = 10;
 uint8 dcReq = 0;				//armazena o valor do dc requisitado
@@ -106,22 +106,21 @@ uint8 minVotage = 30;
 
 void seta_dc(uint8 d_cycle)		//função para definição do Duty Cicle do PWM
 {
-	dcReq = d_cycle;
-	if(dcReq < minDC)				// Comparação com o valor mínimo de Duty Cicle
+	if(d_cycle < minDC)				// Comparação com o valor mínimo de Duty Cicle
 		status.dc = 0;
 	else
 	{
-		if(dcReq > maxDC)			//Comparação com o valor máximo de Duty Cicle
+		if(d_cycle > maxDC)			//Comparação com o valor máximo de Duty Cicle
 			status.dc = 100;
 		else
 		{
-			status.dc = dcReq;
+			status.dc = d_cycle;
 			timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);		//seta o valor do comparador B para gerar o DC requerido
 		}
 	}
 }
 
-void seta_freq(uint16 freqReq)		//função para definição da frequencia do PWM
+inline void seta_freq(uint16 freqReq)		//função para definição da frequencia do PWM
 {
 	if(freqReq < MIN_FREQ)
 		status.freq = MIN_FREQ;
@@ -191,8 +190,10 @@ uint8 string4Touint8(char* str)
 
 int main(void)
 {
-	flags.mode = POT_MODE;
+	flags.mode = SERIAL_MODE;
 	status.freq = 1000;
+	flags.on = 1;
+	flags.dms = 1;
 	// VARIAVEIS LOCAIS;
 	char frameData[50];
 	uint8 frameIndex = 0;
@@ -221,7 +222,9 @@ int main(void)
 	// CONFIGURA A INTERRUPÇÃO DE CONTROLE(60Hz)
 	timer0Config(TIMER_A_MODE_NORMAL, TIMER_A_PRESCALER_1024);			
 	timer0ClearOverflowInterruptRequest();								//limpa a interrupcao de OVF
-	timer0ActivateOverflowInterrupt();							
+	timer0ActivateOverflowInterrupt();
+
+	//se estiver no modo Serial configura a usart							
 	if (flags.mode == SERIAL_MODE)
 	{
 		// CONFIGURA A USART
@@ -238,17 +241,17 @@ int main(void)
 	setBit(ON_PORT,ON_BIT);				//habilita o pull-up da chave on
 	setBit(DMS_PORT,DMS_BIT);			//habilita o pull-up da chave dms
 
-//configura o buzzer e da sinal de alerta de ligação
+	//configura o buzzer e da sinal de alerta de ligação
 	setBit(BUZZER_DDR,BUZZER_BIT);			
 	setBit(BUZZER_PORT,BUZZER_BIT);
 	_delay_ms(1000);
 	clrBit(BUZZER_PORT,BUZZER_BIT);
 
-/*
+	/*
 	//pino usado somente para teste no proteus
 	setBit(DDRD,PD0);			
 	setBit(PORTD,PD0);			
-*/
+	*/
 
     while(1)
     {
@@ -368,7 +371,8 @@ int main(void)
 										minVotage = string4Touint8(recebido);
 										break;
 									case 10:
-										seta_dc(string4Touint8(recebido));
+										//seta_dc(string4Touint8(recebido));
+										dcReq = string4Touint8(recebido);
 										break;
 									case 11:
 									case 12:
@@ -401,7 +405,8 @@ ISR(ADC_vect)
 	switch (channel)
 	{
 		case CURRENT_CHANNEL:
-			status.current = ADC / 5;
+			status.current = ADC;// / 5;
+			channel = TEMP_CHANNEL;
 			break;
 		case POT_CHANNEL:
 			if(flags.mode == POT_MODE)
@@ -413,7 +418,7 @@ ISR(ADC_vect)
 			break;
 		case TEMP_CHANNEL:
 			status.temperature = ADC / 2;
-			channel = POT_CHANNEL;
+			channel = CURRENT_CHANNEL;
 			break;
 		default: 
 			break;
@@ -439,14 +444,18 @@ ISR(TIMER1_COMPB_vect)
 		clrBit(PWM_PORT,PWM_BIT);		//Inicia o período em nível baixo do PWM
 }
 
-//60Hz
+//controle 60Hz
 ISR(TIMER0_OVF_vect)
 {
 	//setBit(PIND,PD0);
-	flags.on = isBitClr(ON_PIN,ON_BIT);
-	flags.dms = isBitClr(DMS_PIN,DMS_BIT);
+	if(flags.mode == POT_MODE)
+	{
+		flags.on = isBitClr(ON_PIN,ON_BIT);
+		flags.dms = isBitClr(DMS_PIN,DMS_BIT);
+	}
 	if(flags.on && flags.dms)
 	{
+		//stringTransmit("@teste*");
     	if(status.dc != dcReq)
     	{
     		if(dcReq > status.dc && dcReq > (minDC + 5))
@@ -469,7 +478,8 @@ ISR(TIMER0_OVF_vect)
 	}
 	else
 	{
-		if(status.dc != 0)					//se o sistema ainda nao esta desligado
+		stringTransmit("@teste2*");
+		if(status.dc != 0)			//se o sistema ainda nao esta desligado
 			seta_dc(0);				//desliga o sistema
 	}
 	if(status.temperature > criticalTemp && !flags.warning)
