@@ -183,6 +183,7 @@ int main(void)
 	_delay_ms(1000);
 	flags.mode = POT_MODE;
 	status.freq = 1000;
+	status.on = 0;			//indica que o sistema inicia sem acionar o motor
 	// VARIAVEIS LOCAIS;
 	char frameData[50];
 	uint8 frameIndex = 0;
@@ -465,7 +466,11 @@ ISR(TIMER0_OVF_vect)
 	//setBit(PIND,PD0);
 	flags.on = isBitClr(ON_PIN,ON_BIT);
 	flags.dms = isBitClr(DMS_PIN,DMS_BIT);
-	if(flags.on && flags.dms)
+	if(!(flags.on && flags.dms))					//informa ao sistema para nao acionar o motor caso botão ON e DMS estejam desligados.
+		status.on = 0;
+	if(dcReq<minDC && flags.on && flags.dms)		//informa ao sistema para acionar o motor apenas quando botão ON e DMS estejam ligados
+		status.on = 1;								//e o potenciometro esteja numa posicao correspondente a menos de 10% do DC do PWM.
+	if(status.on==1 && flags.on && flags.dms)		//inicia o acionamento do motor, com os as condições preliminares acima satisfeitas.
 	{
     	if(status.dc != dcReq)
     	{
