@@ -23,7 +23,7 @@
 #define F_CPU 			16000000UL
 
 #define CURRENT_CHANNEL ADC_CHANNEL_0
-#define POT_CHANNEL 	ADC_CHANNEL_1
+#define POT_CHANNEL 	ADC_CHANNEL_1 
 #define VOLTAGE_CHANNEL ADC_CHANNEL_2
 #define TEMP_CHANNEL	ADC_CHANNEL_3
 
@@ -95,8 +95,7 @@ flags_t flags;
 status_t status;
 int16 cont = 0;
 
-uint8 channel = POT_CHANNEL;	//canal do ad
-uint16 freqReq = 0;				//frequencia requisitada
+uint8 channel = TEMP_CHANNEL;	//canal do ad
 uint8 maxCurrent = 100;
 uint8 minDC = 10;
 uint8 dcReq = 0;				//armazena o valor do dc requisitado
@@ -108,19 +107,31 @@ uint8 minVoltage = 30;
 
 void seta_dc(uint8 d_cycle)		//função para definição do Duty Cicle do PWM
 {
-	dcReq = d_cycle;
-	if(dcReq < minDC)				// Comparação com o valor mínimo de Duty Cicle
+	if(d_cycle < minDC)				// Comparação com o valor mínimo de Duty Cicle
 		status.dc = 0;
 	else
 	{
-		if(dcReq > maxDC)			//Comparação com o valor máximo de Duty Cicle
+		if(d_cycle > maxDC)			//Comparação com o valor máximo de Duty Cicle
 			status.dc = 100;
 		else
 		{
-			status.dc = dcReq;
+			status.dc = d_cycle;
 			timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);		//seta o valor do comparador B para gerar o DC requerido
 		}
 	}
+}
+
+inline void seta_freq(uint16 freqReq)		//função para definição da frequencia do PWM
+{
+	if(freqReq < MIN_FREQ)
+		status.freq = MIN_FREQ;
+	else
+		if(freqReq > MAX_FREQ)
+			status.freq = MAX_FREQ;
+		else
+			status.freq = freqReq;
+	timer1SetCompareAValue((F_CPU/1024)/status.freq);
+	timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
 }
 
 //esvazia o buffer de entrada da usart
@@ -185,6 +196,7 @@ int main(void)
 	status.freq = 1000;
 	status.on = 0;			//indica que o sistema inicia sem acionar o motor
 	status.dc = 0;
+
 	// VARIAVEIS LOCAIS;
 	char frameData[50];
 	uint8 frameIndex = 0;
@@ -213,7 +225,9 @@ int main(void)
 	// CONFIGURA A INTERRUPÇÃO DE CONTROLE(60Hz)
 	timer0Config(TIMER_A_MODE_NORMAL, TIMER_A_PRESCALER_1024);			
 	timer0ClearOverflowInterruptRequest();								//limpa a interrupcao de OVF
-	timer0ActivateOverflowInterrupt();							
+	timer0ActivateOverflowInterrupt();
+
+	//se estiver no modo Serial configura a usart							
 	if (flags.mode == SERIAL_MODE)
 	{
 		// CONFIGURA A USART
@@ -230,17 +244,17 @@ int main(void)
 	setBit(ON_PORT,ON_BIT);				//habilita o pull-up da chave on
 	setBit(DMS_PORT,DMS_BIT);			//habilita o pull-up da chave dms
 
-//configura o buzzer e da sinal de alerta de ligação
+	//configura o buzzer e da sinal de alerta de ligação
 	setBit(BUZZER_DDR,BUZZER_BIT);			
 	setBit(BUZZER_PORT,BUZZER_BIT);
 	_delay_ms(1000);
 	clrBit(BUZZER_PORT,BUZZER_BIT);
 
-/*
+	/*
 	//pino usado somente para teste no proteus
 	setBit(DDRD,PD0);			
 	setBit(PORTD,PD0);			
-*/
+	*/
 
     while(1)
     {
@@ -326,55 +340,32 @@ int main(void)
 
 								switch (pos){
 									case 1:
-										freqReq = string4ToUint16(recebido);
-										if (freqReq >= MIN_FREQ && freqReq <= MAX_FREQ)
-										{
-											status.freq = freqReq;
-											timer1SetCompareAValue((F_CPU/1024)/status.freq);
-											timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
-										}
+										seta_freq(string4ToUint16(recebido));
 										break;
 									case 2:
 										maxCurrent = string4Touint8(recebido);
 										break;
 									case 3:
 										maxDC = string4Touint8(recebido);
-										if(dcReq > maxDC)
-											status.dc = 100;
-										else
-											status.dc = dcReq;
-										timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
 										break;
 									case 4:
 										minDC = string4Touint8(recebido);
-										if(dcReq < minDC)
-											status.dc = 0;
-										else
-											status.dc = dcReq;
-										timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
+										seta_dc(dcReq);
 										break;
 									case 5:
 										maxDV = string4Touint8(recebido);
 										break;
 									case 6 :
 										if(recebido[3] == '1')
-										{
 											flags.on = 1;
-										}
 										if(recebido[3] == '0')
-										{
 											flags.on = 0;
-										}
 										break;
 									case 7:
 										if(recebido[3] == '1')
-										{
 											flags.dms = 1;
-										}
 										if(recebido[3] == '0')
-										{
 											flags.dms = 0;
-										}
 										break;
 									case 8:
 										maxTemp = string4Touint8(recebido);
@@ -383,14 +374,8 @@ int main(void)
 										minVoltage = string4Touint8(recebido);
 										break;
 									case 10:
+										//seta_dc(string4Touint8(recebido));
 										dcReq = string4Touint8(recebido);
-										status.dc = dcReq;
-										if(status.dc < minDC)
-											status.dc = 0;
-										else
-											if(status.dc > maxDC)
-												status.dc = 100;
-										timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
 										break;
 									case 11:
 									case 12:
@@ -437,9 +422,8 @@ ISR(ADC_vect)
 			break;
 		case TEMP_CHANNEL:
 			status.temperature = ADC / 2;
+		default:
 			channel = CURRENT_CHANNEL;
-			break;
-		default: 
 			break;
 	}
 	/*if(channel == LAST_CHANNEL)
@@ -463,18 +447,22 @@ ISR(TIMER1_COMPB_vect)
 		clrBit(PWM_PORT,PWM_BIT);		//Inicia o período em nível baixo do PWM
 }
 
-//60Hz
+//controle 60Hz
 ISR(TIMER0_OVF_vect)
 {
-	//setBit(PIND,PD0);
-	flags.on = isBitClr(ON_PIN,ON_BIT);
-	flags.dms = isBitClr(DMS_PIN,DMS_BIT);
+	if(flags.mode == POT_MODE)
+	{
+		flags.on = isBitClr(ON_PIN,ON_BIT);
+		flags.dms = isBitClr(DMS_PIN,DMS_BIT);
+	}
 	if(!(flags.on && flags.dms))					//informa ao sistema para nao acionar o motor caso botão ON e DMS estejam desligados.
 		status.on = 0;
 	if(dcReq<minDC && flags.on && flags.dms)		//informa ao sistema para acionar o motor apenas quando botão ON e DMS estejam ligados
 		status.on = 1;								//e o potenciometro esteja numa posicao correspondente a menos de 10% do DC do PWM.
-	if(status.on && flags.on && flags.dms)		//inicia o acionamento do motor, com os as condições preliminares acima satisfeitas.
+
+	if(status.on)		//inicia o acionamento do motor, com os as condições preliminares acima satisfeitas.
 	{
+		//stringTransmit("@teste*");
     	if(status.dc != dcReq)
     	{
     		if(dcReq > status.dc && dcReq > (minDC + 5))

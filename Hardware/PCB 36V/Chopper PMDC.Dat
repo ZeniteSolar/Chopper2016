@@ -1,51 +1,34 @@
-Field=Quantity~Integer~Quantity~61|Field=Value~String~Value~100|Field=Comment~String~Comment~100|Field=Footprint~String~Footprint~187|ReportField=Currency~<none>|ReportField=ProductionQuantity~1|ReportField=ProjectFileName~Chopper PMDC.PrjPCB|ReportField=ProjectFullPath~C:\Users\marcioantonio\Desktop\BackupMARCIO\IFSC\Zenite\arquivos\DSB2016\Chopper 2016\Modulo_acionamento_chopperPMDC_canBusV.0\PCB 36V\Chopper PMDC.PrjPCB|ReportField=Title~Bill of Materials For Project [Chopper PMDC.PrjPCB] (No PCB Document Selected)|ReportField=TotalQuantity~95|ReportField=ReportTime~7:39:41 PM|ReportField=ReportDate~8/3/2016|ReportField=ReportDateTime~8/3/2016 7:39:41 PM|ReportField=OutputName~Bill of Materials|ReportField=OutputType~BOM_PartType|ReportField=GeneratorName~BOM|ReportField=GeneratorDescription~Bill of Materials|ReportField=VariantName~None|ReportField=Address1~|ReportField=Address2~|ReportField=Address3~|ReportField=Address4~|ReportField=Application_BuildNumber~|ReportField=ApprovedBy~|ReportField=Author~|ReportField=CheckedBy~|ReportField=CompanyName~|ReportField=CurrentDate~8/3/2016|ReportField=CurrentTime~7:28:01 PM|ReportField=Date~|ReportField=DocumentFullPathAndName~C:\Users\marcioantonio\Desktop\BackupMARCIO\IFSC\Zenite\arquivos\DSB2016\Chopper 2016\Modulo_acionamento_chopperPMDC_canBusV.0\PCB 36V\Chopper PMDC.SchDoc|ReportField=DocumentName~Chopper PMDC.SchDoc|ReportField=DocumentNumber~|ReportField=DrawnBy~|ReportField=Engineer~|ReportField=ImagePath~|ReportField=ModifiedDate~6/29/2016|ReportField=Organization~|ReportField=ProjectName~Chopper PMDC.PrjPCB|ReportField=Revision~|ReportField=Rule~|ReportField=SheetNumber~|ReportField=SheetTotal~|ReportField=Time~|ReportField=Title~|ReportField=DataSourceFileName~Chopper PMDC.PrjPCB|ReportField=DataSourceFullPath~C:\Users\marcioantonio\Desktop\BackupMARCIO\IFSC\Zenite\arquivos\DSB2016\Chopper 2016\Modulo_acionamento_chopperPMDC_canBusV.0\PCB 36V\Chopper PMDC.PrjPCB
-1||Buzzer|CapEltr-Rad4.1-Dpp3.0
-11|100nF|Cap|6-0805
-1|220nF|Cap|6-0805
-1|470uF 63V|Cap|CapEltr-Rad6.6-Dpp4.5
-1|470uF 25V|Cap|CapEltr-Rad4.1-Dpp3.0
-1|10uF|Cap|6-0805
-2|0.33uF|Eltr|6-0805
-2|1uF|Cer|1u25v
-4|22pF|Cap|CAPC3216L
-1|100nF|Cer|C0805
-1|4u7F 100V|Cap|cap4u7
-4|BYD77|BYD77|SOD87
-1|BYD77|Diode 1N4002|SOD87
-3|BYD77|1N4002|SOD87
-1|BYD77||SOD87
-3|MMSZ5232BT1G|5V|diode-0.4
-1|Led 0805 Vermelho|RED|6-0805
-8||Header 2X2|HDR2X2
-1||Deadman's Switch|HDR1X2
-1||ON/OFF|HDR1X2
-2||UART|HDR1X4
-2|3 pin Screw Terminal Block|WE-Terminal Blocks Screw Type 691103110003|hdr1x3, t-block
-1||POWER RElAY|HDR1X3
-2||2N2222|22-03
-1|180|Res1|6-0805
-1|0r|1%|6-0805
-1|22k|1%|6-0805
-2|33k|1%|6-0805
-1|3300|Res1|6-0805
-1|na|Res1|6-0805
-3|13k6|1%|6-0805
-3|?|Res1|6-0805
-5|10k|Res1|6-0805
-1|120|Res1|6-0805
-3|1k|Res1|6-0805
-1|0|Res1|6-0805
-1|20|Res1|6-0805
-1||Res1|Axial 0.8
-1|0.5R 5W|Res1|Axial 0.8
-2|IXFN420N10T|IXFN420N10T|SOT-227B
-1||LA150-P|LA150-P
-1|LT783|LM317|TO-220AB
-1|IR2127S|IR2127S|SO8_M
-1||LM7815|TO-220AB
-1||LM7805|TO-220AB
-1||ATmega328p|28P3
-1||LM35DT|TA03F
-1||MCP2515-E/P|PDIP300-P18
-1||MCP2551-E/P|PDIP300-P8
-2||16MHz|BCY-W2/E4.7
+Field=Quantity~Integer~Quantity~61|Field=Value~String~Value~100|Field=Comment~String~Comment~100|Field=Designator~String~Designator~112|Field=Description~String~Description~132|Field=Footprint~String~Footprint~187|ReportField=Currency~<none>|ReportField=ProductionQuantity~1|ReportField=ProjectFileName~Chopper PMDC.PrjPCB|ReportField=ProjectFullPath~C:\Users\marcioantonio\Desktop\BackupMARCIO\IFSC\Zenite\arquivos\DSB2016\Chopper 2016\git\Chopper2016\Hardware\PCB 36V\Chopper PMDC.PrjPCB|ReportField=Title~Bill of Materials For Project [Chopper PMDC.PrjPCB] (No PCB Document Selected)|ReportField=TotalQuantity~95|ReportField=ReportTime~2:59:16 PM|ReportField=ReportDate~9/1/2016|ReportField=ReportDateTime~9/1/2016 2:59:16 PM|ReportField=OutputName~Bill of Materials|ReportField=OutputType~BOM_PartType|ReportField=GeneratorName~BOM|ReportField=GeneratorDescription~Bill of Materials|ReportField=VariantName~None|ReportField=Address1~|ReportField=Address2~|ReportField=Address3~|ReportField=Address4~|ReportField=Application_BuildNumber~|ReportField=ApprovedBy~|ReportField=Author~|ReportField=CheckedBy~|ReportField=CompanyName~|ReportField=CurrentDate~9/1/2016|ReportField=CurrentTime~2:59:11 PM|ReportField=Date~|ReportField=DocumentFullPathAndName~C:\Users\marcioantonio\Desktop\BackupMARCIO\IFSC\Zenite\arquivos\DSB2016\Chopper 2016\git\Chopper2016\Hardware\PCB 36V\Chopper PMDC.SchDoc|ReportField=DocumentName~Chopper PMDC.SchDoc|ReportField=DocumentNumber~|ReportField=DrawnBy~|ReportField=Engineer~|ReportField=ImagePath~|ReportField=ModifiedDate~8/23/2016|ReportField=Organization~|ReportField=ProjectName~Chopper PMDC.PrjPCB|ReportField=Revision~|ReportField=Rule~|ReportField=SheetNumber~|ReportField=SheetTotal~|ReportField=Time~|ReportField=Title~|ReportField=DataSourceFileName~Chopper PMDC.PrjPCB|ReportField=DataSourceFullPath~C:\Users\marcioantonio\Desktop\BackupMARCIO\IFSC\Zenite\arquivos\DSB2016\Chopper 2016\git\Chopper2016\Hardware\PCB 36V\Chopper PMDC.PrjPCB
+26||2N2222, 16MHz, ATmega328p, Buzzer, Deadman's Switch, Header 2X2, LA150-P, LM35DT, LM7805, LM7815, MCP2515-E/P, MCP2551-E/P, ON/OFF, POWER RElAY, Res1, UART|Buzzer, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P13, P14, Q1, Q2, RS1, S*1, U3, U4, U5, U6, U7, U8, Y1, Y2|8-Bit AVR Microcontroller with 8K Bytes of In-System Programmable Flash Memory, Crystal Oscillator, Current Transducer, General Purpose Transistor NPN Silicon, Header, 2-Pin, Header, 2-Pin, Dual row, Header, 3-Pin, Header, 4-Pin, High-Speed CAN Transceiver, 8-Pin PDIP, Extended Temperature, Magnetic Transducer Buzzer, Positive-Voltage Regulator, Precision Centigrade Temperature Sensor, Resistor, Stand-Alone CAN Controller With SPI Interface, 18-Pin PDIP, Extended Temperature|22-03, 28P3, Axial 0.8, BCY-W2/E4.7, CapEltr-Rad4.1-Dpp3.0, HDR1X2, HDR1X3, HDR1X4, HDR2X2, LA150-P, PDIP300-P18, SOIC-SN8_L, TA03F, TO-220AB
+11|100nF|Cap, Cer|C1, C4, C13, C14, C15, C16, C20, C21, C22, C23, Cbs1|Capacitor|6-0805, C0805
+1|220nF|Cap|C2|Capacitor|6-0805
+1|470uF 63V|Cap|C3|Capacitor|CapEltr-Rad6.6-Dpp4.5
+1|470uF 25V|Cap|C5|Capacitor|CapEltr-Rad4.1-Dpp3.0
+1|10uF|Cap|C6|Capacitor|0805
+2|0.33uF|Eltr|C7, C9|Capacitor|6-0805
+2|1uF|Cer|C8, C10|Capacitor|1u25v
+4|22pF|Cap|C11, C12, C17, C18|Capacitor (Semiconductor SIM Model)|0805
+1|10nF|Cap|C19|Capacitor|6-0805
+1|4u7F 100V|Cap|Cs1|Capacitor|cap4u7
+9|BYD77|1N4002, BYD77, Diode 1N4002|D1, D2, D3, D4, D5, D6, Dbs1, Dgfall1, DS1|1 Amp General Purpose Rectifier, Default Diode|SOD87
+3|MMSZ5232BT1G|5V|Dz1, Dz2, Dz3|Zener Diode|diode-0.4
+1|Led 0805 Vermelho|RED|LD1|Diodo Emissor de Luz|6-0805
+2|3 pin Screw Terminal Block|WE-Terminal Blocks Screw Type 691103110003|P12, P15|WR-TBL 3.50 mm Wire Protector system|hdr1x3, t-block
+1|180|Res1|R1|Resistor|6-0805
+2|0|1%, Res1|R2, Rgfall1|Resistor|6-0805
+1|22k|1%|R3|Resistor|6-0805
+2|4k7|1%|R4, R5|Resistor|6-0805
+1|3300|Res1|R6|Resistor|6-0805
+1|na|Res1|R7|Resistor|6-0805
+2|1k8|1%, Res1|R8, R14|Resistor|6-0805
+1|1k5|1%|R9|Resistor|6-0805
+1|82|1%|R10|Resistor|6-0805
+2|47|Res1|R11, R11-2|Resistor|6-0805
+5|10k|Res1|R12, R15, R17, R21, R22|Resistor|6-0805
+1|16k|Res1|R13|Resistor|6-0805
+3|1k|Res1|R18, R19, R20|Resistor|6-0805
+1|22|Res1|Rgrise1|Resistor|6-0805
+1|0.5R 5W|Res1|RS2|Resistor|Axial 0.8
+2|IXFN420N10T|IXFN420N10T|S1, S2|N-Channel MOSFET|SOT-227B
+1|LT783|LM317|U1|Precision 1A Regulator|TO-220AB
+1|IR2127S|IR2127S|U2|Current Sensing Single Channel Driver|SO8_M
