@@ -402,7 +402,7 @@ int main(void)
 
 ISR(ADC_vect)
 {
-	switch (channel)
+	/*switch (channel)
 	{
 		case CURRENT_CHANNEL:
 			status.current = ADC;// / 5;
@@ -411,7 +411,7 @@ ISR(ADC_vect)
 		case POT_CHANNEL:
 			if(flags.mode == POT_MODE)
 				dcReq = ADC / 10;
-			channel = TEMP_CHANNEL;
+			//channel = TEMP_CHANNEL;
 			break;
 		case VOLTAGE_CHANNEL:
 			status.voltage = ADC / 30;
@@ -427,9 +427,10 @@ ISR(ADC_vect)
 		channel = FIRST_CHANNEL;
 	else
 		channel ++;
-	*/
-	adcSelectChannel(channel);
+	*
+	//adcSelectChannel(channel);
 	adcStartConversion();
+*/
 }
 
 ISR(TIMER1_COMPA_vect)
@@ -478,7 +479,6 @@ ISR(TIMER0_OVF_vect)
 	}
 	else
 	{
-		stringTransmit("@teste2*");
 		if(status.dc != 0)			//se o sistema ainda nao esta desligado
 			seta_dc(0);				//desliga o sistema
 	}
