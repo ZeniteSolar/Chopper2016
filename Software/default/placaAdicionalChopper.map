@@ -1,24 +1,24 @@
 Archive member included because of file (symbol)
 
-/usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_udivmodhi4.o)
+/usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
                               placaAdicionalChopper.o (__udivmodhi4)
-/usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_udivmodsi4.o)
+/usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodsi4.o)
                               placaAdicionalChopper.o (__udivmodsi4)
-/usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
-                              /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o (exit)
-/usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_tablejump.o)
+/usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+                              /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm328p.o (exit)
+/usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_tablejump.o)
                               placaAdicionalChopper.o (__tablejump2__)
-/usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
+/usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
                               placaAdicionalChopper.o (__do_copy_data)
-/usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
+/usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
                               placaAdicionalChopper.o (__do_clear_bss)
-/usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_ashrdi3.o)
+/usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_ashrdi3.o)
                               ATmega328.o (__lshrdi3)
-/usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/libc.a(strcat.o)
+/usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(strcat.o)
                               placaAdicionalChopper.o (strcat)
-/usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/libc.a(strcpy.o)
+/usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(strcpy.o)
                               placaAdicionalChopper.o (strcpy)
-/usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/libc.a(iob.o)
+/usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(iob.o)
                               ATmega328.o (__iob)
 
 Allocating common symbols
@@ -33,7 +33,7 @@ usartReceiverBufferLength
                     0x1               ATmega328.o
 usartReceiverBufferNextRead
                     0x1               ATmega328.o
-__iob               0x6               /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/libc.a(iob.o)
+__iob               0x6               /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(iob.o)
 status              0x7               placaAdicionalChopper.o
 
 Memory Configuration
@@ -51,13 +51,13 @@ user_signatures  0x0000000000850000 0x0000000000000400 rw !x
 Linker script and memory map
 
 Address of section .data set to 0x800100
-LOAD /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
+LOAD /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm328p.o
 LOAD placaAdicionalChopper.o
 LOAD ATmega328.o
 START GROUP
-LOAD /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a
-LOAD /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/libm.a
-LOAD /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/libc.a
+LOAD /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a
+LOAD /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libm.a
+LOAD /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a
 END GROUP
 
 .hash
@@ -150,9 +150,13 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
+<<<<<<< HEAD
 .text           0x0000000000000000     0x1a52
+=======
+.text           0x0000000000000000     0x1b42
+>>>>>>> refs/remotes/origin/master
  *(.vectors)
- .vectors       0x0000000000000000       0x68 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
+ .vectors       0x0000000000000000       0x68 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm328p.o
                 0x0000000000000000                __vectors
                 0x0000000000000000                __vector_default
  *(.vectors)
@@ -161,14 +165,13 @@ END GROUP
                 0x0000000000000068       0x30 placaAdicionalChopper.o
  .progmem.gcc_sw_table
                 0x0000000000000098       0x30 ATmega328.o
+ *(.progmem*)
                 0x00000000000000c8                . = ALIGN (0x2)
                 0x00000000000000c8                __trampolines_start = .
  *(.trampolines)
  .trampolines   0x00000000000000c8        0x0 linker stubs
  *(.trampolines*)
                 0x00000000000000c8                __trampolines_end = .
- *(.progmem*)
-                0x00000000000000c8                . = ALIGN (0x2)
  *(.jumptables)
  *(.jumptables*)
  *(.lowtext)
@@ -182,20 +185,20 @@ END GROUP
  SORT(*)(.ctors)
  SORT(*)(.dtors)
  *(.init0)
- .init0         0x00000000000000c8        0x0 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
+ .init0         0x00000000000000c8        0x0 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm328p.o
                 0x00000000000000c8                __init
  *(.init0)
  *(.init1)
  *(.init1)
  *(.init2)
- .init2         0x00000000000000c8        0xc /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
+ .init2         0x00000000000000c8        0xc /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm328p.o
  *(.init2)
  *(.init3)
  *(.init3)
  *(.init4)
- .init4         0x00000000000000d4       0x16 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
+ .init4         0x00000000000000d4       0x16 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
                 0x00000000000000d4                __do_copy_data
- .init4         0x00000000000000ea       0x10 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
+ .init4         0x00000000000000ea       0x10 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
                 0x00000000000000ea                __do_clear_bss
  *(.init4)
  *(.init5)
@@ -207,10 +210,10 @@ END GROUP
  *(.init8)
  *(.init8)
  *(.init9)
- .init9         0x00000000000000fa        0x8 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
+ .init9         0x00000000000000fa        0x8 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm328p.o
  *(.init9)
  *(.text)
- .text          0x0000000000000102        0x4 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
+ .text          0x0000000000000102        0x4 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm328p.o
                 0x0000000000000102                __vector_22
                 0x0000000000000102                __vector_1
                 0x0000000000000102                __vector_24
@@ -234,6 +237,7 @@ END GROUP
                 0x0000000000000102                __vector_20
  .text          0x0000000000000106      0x38e placaAdicionalChopper.o
                 0x0000000000000106                seta_dc
+<<<<<<< HEAD
                 0x0000000000000150                esvaziaBuffer
                 0x0000000000000160                stringTransmit
                 0x0000000000000190                uint16ToString4
@@ -547,6 +551,321 @@ END GROUP
  .fini9         0x0000000000001a4e        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
                 0x0000000000001a4e                exit
                 0x0000000000001a4e                _exit
+=======
+                0x0000000000000154                esvaziaBuffer
+                0x0000000000000164                stringTransmit
+                0x0000000000000194                uint16ToString4
+                0x00000000000001fc                uint8ToString4
+                0x0000000000000252                string4ToUint16
+                0x00000000000002a8                string4Touint8
+                0x00000000000002cc                __vector_21
+                0x0000000000000394                __vector_11
+                0x00000000000003c0                __vector_12
+                0x00000000000003e2                __vector_16
+                0x00000000000004f4                __vector_18
+ .text          0x0000000000000540     0x10e4 ATmega328.o
+                0x0000000000000540                usartReceiveStd
+                0x0000000000000550                globalInterruptEnable
+                0x0000000000000554                globalInterruptDisable
+                0x0000000000000558                systemClockSetPrescaler
+                0x00000000000005a4                eepromSetOperationMode
+                0x00000000000005b6                eepromReadyActivateInterrupt
+                0x00000000000005ba                eepromReadyDeactivateInterrupt
+                0x00000000000005be                eepromWrite
+                0x00000000000005d8                eepromRead
+                0x00000000000005e8                globalPullUpEnable
+                0x00000000000005f0                pullUpDisable
+                0x00000000000005f8                int0Config
+                0x0000000000000656                int0ActivateInterrupt
+                0x000000000000065a                int0DeactivateInterrupt
+                0x000000000000065e                int0ClearInterruptRequest
+                0x0000000000000662                int1Config
+                0x00000000000006c0                int1ActivateInterrupt
+                0x00000000000006c4                int1DeactivateInterrupt
+                0x00000000000006c8                int1ClearInterruptRequest
+                0x00000000000006cc                pcint7_0Enable
+                0x00000000000006d8                pcint7_0Disable
+                0x00000000000006e4                pcint7_0ClearInterruptRequest
+                0x00000000000006e8                pcint0ActivateInterrupt
+                0x0000000000000724                pcint0DeactivateInterrupt
+                0x0000000000000730                pcint1ActivateInterrupt
+                0x000000000000076c                pcint1DeactivateInterrupt
+                0x0000000000000778                pcint2ActivateInterrupt
+                0x00000000000007b4                pcint2DeactivateInterrupt
+                0x00000000000007c0                pcint3ActivateInterrupt
+                0x00000000000007fc                pcint3DeactivateInterrupt
+                0x0000000000000808                pcint4ActivateInterrupt
+                0x0000000000000844                pcint4DeactivateInterrupt
+                0x0000000000000850                pcint5ActivateInterrupt
+                0x000000000000088c                pcint5DeactivateInterrupt
+                0x0000000000000898                pcint6ActivateInterrupt
+                0x00000000000008d4                pcint6DeactivateInterrupt
+                0x00000000000008e0                pcint7ActivateInterrupt
+                0x000000000000091c                pcint7DeactivateInterrupt
+                0x0000000000000928                pcint14_8Enable
+                0x0000000000000934                pcint14_8Disable
+                0x0000000000000940                pcint14_8ClearInterruptRequest
+                0x0000000000000944                pcint8ActivateInterrupt
+                0x0000000000000980                pcint8DeactivateInterrupt
+                0x000000000000098c                pcint9ActivateInterrupt
+                0x00000000000009c8                pcint9DeactivateInterrupt
+                0x00000000000009d4                pcint10ActivateInterrupt
+                0x0000000000000a10                pcint10DeactivateInterrupt
+                0x0000000000000a1c                pcint11ActivateInterrupt
+                0x0000000000000a58                pcint11DeactivateInterrupt
+                0x0000000000000a64                pcint12ActivateInterrupt
+                0x0000000000000aa0                pcint12DeactivateInterrupt
+                0x0000000000000aac                pcint13ActivateInterrupt
+                0x0000000000000ae8                pcint13DeactivateInterrupt
+                0x0000000000000af4                pcint14ActivateInterrupt
+                0x0000000000000b30                pcint14DeactivateInterrupt
+                0x0000000000000b3c                pcint23_16Enable
+                0x0000000000000b48                pcint23_16Disable
+                0x0000000000000b54                pcint23_16ClearInterruptRequest
+                0x0000000000000b58                pcint16ActivateInterrupt
+                0x0000000000000b94                pcint16DeactivateInterrupt
+                0x0000000000000ba0                pcint17ActivateInterrupt
+                0x0000000000000bdc                pcint17DeactivateInterrupt
+                0x0000000000000be8                pcint18ActivateInterrupt
+                0x0000000000000c24                pcint18DeactivateInterrupt
+                0x0000000000000c30                pcint19ActivateInterrupt
+                0x0000000000000c6c                pcint19DeactivateInterrupt
+                0x0000000000000c78                pcint20ActivateInterrupt
+                0x0000000000000cb4                pcint20DeactivateInterrupt
+                0x0000000000000cc0                pcint21ActivateInterrupt
+                0x0000000000000cfc                pcint21DeactivateInterrupt
+                0x0000000000000d08                pcint22ActivateInterrupt
+                0x0000000000000d44                pcint22DeactivateInterrupt
+                0x0000000000000d50                pcint23ActivateInterrupt
+                0x0000000000000d8c                pcint23DeactivateInterrupt
+                0x0000000000000d98                timer0Config
+                0x0000000000000e14                timer0OutputConfig
+                0x0000000000000e66                timer0ActivateOverflowInterrupt
+                0x0000000000000e72                timer0DeactivateOverflowInterrupt
+                0x0000000000000e7e                timer0ClearOverflowInterruptRequest
+                0x0000000000000e82                timer0ActivateCompareAInterrupt
+                0x0000000000000e8e                timer0DeactivateCompareAInterrupt
+                0x0000000000000e9a                timer0ClearCompareAInterruptRequest
+                0x0000000000000e9e                timer0ActivateCompareBInterrupt
+                0x0000000000000eaa                timer0DeactivateCompareBInterrupt
+                0x0000000000000eb6                timer0ClearCompareBInterruptRequest
+                0x0000000000000eba                timer0ForceCompareA
+                0x0000000000000ec2                timer0ForceCompareB
+                0x0000000000000eca                timer0SetCounterValue
+                0x0000000000000ece                timer0GetCounterValue
+                0x0000000000000ed2                timer0SetCompareAValue
+                0x0000000000000ed6                timer0GetCompareAValue
+                0x0000000000000eda                timer0SetCompareBValue
+                0x0000000000000ede                timer0GetCompareBValue
+                0x0000000000000ee2                timer1Config
+                0x0000000000000f1c                timer1OutputConfig
+                0x0000000000000f48                timer1InputCaptureNoiseCancelerConfig
+                0x0000000000000f58                timer1ActivateOverflowInterrupt
+                0x0000000000000f66                timer1DeactivateOverflowInterrupt
+                0x0000000000000f74                timer1ClearOverflowInterruptRequest
+                0x0000000000000f7a                timer1ActivateCompareAInterrupt
+                0x0000000000000f88                timer1DeactivateCompareAInterrupt
+                0x0000000000000f96                timer1ClearCompareAInterruptRequest
+                0x0000000000000f9c                timer1ActivateCompareBInterrupt
+                0x0000000000000faa                timer1DeactivateCompareBInterrupt
+                0x0000000000000fb8                timer1ClearCompareBInterruptRequest
+                0x0000000000000fbe                timer1ActivateInputCaptureInterrupt
+                0x0000000000000fcc                timer1DeactivateInputCaptureInterrupt
+                0x0000000000000fda                timer1ClearInputCaptureInterruptRequest
+                0x0000000000000fe0                timer1ForceCompareA
+                0x0000000000000fee                timer1ForceCompareB
+                0x0000000000000ffc                timer1SetCounterValue
+                0x000000000000100e                timer1GetCounterValue
+                0x0000000000001018                timer1SetCompareAValue
+                0x000000000000102a                timer1GetCompareAValue
+                0x0000000000001034                timer1SetCompareBValue
+                0x0000000000001046                timer1GetCompareBValue
+                0x0000000000001050                timer1SetInputCaptureValue
+                0x0000000000001062                timer1GetInputCaptureValue
+                0x000000000000106c                timer2Config
+                0x000000000000109c                timer2OutputConfig
+                0x00000000000010c8                timer2ActivateOverflowInterrupt
+                0x00000000000010d6                timer2DeactivateOverflowInterrupt
+                0x00000000000010e4                timer2ClearOverflowInterruptRequest
+                0x00000000000010ea                timer2ActivateCompareAInterrupt
+                0x00000000000010f8                timer2DeactivateCompareAInterrupt
+                0x0000000000001106                timer2ClearCompareAInterruptRequest
+                0x000000000000110c                timer2ActivateCompareBInterrupt
+                0x000000000000111a                timer2DeactivateCompareBInterrupt
+                0x0000000000001128                timer2ClearCompareBInterruptRequest
+                0x000000000000112e                timer2ForceCompareA
+                0x000000000000113c                timer2ForceCompareB
+                0x000000000000114a                timer2SetCounterValue
+                0x0000000000001152                timer2GetCounterValue
+                0x0000000000001158                timer2SetCompareAValue
+                0x0000000000001160                timer2GetCompareAValue
+                0x0000000000001166                timer2SetCompareBValue
+                0x000000000000116e                timer2GetCompareBValue
+                0x0000000000001174                adcConfig
+                0x00000000000011f6                adcSelectChannel
+                0x0000000000001206                adcEnableDigitalInput
+                0x0000000000001216                adcDisableDigitalInput
+                0x0000000000001224                adcDataPresentation
+                0x000000000000123e                adcEnable
+                0x000000000000124c                adcDisable
+                0x000000000000125a                adcClearInterruptRequest
+                0x0000000000001268                adcActivateInterrupt
+                0x0000000000001276                adcDeactivateInterrupt
+                0x0000000000001284                adcStartConversion
+                0x0000000000001292                adcIsBusy
+                0x000000000000129e                adcWaitUntilConversionFinish
+                0x00000000000012aa                usartConfig
+                0x00000000000013b4                usartEnableReceiver
+                0x00000000000013c2                usartDisableReceiver
+                0x00000000000013d0                usartEnableTransmitter
+                0x00000000000013de                usartDisableTransmitter
+                0x00000000000013ec                usartActivateReceptionCompleteInterrupt
+                0x00000000000013fa                usartDeactivateReceptionCompleteInterrupt
+                0x0000000000001408                usartActivateTransmissionCompleteInterrupt
+                0x0000000000001416                usartDeactivateTransmissionCompleteInterrupt
+                0x0000000000001424                usartActivateBufferEmptyInterrupt
+                0x0000000000001432                usartDeactivateBufferEmptyInterrupt
+                0x0000000000001440                usartStdio
+                0x0000000000001460                usartIsReceptionComplete
+                0x000000000000146c                usartIsTransmissionComplete
+                0x0000000000001478                usartIsBufferEmpty
+                0x0000000000001484                usartTransmitStd
+                0x000000000000149a                usartCheckError
+                0x00000000000014c4                usartTransmit
+                0x00000000000014da                usartTransmit9bits
+                0x000000000000150c                usartReceive
+                0x000000000000151e                usartReceive9bits
+                0x0000000000001544                usartClearReceptionBuffer
+                0x0000000000001554                usartAddDataToReceiverBuffer
+                0x00000000000015b4                usartGetDataFromReceiverBuffer
+                0x00000000000015f8                usartIsReceiverBufferEmpty
+                0x0000000000001604                usartGetCurrentBaudRate
+                0x000000000000160c                spiInit
+                0x000000000000160e                spiMasterTransmit
+                0x000000000000161a                spiSlaveTransmit
+ .text          0x0000000000001624        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+ .text          0x0000000000001624        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodsi4.o)
+ .text          0x0000000000001624        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .text          0x0000000000001624        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_tablejump.o)
+ .text          0x0000000000001624        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .text          0x0000000000001624        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .text          0x0000000000001624        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_ashrdi3.o)
+ .text          0x0000000000001624        0x0 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(strcat.o)
+ .text          0x0000000000001624        0x0 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(strcpy.o)
+ .text          0x0000000000001624        0x0 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(iob.o)
+                0x0000000000001624                . = ALIGN (0x2)
+ *(.text.*)
+ .text.startup  0x0000000000001624      0x442 placaAdicionalChopper.o
+                0x0000000000001624                main
+ .text.libgcc.mul
+                0x0000000000001a66        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.div
+                0x0000000000001a66       0x28 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+                0x0000000000001a66                __udivmodhi4
+ .text.libgcc   0x0000000000001a8e        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.prologue
+                0x0000000000001a8e        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.builtins
+                0x0000000000001a8e        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.fmul
+                0x0000000000001a8e        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.fixed
+                0x0000000000001a8e        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.mul
+                0x0000000000001a8e        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodsi4.o)
+ .text.libgcc.div
+                0x0000000000001a8e       0x44 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodsi4.o)
+                0x0000000000001a8e                __udivmodsi4
+ .text.libgcc   0x0000000000001ad2        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodsi4.o)
+ .text.libgcc.prologue
+                0x0000000000001ad2        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodsi4.o)
+ .text.libgcc.builtins
+                0x0000000000001ad2        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodsi4.o)
+ .text.libgcc.fmul
+                0x0000000000001ad2        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodsi4.o)
+ .text.libgcc.fixed
+                0x0000000000001ad2        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodsi4.o)
+ .text.libgcc.mul
+                0x0000000000001ad2        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .text.libgcc.div
+                0x0000000000001ad2        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .text.libgcc   0x0000000000001ad2        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .text.libgcc.prologue
+                0x0000000000001ad2        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .text.libgcc.builtins
+                0x0000000000001ad2        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .text.libgcc.fmul
+                0x0000000000001ad2        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .text.libgcc.fixed
+                0x0000000000001ad2        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .text.libgcc.mul
+                0x0000000000001ad2        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_tablejump.o)
+ .text.libgcc.div
+                0x0000000000001ad2        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_tablejump.o)
+ .text.libgcc   0x0000000000001ad2        0xc /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_tablejump.o)
+                0x0000000000001ad2                __tablejump2__
+                0x0000000000001ad6                __tablejump__
+ .text.libgcc.prologue
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_tablejump.o)
+ .text.libgcc.builtins
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_tablejump.o)
+ .text.libgcc.fmul
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_tablejump.o)
+ .text.libgcc.fixed
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_tablejump.o)
+ .text.libgcc.mul
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.div
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc   0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.prologue
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.builtins
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.fmul
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.fixed
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.mul
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.div
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc   0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.prologue
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.builtins
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.fmul
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.fixed
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.mul
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_ashrdi3.o)
+ .text.libgcc.div
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_ashrdi3.o)
+ .text.libgcc   0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_ashrdi3.o)
+ .text.libgcc.prologue
+                0x0000000000001ade        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_ashrdi3.o)
+ .text.libgcc.builtins
+                0x0000000000001ade       0x3c /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_ashrdi3.o)
+                0x0000000000001ade                __ashrdi3
+                0x0000000000001ae2                __lshrdi3
+ .text.libgcc.fmul
+                0x0000000000001b1a        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_ashrdi3.o)
+ .text.libgcc.fixed
+                0x0000000000001b1a        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_ashrdi3.o)
+ .text.avr-libc
+                0x0000000000001b1a       0x16 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(strcat.o)
+                0x0000000000001b1a                strcat
+ .text.avr-libc
+                0x0000000000001b30        0xe /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(strcpy.o)
+                0x0000000000001b30                strcpy
+                0x0000000000001b3e                . = ALIGN (0x2)
+ *(.fini9)
+ .fini9         0x0000000000001b3e        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+                0x0000000000001b3e                exit
+                0x0000000000001b3e                _exit
+>>>>>>> refs/remotes/origin/master
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -565,14 +884,22 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
+<<<<<<< HEAD
  .fini0         0x0000000000001a4e        0x4 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  *(.fini0)
                 0x0000000000001a52                _etext = .
 
 .data           0x0000000000800100       0x34 load address 0x0000000000001a52
+=======
+ .fini0         0x0000000000001b3e        0x4 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ *(.fini0)
+                0x0000000000001b42                _etext = .
+
+.data           0x0000000000800100       0x34 load address 0x0000000000001b42
+>>>>>>> refs/remotes/origin/master
                 0x0000000000800100                PROVIDE (__data_start, .)
  *(.data)
- .data          0x0000000000800100        0x0 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
+ .data          0x0000000000800100        0x0 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm328p.o
  .data          0x0000000000800100        0x8 placaAdicionalChopper.o
                 0x0000000000800100                minVotage
                 0x0000000000800101                criticalTemp
@@ -584,16 +911,16 @@ END GROUP
                 0x0000000000800107                channel
  .data          0x0000000000800108        0xe ATmega328.o
                 0x0000000000800108                usartStream
- .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_udivmodhi4.o)
- .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_udivmodsi4.o)
- .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
- .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_tablejump.o)
- .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
- .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
- .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_ashrdi3.o)
- .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/libc.a(strcat.o)
- .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/libc.a(strcpy.o)
- .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/libc.a(iob.o)
+ .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+ .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodsi4.o)
+ .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_tablejump.o)
+ .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_ashrdi3.o)
+ .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(strcat.o)
+ .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(strcpy.o)
+ .data          0x0000000000800116        0x0 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(iob.o)
  *(.data*)
  *(.rodata)
  *(.rodata*)
@@ -608,6 +935,7 @@ END GROUP
 .bss            0x0000000000800134       0x46
                 0x0000000000800134                PROVIDE (__bss_start, .)
  *(.bss)
+<<<<<<< HEAD
  .bss           0x0000000000800134        0x0 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
  .bss           0x0000000000800134        0x3 placaAdicionalChopper.o
                 0x0000000000800134                dcReq
@@ -641,6 +969,42 @@ END GROUP
 
 .noinit         0x000000000080017a        0x0
                 0x000000000080017a                PROVIDE (__noinit_start, .)
+=======
+ .bss           0x0000000000800134        0x0 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm328p.o
+ .bss           0x0000000000800134        0x5 placaAdicionalChopper.o
+                0x0000000000800134                dcReq
+                0x0000000000800135                freqReq
+                0x0000000000800137                cont
+ .bss           0x0000000000800139        0x0 ATmega328.o
+ .bss           0x0000000000800139        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+ .bss           0x0000000000800139        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodsi4.o)
+ .bss           0x0000000000800139        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .bss           0x0000000000800139        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_tablejump.o)
+ .bss           0x0000000000800139        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .bss           0x0000000000800139        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .bss           0x0000000000800139        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_ashrdi3.o)
+ .bss           0x0000000000800139        0x0 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(strcat.o)
+ .bss           0x0000000000800139        0x0 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(strcpy.o)
+ .bss           0x0000000000800139        0x0 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(iob.o)
+ *(.bss*)
+ *(COMMON)
+ COMMON         0x0000000000800139        0x8 placaAdicionalChopper.o
+                0x0000000000800139                flags
+                0x000000000080013a                status
+ COMMON         0x0000000000800141       0x35 ATmega328.o
+                0x0000000000800141                usartReceiverBuffer
+                0x0000000000800173                usartReceiverBufferNextWrite
+                0x0000000000800174                usartReceiverBufferLength
+                0x0000000000800175                usartReceiverBufferNextRead
+ COMMON         0x0000000000800176        0x6 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(iob.o)
+                0x0000000000800176                __iob
+                0x000000000080017c                PROVIDE (__bss_end, .)
+                0x0000000000001b42                __data_load_start = LOADADDR (.data)
+                0x0000000000001b76                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x000000000080017c        0x0
+                0x000000000080017c                PROVIDE (__noinit_start, .)
+>>>>>>> refs/remotes/origin/master
  *(.noinit*)
                 0x000000000080017a                PROVIDE (__noinit_end, .)
                 0x000000000080017a                _end = .
@@ -665,11 +1029,19 @@ END GROUP
 .user_signatures
  *(.user_signatures*)
 
-.stab
+.stab           0x0000000000000000      0xc54
  *(.stab)
+ .stab          0x0000000000000000      0x6cc /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm328p.o
+ .stab          0x00000000000006cc       0x9c /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(strcat.o)
+                                         0xa8 (size before relaxing)
+ .stab          0x0000000000000768       0x6c /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(strcpy.o)
+                                         0x78 (size before relaxing)
+ .stab          0x00000000000007d4      0x480 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(iob.o)
+                                        0x48c (size before relaxing)
 
-.stabstr
+.stabstr        0x0000000000000000      0xd41
  *(.stabstr)
+ .stabstr       0x0000000000000000      0xd41 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm328p.o
 
 .stab.excl
  *(.stab.excl)
@@ -683,15 +1055,13 @@ END GROUP
 .stab.indexstr
  *(.stab.indexstr)
 
-.comment        0x0000000000000000       0x11
+.comment        0x0000000000000000       0x22
  *(.comment)
  .comment       0x0000000000000000       0x11 placaAdicionalChopper.o
                                          0x12 (size before relaxing)
- .comment       0x0000000000000000       0x12 ATmega328.o
- .comment       0x0000000000000000       0x12 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/libc.a(iob.o)
-
-.note.gnu.build-id
- *(.note.gnu.build-id)
+ .comment       0x0000000000000011       0x11 ATmega328.o
+                                         0x12 (size before relaxing)
+ .comment       0x0000000000000000       0x12 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a(iob.o)
 
 .debug
  *(.debug)
@@ -715,6 +1085,7 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
+<<<<<<< HEAD
 .debug_info     0x0000000000000000     0x3381
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x0000000000000000      0xf62 placaAdicionalChopper.o
@@ -729,17 +1100,42 @@ END GROUP
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x0000000000000000      0x1fa placaAdicionalChopper.o
  .debug_line    0x00000000000001fa      0x60a ATmega328.o
+=======
+.debug_info     0x0000000000000000     0x33cc
+ *(.debug_info)
+ .debug_info    0x0000000000000000      0xfad placaAdicionalChopper.o
+ .debug_info    0x0000000000000fad     0x241f ATmega328.o
+ *(.gnu.linkonce.wi.*)
+
+.debug_abbrev   0x0000000000000000      0x6bb
+ *(.debug_abbrev)
+ .debug_abbrev  0x0000000000000000      0x344 placaAdicionalChopper.o
+ .debug_abbrev  0x0000000000000344      0x377 ATmega328.o
+
+.debug_line     0x0000000000000000      0x81c
+ *(.debug_line)
+ .debug_line    0x0000000000000000      0x212 placaAdicionalChopper.o
+ .debug_line    0x0000000000000212      0x60a ATmega328.o
+>>>>>>> refs/remotes/origin/master
 
 .debug_frame    0x0000000000000000      0xdac
  *(.debug_frame)
  .debug_frame   0x0000000000000000      0x1f4 placaAdicionalChopper.o
  .debug_frame   0x00000000000001f4      0xbb8 ATmega328.o
 
+<<<<<<< HEAD
 .debug_str      0x0000000000000000     0x2575
  *(.debug_str)
  .debug_str     0x0000000000000000     0x109d placaAdicionalChopper.o
                                        0x10f9 (size before relaxing)
  .debug_str     0x000000000000109d     0x14d8 ATmega328.o
+=======
+.debug_str      0x0000000000000000     0x2633
+ *(.debug_str)
+ .debug_str     0x0000000000000000     0x1065 placaAdicionalChopper.o
+                                       0x10bc (size before relaxing)
+ .debug_str     0x0000000000001065     0x15ce ATmega328.o
+>>>>>>> refs/remotes/origin/master
                                        0x2440 (size before relaxing)
 
 .debug_loc      0x0000000000000000     0x1a81
@@ -749,18 +1145,6 @@ END GROUP
 
 .debug_macinfo
  *(.debug_macinfo)
-
-.debug_weaknames
- *(.debug_weaknames)
-
-.debug_funcnames
- *(.debug_funcnames)
-
-.debug_typenames
- *(.debug_typenames)
-
-.debug_varnames
- *(.debug_varnames)
 
 .debug_pubtypes
  *(.debug_pubtypes)

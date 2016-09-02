@@ -10,6 +10,7 @@
 #include "bibliotecas/globalDefines.h"
 #include "bibliotecas/ATmega328.h"
 #include <string.h>
+//#include "bibliotecas/can.h"
 
 #define BYTES_TO_RECEIVE 	18 // Number of bytes that uC have to receive on communication
 
@@ -190,10 +191,11 @@ uint8 string4Touint8(char* str)
 
 int main(void)
 {
-	flags.mode = SERIAL_MODE;
+	_delay_ms(1000);
+	flags.mode = POT_MODE;
 	status.freq = 1000;
-	flags.on = 1;
-	flags.dms = 1;
+	status.on = 0;			//indica que o sistema inicia sem acionar o motor
+
 	// VARIAVEIS LOCAIS;
 	char frameData[50];
 	uint8 frameIndex = 0;
@@ -448,13 +450,16 @@ ISR(TIMER1_COMPB_vect)
 //controle 60Hz
 ISR(TIMER0_OVF_vect)
 {
-	//setBit(PIND,PD0);
 	if(flags.mode == POT_MODE)
 	{
 		flags.on = isBitClr(ON_PIN,ON_BIT);
 		flags.dms = isBitClr(DMS_PIN,DMS_BIT);
 	}
-	if(flags.on && flags.dms)
+	if(!(flags.on && flags.dms))					//informa ao sistema para nao acionar o motor caso botão ON e DMS estejam desligados.
+		status.on = 0;
+	if(dcReq<minDC && flags.on && flags.dms)		//informa ao sistema para acionar o motor apenas quando botão ON e DMS estejam ligados
+		status.on = 1;								//e o potenciometro esteja numa posicao correspondente a menos de 10% do DC do PWM.
+	if(status.on)		//inicia o acionamento do motor, com os as condições preliminares acima satisfeitas.
 	{
 		//stringTransmit("@teste*");
     	if(status.dc != dcReq)
@@ -479,8 +484,8 @@ ISR(TIMER0_OVF_vect)
 	}
 	else
 	{
-		if(status.dc != 0)			//se o sistema ainda nao esta desligado
-			seta_dc(0);				//desliga o sistema
+		if(status.dc != 0)					//se o sistema ainda nao esta desligado
+			seta_dc(0);						//desliga o sistema
 	}
 	if(status.temperature > criticalTemp && !flags.warning)
 	{
