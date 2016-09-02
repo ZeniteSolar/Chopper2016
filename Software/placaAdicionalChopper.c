@@ -104,7 +104,7 @@ uint8 maxDC = 90;
 uint8 maxDV = 7;				//define a variação máxima, x V/s				
 uint8 maxTemp = 70;				//temperatura maxima, desliga o sistema
 uint8 criticalTemp = 60;		//temperatura critica
-uint8 minVotage = 30;
+uint8 minVoltage = 30;
 
 void seta_dc(uint8 d_cycle)		//função para definição do Duty Cicle do PWM
 {
@@ -295,7 +295,7 @@ int main(void)
 									uint8ToString4(msgToSend,maxTemp);
 									break;
 								case 9:
-									uint8ToString4(msgToSend,minVotage);
+									uint8ToString4(msgToSend,minVoltage);
 									break;
 								case 10:
 									uint8ToString4(msgToSend,status.dc);
@@ -380,7 +380,7 @@ int main(void)
 										maxTemp = string4Touint8(recebido);
 										break;
 									case 9:
-										minVotage = string4Touint8(recebido);
+										minVoltage = string4Touint8(recebido);
 										break;
 									case 10:
 										dcReq = string4Touint8(recebido);
@@ -432,7 +432,7 @@ ISR(ADC_vect)
 			channel = VOLTAGE_CHANNEL;
 			break;
 		case VOLTAGE_CHANNEL:
-			//status.voltage = ADC / 30;
+			status.voltage = ADC / 21;
 			channel = TEMP_CHANNEL;
 			break;
 		case TEMP_CHANNEL:
@@ -500,14 +500,13 @@ ISR(TIMER0_OVF_vect)
 		if(status.dc != 0)					//se o sistema ainda nao esta desligado
 			seta_dc(0);						//desliga o sistema
 	}
-	if(status.dc>minDC && status.current>maxCurrent)
+	if(status.dc>minDC && (status.current>maxCurrent || status.voltage<minVoltage))
+	{
 		if(status.dc==100)
 			seta_dc(status.dc-(100 - maxDC));
 		else
 			seta_dc(status.dc-2);
-
-	//if(status.voltage<minVotage)
-	//	seta_dc(status.dc-1);
+	}
 	if(status.temperature > criticalTemp && !flags.warning)
 	{
 		flags.warning = 1;
