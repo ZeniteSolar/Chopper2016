@@ -195,6 +195,7 @@ int main(void)
 	flags.mode = POT_MODE;
 	status.freq = 1000;
 	status.on = 0;			//indica que o sistema inicia sem acionar o motor
+	status.dc = 0;
 
 	// VARIAVEIS LOCAIS;
 	char frameData[50];
@@ -404,35 +405,34 @@ int main(void)
 
 ISR(ADC_vect)
 {
-	/*switch (channel)
+	switch (channel)
 	{
 		case CURRENT_CHANNEL:
-			status.current = ADC;// / 5;
-			channel = TEMP_CHANNEL;
+			status.current = ADC / 5;
+			channel = POT_CHANNEL;
 			break;
 		case POT_CHANNEL:
 			if(flags.mode == POT_MODE)
 				dcReq = ADC / 10;
-			//channel = TEMP_CHANNEL;
+			channel = VOLTAGE_CHANNEL;
 			break;
 		case VOLTAGE_CHANNEL:
-			status.voltage = ADC / 30;
+			//status.voltage = ADC / 30;
+			channel = TEMP_CHANNEL;
 			break;
 		case TEMP_CHANNEL:
 			status.temperature = ADC / 2;
+		default:
 			channel = CURRENT_CHANNEL;
-			break;
-		default: 
 			break;
 	}
 	/*if(channel == LAST_CHANNEL)
 		channel = FIRST_CHANNEL;
 	else
 		channel ++;
-	*
-	//adcSelectChannel(channel);
+	*/
+	adcSelectChannel(channel);
 	adcStartConversion();
-*/
 }
 
 ISR(TIMER1_COMPA_vect)
@@ -459,6 +459,7 @@ ISR(TIMER0_OVF_vect)
 		status.on = 0;
 	if(dcReq<minDC && flags.on && flags.dms)		//informa ao sistema para acionar o motor apenas quando botão ON e DMS estejam ligados
 		status.on = 1;								//e o potenciometro esteja numa posicao correspondente a menos de 10% do DC do PWM.
+
 	if(status.on)		//inicia o acionamento do motor, com os as condições preliminares acima satisfeitas.
 	{
 		//stringTransmit("@teste*");
@@ -487,6 +488,14 @@ ISR(TIMER0_OVF_vect)
 		if(status.dc != 0)					//se o sistema ainda nao esta desligado
 			seta_dc(0);						//desliga o sistema
 	}
+	if(status.dc>minDC && status.current>maxCurrent)
+		if(status.dc==100)
+			seta_dc(status.dc-(100 - maxDC));
+		else
+			seta_dc(status.dc-2);
+
+	//if(status.voltage<minVotage)
+	//	seta_dc(status.dc-1);
 	if(status.temperature > criticalTemp && !flags.warning)
 	{
 		flags.warning = 1;
