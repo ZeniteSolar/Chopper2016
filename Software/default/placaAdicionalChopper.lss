@@ -772,16 +772,26 @@ uint8 string4Touint8(char* str)
      2c4:	82 0f       	add	r24, r18
      2c6:	08 95       	ret
 
+<<<<<<< HEAD
 000002c8 <__vector_21>:
+=======
+000002cc <__vector_21>:
+				}
+			}
+>>>>>>> firmware-changes-chopper
 		}
     }
 }
 
+<<<<<<< HEAD
 ISR(ADC_vect)
 {
      2c8:	1f 92       	push	r1
      2ca:	0f 92       	push	r0
      2cc:	0f b6       	in	r0, 0x3f	; 63
+=======
+     2cc:	1f 92       	push	r1
+>>>>>>> firmware-changes-chopper
      2ce:	0f 92       	push	r0
 <<<<<<< HEAD
      2d0:	11 24       	eor	r1, r1
@@ -801,7 +811,7 @@ ISR(ADC_vect)
      2e8:	bf 93       	push	r27
      2ea:	ef 93       	push	r30
      2ec:	ff 93       	push	r31
-	switch (channel)
+ISR(ADC_vect)
      2ee:	80 91 07 01 	lds	r24, 0x0107
      2f2:	81 30       	cpi	r24, 0x01	; 1
      2f4:	e1 f0       	breq	.+56     	; 0x32e <__vector_21+0x62>
@@ -809,6 +819,7 @@ ISR(ADC_vect)
      2f8:	82 30       	cpi	r24, 0x02	; 2
      2fa:	61 f1       	breq	.+88     	; 0x354 <__vector_21+0x88>
      2fc:	83 30       	cpi	r24, 0x03	; 3
+<<<<<<< HEAD
      2fe:	b1 f5       	brne	.+108    	; 0x36c <__vector_21+0xa0>
 		case VOLTAGE_CHANNEL:
 			status.voltage = ADC / 21;
@@ -816,19 +827,37 @@ ISR(ADC_vect)
 			break;
 		case TEMP_CHANNEL:
 			status.temperature = ADC / 2;
+=======
+     2fe:	99 f5       	brne	.+102    	; 0x366 <__vector_21+0x9a>
+			if(flags.mode == POT_MODE)
+				dcReq = ADC / 10;
+			channel = VOLTAGE_CHANNEL;
+			break;
+		case VOLTAGE_CHANNEL:
+			status.voltage = ADC / 21;
+>>>>>>> firmware-changes-chopper
      300:	80 91 78 00 	lds	r24, 0x0078
      304:	90 91 79 00 	lds	r25, 0x0079
      308:	96 95       	lsr	r25
      30a:	87 95       	ror	r24
      30c:	80 93 3e 01 	sts	0x013E, r24
+<<<<<<< HEAD
 			channel = CURRENT_CHANNEL;
      310:	10 92 07 01 	sts	0x0107, r1
 			break;
      314:	2b c0       	rjmp	.+86     	; 0x36c <__vector_21+0xa0>
+=======
+			channel = TEMP_CHANNEL;
+     310:	81 e0       	ldi	r24, 0x01	; 1
+     312:	27 c0       	rjmp	.+78     	; 0x362 <__vector_21+0x96>
+}
+
+>>>>>>> firmware-changes-chopper
 ISR(ADC_vect)
 {
 	switch (channel)
 	{
+<<<<<<< HEAD
 		case CURRENT_CHANNEL:
 			status.current = ADC / 5;
      316:	80 91 78 00 	lds	r24, 0x0078
@@ -1626,8 +1655,318 @@ resultValue_t systemClockSetPrescaler(systemPrescalerValue_t prescaler)
 	ATOMIC_BLOCK(ATOMIC_RESTORESTATE){
      4e0:	9f b7       	in	r25, 0x3f	; 63
 =======
+=======
+     314:	80 91 78 00 	lds	r24, 0x0078
+     318:	90 91 79 00 	lds	r25, 0x0079
+     31c:	65 e0       	ldi	r22, 0x05	; 5
+     31e:	70 e0       	ldi	r23, 0x00	; 0
+     320:	0e 94 33 0d 	call	0x1a66	; 0x1a66 <__udivmodhi4>
+     324:	60 93 3c 01 	sts	0x013C, r22
+		case CURRENT_CHANNEL:
+     328:	1e c0       	rjmp	.+60     	; 0x366 <__vector_21+0x9a>
+			status.current = ADC / 5;
+			channel = POT_CHANNEL;
+     32a:	80 91 39 01 	lds	r24, 0x0139
+     32e:	8c 70       	andi	r24, 0x0C	; 12
+     330:	88 30       	cpi	r24, 0x08	; 8
+     332:	51 f4       	brne	.+20     	; 0x348 <__vector_21+0x7c>
+			break;
+     334:	80 91 78 00 	lds	r24, 0x0078
+     338:	90 91 79 00 	lds	r25, 0x0079
+     33c:	6a e0       	ldi	r22, 0x0A	; 10
+     33e:	70 e0       	ldi	r23, 0x00	; 0
+     340:	0e 94 33 0d 	call	0x1a66	; 0x1a66 <__udivmodhi4>
+     344:	60 93 34 01 	sts	0x0134, r22
+		case POT_CHANNEL:
+     348:	83 e0       	ldi	r24, 0x03	; 3
+     34a:	0b c0       	rjmp	.+22     	; 0x362 <__vector_21+0x96>
+			if(flags.mode == POT_MODE)
+				dcReq = ADC / 10;
+			channel = VOLTAGE_CHANNEL;
+     34c:	80 91 78 00 	lds	r24, 0x0078
+     350:	90 91 79 00 	lds	r25, 0x0079
+     354:	6e e1       	ldi	r22, 0x1E	; 30
+     356:	70 e0       	ldi	r23, 0x00	; 0
+     358:	0e 94 33 0d 	call	0x1a66	; 0x1a66 <__udivmodhi4>
+     35c:	60 93 3f 01 	sts	0x013F, r22
+			break;
+     360:	02 c0       	rjmp	.+4      	; 0x366 <__vector_21+0x9a>
+		case VOLTAGE_CHANNEL:
+			status.voltage = ADC / 21;
+			channel = TEMP_CHANNEL;
+     362:	80 93 07 01 	sts	0x0107, r24
+			break;
+		default: 
+			break;
+	}
+	/*if(channel == LAST_CHANNEL)
+		channel = FIRST_CHANNEL;
+     366:	80 91 07 01 	lds	r24, 0x0107
+     36a:	0e 94 fb 08 	call	0x11f6	; 0x11f6 <adcSelectChannel>
+	else
+     36e:	0e 94 42 09 	call	0x1284	; 0x1284 <adcStartConversion>
+		channel ++;
+     372:	ff 91       	pop	r31
+     374:	ef 91       	pop	r30
+     376:	bf 91       	pop	r27
+     378:	af 91       	pop	r26
+     37a:	9f 91       	pop	r25
+     37c:	8f 91       	pop	r24
+     37e:	7f 91       	pop	r23
+     380:	6f 91       	pop	r22
+     382:	5f 91       	pop	r21
+     384:	4f 91       	pop	r20
+     386:	3f 91       	pop	r19
+     388:	2f 91       	pop	r18
+     38a:	0f 90       	pop	r0
+     38c:	0f be       	out	0x3f, r0	; 63
+     38e:	0f 90       	pop	r0
+     390:	1f 90       	pop	r1
+     392:	18 95       	reti
+
+00000394 <__vector_11>:
+	*/
+	adcSelectChannel(channel);
+	adcStartConversion();
+     394:	1f 92       	push	r1
+     396:	0f 92       	push	r0
+     398:	0f b6       	in	r0, 0x3f	; 63
+     39a:	0f 92       	push	r0
+     39c:	11 24       	eor	r1, r1
+     39e:	8f 93       	push	r24
+}
+     3a0:	80 91 3d 01 	lds	r24, 0x013D
+     3a4:	88 23       	and	r24, r24
+     3a6:	31 f0       	breq	.+12     	; 0x3b4 <__vector_11+0x20>
+     3a8:	80 91 39 01 	lds	r24, 0x0139
+     3ac:	80 73       	andi	r24, 0x30	; 48
+     3ae:	80 33       	cpi	r24, 0x30	; 48
+     3b0:	09 f4       	brne	.+2      	; 0x3b4 <__vector_11+0x20>
+
+     3b2:	29 9a       	sbi	0x05, 1	; 5
+ISR(TIMER1_COMPA_vect)
+     3b4:	8f 91       	pop	r24
+     3b6:	0f 90       	pop	r0
+     3b8:	0f be       	out	0x3f, r0	; 63
+     3ba:	0f 90       	pop	r0
+     3bc:	1f 90       	pop	r1
+     3be:	18 95       	reti
+
+000003c0 <__vector_12>:
+{
+	if(status.dc > 0 && flags.on && flags.dms)
+		setBit(PWM_PORT,PWM_BIT);		//Inicia o período em nível alto do PWM
+     3c0:	1f 92       	push	r1
+     3c2:	0f 92       	push	r0
+     3c4:	0f b6       	in	r0, 0x3f	; 63
+     3c6:	0f 92       	push	r0
+     3c8:	11 24       	eor	r1, r1
+     3ca:	8f 93       	push	r24
+}
+     3cc:	80 91 3d 01 	lds	r24, 0x013D
+     3d0:	84 36       	cpi	r24, 0x64	; 100
+     3d2:	08 f4       	brcc	.+2      	; 0x3d6 <__vector_12+0x16>
+
+     3d4:	29 98       	cbi	0x05, 1	; 5
+ISR(TIMER1_COMPB_vect)
+     3d6:	8f 91       	pop	r24
+     3d8:	0f 90       	pop	r0
+     3da:	0f be       	out	0x3f, r0	; 63
+     3dc:	0f 90       	pop	r0
+     3de:	1f 90       	pop	r1
+     3e0:	18 95       	reti
+
+000003e2 <__vector_16>:
+{
+	if(status.dc < 100)
+		clrBit(PWM_PORT,PWM_BIT);		//Inicia o período em nível baixo do PWM
+}
+     3e2:	1f 92       	push	r1
+     3e4:	0f 92       	push	r0
+     3e6:	0f b6       	in	r0, 0x3f	; 63
+     3e8:	0f 92       	push	r0
+     3ea:	11 24       	eor	r1, r1
+     3ec:	2f 93       	push	r18
+     3ee:	3f 93       	push	r19
+     3f0:	4f 93       	push	r20
+     3f2:	5f 93       	push	r21
+     3f4:	6f 93       	push	r22
+     3f6:	7f 93       	push	r23
+     3f8:	8f 93       	push	r24
+     3fa:	9f 93       	push	r25
+     3fc:	af 93       	push	r26
+     3fe:	bf 93       	push	r27
+     400:	ef 93       	push	r30
+     402:	ff 93       	push	r31
+
+//60Hz
+     404:	99 b1       	in	r25, 0x09	; 9
+     406:	95 fb       	bst	r25, 5
+     408:	99 27       	eor	r25, r25
+     40a:	90 f9       	bld	r25, 0
+     40c:	21 e0       	ldi	r18, 0x01	; 1
+     40e:	92 27       	eor	r25, r18
+     410:	80 91 39 01 	lds	r24, 0x0139
+     414:	90 fb       	bst	r25, 0
+     416:	84 f9       	bld	r24, 4
+     418:	80 93 39 01 	sts	0x0139, r24
+ISR(TIMER0_OVF_vect)
+     41c:	99 b1       	in	r25, 0x09	; 9
+     41e:	92 95       	swap	r25
+     420:	91 70       	andi	r25, 0x01	; 1
+     422:	92 27       	eor	r25, r18
+     424:	90 fb       	bst	r25, 0
+     426:	85 f9       	bld	r24, 5
+     428:	80 93 39 01 	sts	0x0139, r24
+{
+     42c:	80 73       	andi	r24, 0x30	; 48
+     42e:	90 91 3d 01 	lds	r25, 0x013D
+     432:	80 33       	cpi	r24, 0x30	; 48
+     434:	79 f5       	brne	.+94     	; 0x494 <__vector_16+0xb2>
+	//setBit(PIND,PD0);
+	flags.on = isBitClr(ON_PIN,ON_BIT);
+     436:	80 91 34 01 	lds	r24, 0x0134
+     43a:	98 17       	cp	r25, r24
+     43c:	81 f1       	breq	.+96     	; 0x49e <__vector_16+0xbc>
+	flags.dms = isBitClr(DMS_PIN,DMS_BIT);
+	if(!(flags.on && flags.dms))					//informa ao sistema para nao acionar o motor caso botão ON e DMS estejam desligados.
+     43e:	98 17       	cp	r25, r24
+     440:	30 f5       	brcc	.+76     	; 0x48e <__vector_16+0xac>
+     442:	60 91 05 01 	lds	r22, 0x0105
+     446:	48 2f       	mov	r20, r24
+     448:	50 e0       	ldi	r21, 0x00	; 0
+     44a:	26 2f       	mov	r18, r22
+     44c:	30 e0       	ldi	r19, 0x00	; 0
+     44e:	2b 5f       	subi	r18, 0xFB	; 251
+     450:	3f 4f       	sbci	r19, 0xFF	; 255
+     452:	24 17       	cp	r18, r20
+     454:	35 07       	cpc	r19, r21
+     456:	dc f4       	brge	.+54     	; 0x48e <__vector_16+0xac>
+		status.on = 0;
+	if(dcReq<minDC && flags.on && flags.dms)		//informa ao sistema para acionar o motor apenas quando botão ON e DMS estejam ligados
+     458:	20 91 37 01 	lds	r18, 0x0137
+     45c:	30 91 38 01 	lds	r19, 0x0138
+     460:	23 30       	cpi	r18, 0x03	; 3
+     462:	31 05       	cpc	r19, r1
+     464:	69 f4       	brne	.+26     	; 0x480 <__vector_16+0x9e>
+		status.on = 1;								//e o potenciometro esteja numa posicao correspondente a menos de 10% do DC do PWM.
+	if(status.on && flags.on && flags.dms)		//inicia o acionamento do motor, com os as condições preliminares acima satisfeitas.
+     466:	91 11       	cpse	r25, r1
+     468:	02 c0       	rjmp	.+4      	; 0x46e <__vector_16+0x8c>
+	{
+     46a:	86 2f       	mov	r24, r22
+     46c:	02 c0       	rjmp	.+4      	; 0x472 <__vector_16+0x90>
+    	if(status.dc != dcReq)
+    	{
+     46e:	81 e0       	ldi	r24, 0x01	; 1
+     470:	89 0f       	add	r24, r25
+     472:	0e 94 83 00 	call	0x106	; 0x106 <seta_dc>
+    		if(dcReq > status.dc && dcReq > (minDC + 5))
+     476:	10 92 38 01 	sts	0x0138, r1
+     47a:	10 92 37 01 	sts	0x0137, r1
+     47e:	0f c0       	rjmp	.+30     	; 0x49e <__vector_16+0xbc>
+    		{
+    			if(cont == maxCont)
+    			{
+     480:	2f 5f       	subi	r18, 0xFF	; 255
+     482:	3f 4f       	sbci	r19, 0xFF	; 255
+     484:	30 93 38 01 	sts	0x0138, r19
+     488:	20 93 37 01 	sts	0x0137, r18
+     48c:	08 c0       	rjmp	.+16     	; 0x49e <__vector_16+0xbc>
+    				if(status.dc == 0)
+    					seta_dc(minDC);
+    				else
+     48e:	89 17       	cp	r24, r25
+     490:	30 f4       	brcc	.+12     	; 0x49e <__vector_16+0xbc>
+     492:	03 c0       	rjmp	.+6      	; 0x49a <__vector_16+0xb8>
+    					seta_dc(status.dc+1);
+    				cont = 0;
+    			}
+    			else
+    				cont++;
+    		}
+     494:	99 23       	and	r25, r25
+     496:	19 f0       	breq	.+6      	; 0x49e <__vector_16+0xbc>
+    		else
+     498:	80 e0       	ldi	r24, 0x00	; 0
+     49a:	0e 94 83 00 	call	0x106	; 0x106 <seta_dc>
+    			if (dcReq < status.dc)
+    				seta_dc(dcReq);			//definição do Duty Cicle do PWM
+     49e:	90 91 3e 01 	lds	r25, 0x013E
+     4a2:	80 91 01 01 	lds	r24, 0x0101
+     4a6:	89 17       	cp	r24, r25
+     4a8:	50 f4       	brcc	.+20     	; 0x4be <__vector_16+0xdc>
+     4aa:	20 91 39 01 	lds	r18, 0x0139
+     4ae:	20 fd       	sbrc	r18, 0
+     4b0:	06 c0       	rjmp	.+12     	; 0x4be <__vector_16+0xdc>
+    	}
+	}
+     4b2:	82 2f       	mov	r24, r18
+     4b4:	81 60       	ori	r24, 0x01	; 1
+     4b6:	80 93 39 01 	sts	0x0139, r24
+	else
+     4ba:	44 9a       	sbi	0x08, 4	; 8
+     4bc:	0a c0       	rjmp	.+20     	; 0x4d2 <__vector_16+0xf0>
+	{
+		if(status.dc != 0)					//se o sistema ainda nao esta desligado
+			seta_dc(0);						//desliga o sistema
+     4be:	98 17       	cp	r25, r24
+     4c0:	40 f4       	brcc	.+16     	; 0x4d2 <__vector_16+0xf0>
+     4c2:	80 91 39 01 	lds	r24, 0x0139
+     4c6:	80 ff       	sbrs	r24, 0
+     4c8:	04 c0       	rjmp	.+8      	; 0x4d2 <__vector_16+0xf0>
+	}
+	if(status.dc>minDC && (status.current>maxCurrent || status.voltage<minVoltage))
+     4ca:	8e 7f       	andi	r24, 0xFE	; 254
+     4cc:	80 93 39 01 	sts	0x0139, r24
+	{
+     4d0:	44 98       	cbi	0x08, 4	; 8
+		if(status.dc==100)
+			seta_dc(status.dc-(100 - maxDC));
+     4d2:	ff 91       	pop	r31
+     4d4:	ef 91       	pop	r30
+     4d6:	bf 91       	pop	r27
+     4d8:	af 91       	pop	r26
+     4da:	9f 91       	pop	r25
+     4dc:	8f 91       	pop	r24
+     4de:	7f 91       	pop	r23
+     4e0:	6f 91       	pop	r22
+     4e2:	5f 91       	pop	r21
+     4e4:	4f 91       	pop	r20
+     4e6:	3f 91       	pop	r19
+     4e8:	2f 91       	pop	r18
+     4ea:	0f 90       	pop	r0
+     4ec:	0f be       	out	0x3f, r0	; 63
+     4ee:	0f 90       	pop	r0
+     4f0:	1f 90       	pop	r1
+     4f2:	18 95       	reti
+
+000004f4 <__vector_18>:
+		else
+			seta_dc(status.dc-2);
+	}
+     4f4:	1f 92       	push	r1
+     4f6:	0f 92       	push	r0
+     4f8:	0f b6       	in	r0, 0x3f	; 63
+     4fa:	0f 92       	push	r0
+     4fc:	11 24       	eor	r1, r1
+     4fe:	2f 93       	push	r18
+     500:	3f 93       	push	r19
+     502:	4f 93       	push	r20
+     504:	5f 93       	push	r21
+     506:	6f 93       	push	r22
+     508:	7f 93       	push	r23
+     50a:	8f 93       	push	r24
+     50c:	9f 93       	push	r25
+     50e:	af 93       	push	r26
+     510:	bf 93       	push	r27
+     512:	ef 93       	push	r30
+     514:	ff 93       	push	r31
+	if(status.temperature > criticalTemp && !flags.warning)
+>>>>>>> firmware-changes-chopper
      516:	80 91 c6 00 	lds	r24, 0x00C6
      51a:	0e 94 aa 0a 	call	0x1554	; 0x1554 <usartAddDataToReceiverBuffer>
+	{
      51e:	ff 91       	pop	r31
      520:	ef 91       	pop	r30
      522:	bf 91       	pop	r27
@@ -10711,6 +11050,7 @@ int main(void)
     165a:	93 e0       	ldi	r25, 0x03	; 3
     165c:	90 93 3b 01 	sts	0x013B, r25
     1660:	80 93 3a 01 	sts	0x013A, r24
+<<<<<<< HEAD
 >>>>>>> refs/remotes/origin/master
 >>>>>>> eb0a63735974dada6f69fdef94e129260db79bc1
 	// VARIAVEIS LOCAIS;
@@ -10777,6 +11117,12 @@ int main(void)
     15da:	cb 59       	subi	r28, 0x9B	; 155
     15dc:	d0 40       	sbci	r29, 0x00	; 0
 =======
+=======
+	status.on = 0;			//indica que o sistema inicia sem acionar o motor
+	status.dc = 0;
+	// VARIAVEIS LOCAIS;
+	char frameData[50];
+>>>>>>> firmware-changes-chopper
     1664:	19 82       	std	Y+1, r1	; 0x01
     1666:	1a 82       	std	Y+2, r1	; 0x02
     1668:	1b 82       	std	Y+3, r1	; 0x03
@@ -10788,7 +11134,7 @@ int main(void)
     1674:	1d 92       	st	X+, r1
     1676:	8a 95       	dec	r24
     1678:	e9 f7       	brne	.-6      	; 0x1674 <main+0x50>
-	char msgToSend[8] = "";
+	uint8 frameIndex = 0;
     167a:	c9 56       	subi	r28, 0x69	; 105
     167c:	df 4f       	sbci	r29, 0xFF	; 255
     167e:	18 82       	st	Y, r1
@@ -10805,6 +11151,7 @@ int main(void)
     1694:	1b 82       	std	Y+3, r1	; 0x03
     1696:	cb 59       	subi	r28, 0x9B	; 155
     1698:	d0 40       	sbci	r29, 0x00	; 0
+<<<<<<< HEAD
 >>>>>>> refs/remotes/origin/master
 >>>>>>> eb0a63735974dada6f69fdef94e129260db79bc1
 	uint8 pos =  0;
@@ -11017,15 +11364,126 @@ int main(void)
     17ac:	0e 94 14 0a 	call	0x1428	; 0x1428 <usartEnableTransmitter>
 		usartActivateReceptionCompleteInterrupt();
     17b0:	0e 94 22 0a 	call	0x1444	; 0x1444 <usartActivateReceptionCompleteInterrupt>
+=======
+	char recebido[100] = "";
+	char msgToSend[8] = "";
+	uint8 pos =  0;
+	
+    169a:	39 98       	cbi	0x07, 1	; 7
+	// CONFIGURA ADC
+    169c:	47 e0       	ldi	r20, 0x07	; 7
+    169e:	61 e0       	ldi	r22, 0x01	; 1
+    16a0:	80 e0       	ldi	r24, 0x00	; 0
+    16a2:	0e 94 ba 08 	call	0x1174	; 0x1174 <adcConfig>
+	clrBit(DDRC,POT_BIT);		//SETA O PINO DO ADC COMO ENTRADA
+    16a6:	81 e0       	ldi	r24, 0x01	; 1
+    16a8:	0e 94 fb 08 	call	0x11f6	; 0x11f6 <adcSelectChannel>
+	adcConfig(ADC_MODE_SINGLE_CONVERSION, ADC_REFRENCE_POWER_SUPPLY , ADC_PRESCALER_128);
+    16ac:	0e 94 2d 09 	call	0x125a	; 0x125a <adcClearInterruptRequest>
+	adcSelectChannel(POT_CHANNEL);
+    16b0:	0e 94 34 09 	call	0x1268	; 0x1268 <adcActivateInterrupt>
+	adcClearInterruptRequest();
+    16b4:	0e 94 1f 09 	call	0x123e	; 0x123e <adcEnable>
+	adcActivateInterrupt();
+    16b8:	0e 94 42 09 	call	0x1284	; 0x1284 <adcStartConversion>
+	adcEnable();
+	adcStartConversion();
+	
+    16bc:	63 e0       	ldi	r22, 0x03	; 3
+    16be:	84 e0       	ldi	r24, 0x04	; 4
+    16c0:	0e 94 71 07 	call	0xee2	; 0xee2 <timer1Config>
+	// CONFIGURA PWM
+    16c4:	0e 94 dc 07 	call	0xfb8	; 0xfb8 <timer1ClearCompareBInterruptRequest>
+	timer1Config(TIMER_B_MODE_CTC, TIMER_A_PRESCALER_64);
+    16c8:	0e 94 cb 07 	call	0xf96	; 0xf96 <timer1ClearCompareAInterruptRequest>
+	timer1ClearCompareBInterruptRequest();									
+    16cc:	0e 94 ce 07 	call	0xf9c	; 0xf9c <timer1ActivateCompareBInterrupt>
+	timer1ClearCompareAInterruptRequest();
+    16d0:	0e 94 bd 07 	call	0xf7a	; 0xf7a <timer1ActivateCompareAInterrupt>
+	timer1ActivateCompareBInterrupt();									//ativa a interrupcao do compA
+    16d4:	20 91 3a 01 	lds	r18, 0x013A
+    16d8:	30 91 3b 01 	lds	r19, 0x013B
+    16dc:	40 e0       	ldi	r20, 0x00	; 0
+    16de:	50 e0       	ldi	r21, 0x00	; 0
+    16e0:	60 e9       	ldi	r22, 0x90	; 144
+    16e2:	70 ed       	ldi	r23, 0xD0	; 208
+    16e4:	83 e0       	ldi	r24, 0x03	; 3
+    16e6:	90 e0       	ldi	r25, 0x00	; 0
+    16e8:	0e 94 47 0d 	call	0x1a8e	; 0x1a8e <__udivmodsi4>
+    16ec:	c9 01       	movw	r24, r18
+    16ee:	0e 94 0c 08 	call	0x1018	; 0x1018 <timer1SetCompareAValue>
+	timer1ActivateCompareAInterrupt();									//ativa a interrupcao do compB
+    16f2:	00 91 3d 01 	lds	r16, 0x013D
+    16f6:	10 e0       	ldi	r17, 0x00	; 0
+    16f8:	0e 94 15 08 	call	0x102a	; 0x102a <timer1GetCompareAValue>
+    16fc:	9c 01       	movw	r18, r24
+    16fe:	20 9f       	mul	r18, r16
+    1700:	c0 01       	movw	r24, r0
+    1702:	21 9f       	mul	r18, r17
+    1704:	90 0d       	add	r25, r0
+    1706:	30 9f       	mul	r19, r16
+    1708:	90 0d       	add	r25, r0
+    170a:	11 24       	eor	r1, r1
+    170c:	64 e6       	ldi	r22, 0x64	; 100
+    170e:	70 e0       	ldi	r23, 0x00	; 0
+    1710:	0e 94 33 0d 	call	0x1a66	; 0x1a66 <__udivmodhi4>
+    1714:	cb 01       	movw	r24, r22
+    1716:	0e 94 1a 08 	call	0x1034	; 0x1034 <timer1SetCompareBValue>
+	timer1SetCompareAValue((F_CPU/64)/status.freq);							//valor do comparador A,  define a frequencia
+	timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);		//valor do comparador B,  define Duty Cicle
+
+    171a:	65 e0       	ldi	r22, 0x05	; 5
+    171c:	80 e0       	ldi	r24, 0x00	; 0
+    171e:	0e 94 cc 06 	call	0xd98	; 0xd98 <timer0Config>
+	// CONFIGURA A INTERRUPÇÃO DE CONTROLE(60Hz)
+    1722:	0e 94 3f 07 	call	0xe7e	; 0xe7e <timer0ClearOverflowInterruptRequest>
+	timer0Config(TIMER_A_MODE_NORMAL, TIMER_A_PRESCALER_1024);			
+    1726:	0e 94 33 07 	call	0xe66	; 0xe66 <timer0ActivateOverflowInterrupt>
+	timer0ClearOverflowInterruptRequest();								//limpa a interrupcao de OVF
+    172a:	80 91 39 01 	lds	r24, 0x0139
+    172e:	8c 70       	andi	r24, 0x0C	; 12
+    1730:	84 30       	cpi	r24, 0x04	; 4
+    1732:	81 f4       	brne	.+32     	; 0x1754 <main+0x130>
+	timer0ActivateOverflowInterrupt();							
+	if (flags.mode == SERIAL_MODE)
+	{
+    1734:	e1 2c       	mov	r14, r1
+    1736:	00 e0       	ldi	r16, 0x00	; 0
+    1738:	23 e0       	ldi	r18, 0x03	; 3
+    173a:	40 e8       	ldi	r20, 0x80	; 128
+    173c:	55 e2       	ldi	r21, 0x25	; 37
+    173e:	60 e0       	ldi	r22, 0x00	; 0
+    1740:	70 e0       	ldi	r23, 0x00	; 0
+    1742:	80 e0       	ldi	r24, 0x00	; 0
+    1744:	0e 94 55 09 	call	0x12aa	; 0x12aa <usartConfig>
+		// CONFIGURA A USART
+    1748:	0e 94 da 09 	call	0x13b4	; 0x13b4 <usartEnableReceiver>
+		usartConfig(USART_MODE_ASYNCHRONOUS,USART_BAUD_9600 ,USART_DATA_BITS_8,USART_PARITY_NONE,USART_STOP_BIT_SINGLE);
+    174c:	0e 94 e8 09 	call	0x13d0	; 0x13d0 <usartEnableTransmitter>
+		usartEnableReceiver();
+    1750:	0e 94 f6 09 	call	0x13ec	; 0x13ec <usartActivateReceptionCompleteInterrupt>
+		usartEnableTransmitter();
+		usartActivateReceptionCompleteInterrupt();
+>>>>>>> firmware-changes-chopper
 	}
+    1754:	78 94       	sei
 
 	sei();
+<<<<<<< HEAD
     17b4:	78 94       	sei
 	
 	setBit(PWM_DDR,PWM_BIT);			//define o pino do pwm como saída
     17b6:	21 9a       	sbi	0x04, 1	; 4
+=======
+    1756:	21 9a       	sbi	0x04, 1	; 4
+	
+	setBit(PWM_DDR,PWM_BIT);			//define o pino do pwm como saída
+    1758:	5d 9a       	sbi	0x0b, 5	; 11
+>>>>>>> firmware-changes-chopper
 
+    175a:	5c 9a       	sbi	0x0b, 4	; 11
 	setBit(ON_PORT,ON_BIT);				//habilita o pull-up da chave on
+<<<<<<< HEAD
     17b8:	5d 9a       	sbi	0x0b, 5	; 11
 	setBit(DMS_PORT,DMS_BIT);			//habilita o pull-up da chave dms
 <<<<<<< HEAD
@@ -11088,11 +11546,30 @@ int main(void)
 	uint8 frameIndex = 0;
     17d4:	a1 2c       	mov	r10, r1
 =======
+=======
+	setBit(DMS_PORT,DMS_BIT);			//habilita o pull-up da chave dms
+
+    175c:	3c 9a       	sbi	0x07, 4	; 7
+//configura o buzzer e da sinal de alerta de ligação
+    175e:	44 9a       	sbi	0x08, 4	; 8
+    1760:	3f ef       	ldi	r19, 0xFF	; 255
+    1762:	83 ed       	ldi	r24, 0xD3	; 211
+    1764:	90 e3       	ldi	r25, 0x30	; 48
+    1766:	31 50       	subi	r19, 0x01	; 1
+    1768:	80 40       	sbci	r24, 0x00	; 0
+    176a:	90 40       	sbci	r25, 0x00	; 0
+    176c:	e1 f7       	brne	.-8      	; 0x1766 <main+0x142>
+    176e:	00 c0       	rjmp	.+0      	; 0x1770 <main+0x14c>
+    1770:	00 00       	nop
+	setBit(BUZZER_DDR,BUZZER_BIT);			
+	setBit(BUZZER_PORT,BUZZER_BIT);
+>>>>>>> firmware-changes-chopper
     1772:	44 98       	cbi	0x08, 4	; 8
 	_delay_ms(1000);
 	flags.mode = POT_MODE;
 >>>>>>> refs/remotes/origin/master
 	status.freq = 1000;
+<<<<<<< HEAD
 	flags.on = 1;
 	flags.dms = 1;
 	// VARIAVEIS LOCAIS;
@@ -11115,18 +11592,34 @@ int main(void)
 =======
     1774:	a1 2c       	mov	r10, r1
 >>>>>>> eb0a63735974dada6f69fdef94e129260db79bc1
+=======
+	status.on = 0;			//indica que o sistema inicia sem acionar o motor
+	status.dc = 0;
+	// VARIAVEIS LOCAIS;
+    1774:	a1 2c       	mov	r10, r1
+										dcReq = string4Touint8(recebido);
+										status.dc = dcReq;
+>>>>>>> firmware-changes-chopper
 										if(status.dc < minDC)
 											status.dc = 0;
 										else
 											if(status.dc > maxDC)
+<<<<<<< HEAD
 												status.dc = 100;
 										timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
     17d6:	04 e6       	ldi	r16, 0x64	; 100
     17d8:	10 e0       	ldi	r17, 0x00	; 0
+=======
+    1776:	04 e6       	ldi	r16, 0x64	; 100
+    1778:	10 e0       	ldi	r17, 0x00	; 0
+
+								switch (pos){
+>>>>>>> firmware-changes-chopper
 									case 1:
 										freqReq = string4ToUint16(recebido);
 										if (freqReq >= MIN_FREQ && freqReq <= MAX_FREQ)
 										{
+<<<<<<< HEAD
 											status.freq = freqReq;
 											timer1SetCompareAValue((F_CPU/1024)/status.freq);
 <<<<<<< HEAD
@@ -11135,16 +11628,24 @@ int main(void)
     17de:	9d e3       	ldi	r25, 0x3D	; 61
     17e0:	f9 2e       	mov	r15, r25
 =======
+=======
+>>>>>>> firmware-changes-chopper
     177a:	99 e0       	ldi	r25, 0x09	; 9
     177c:	e9 2e       	mov	r14, r25
     177e:	9d e3       	ldi	r25, 0x3D	; 61
     1780:	f9 2e       	mov	r15, r25
+<<<<<<< HEAD
 >>>>>>> refs/remotes/origin/master
 >>>>>>> eb0a63735974dada6f69fdef94e129260db79bc1
+=======
+	//pino usado somente para teste no proteus
+	setBit(DDRD,PD0);			
+>>>>>>> firmware-changes-chopper
 	setBit(PORTD,PD0);			
 	*/
 
     while(1)
+<<<<<<< HEAD
     {
     	if(flags.mode == SERIAL_MODE)
 <<<<<<< HEAD
@@ -11181,16 +11682,24 @@ inline void seta_freq(uint16 freqReq)		//função para definição da frequencia
     16dc:	bb 24       	eor	r11, r11
     16de:	b3 94       	inc	r11
 =======
+=======
+>>>>>>> firmware-changes-chopper
     1782:	80 91 39 01 	lds	r24, 0x0139
     1786:	8c 70       	andi	r24, 0x0C	; 12
     1788:	84 30       	cpi	r24, 0x04	; 4
     178a:	09 f0       	breq	.+2      	; 0x178e <main+0x16a>
     178c:	ff cf       	rjmp	.-2      	; 0x178c <main+0x168>
+<<<<<<< HEAD
 >>>>>>> eb0a63735974dada6f69fdef94e129260db79bc1
+=======
+									case 10:
+										dcReq = string4Touint8(recebido);
+>>>>>>> firmware-changes-chopper
 										status.dc = dcReq;
 										if(status.dc < minDC)
 											status.dc = 0;
 										else
+<<<<<<< HEAD
 											if(status.dc > maxDC)
 												status.dc = 100;
 <<<<<<< HEAD
@@ -11201,10 +11710,17 @@ inline void seta_freq(uint16 freqReq)		//função para definição da frequencia
     1790:	d8 2e       	mov	r13, r24
 >>>>>>> refs/remotes/origin/master
 >>>>>>> eb0a63735974dada6f69fdef94e129260db79bc1
+=======
+    178e:	84 e6       	ldi	r24, 0x64	; 100
+    1790:	d8 2e       	mov	r13, r24
+	setBit(PORTD,PD0);			
+*/
+>>>>>>> firmware-changes-chopper
 
     while(1)
     {
     	if(flags.mode == SERIAL_MODE)
+<<<<<<< HEAD
     	{
 	    	while(!usartIsReceiverBufferEmpty())
 <<<<<<< HEAD
@@ -11271,6 +11787,25 @@ inline void seta_freq(uint16 freqReq)		//função para definição da frequencia
     1822:	8a 32       	cpi	r24, 0x2A	; 42
     1824:	11 f0       	breq	.+4      	; 0x182a <main+0x1ae>
 =======
+=======
+    1792:	0e 94 fc 0a 	call	0x15f8	; 0x15f8 <usartIsReceiverBufferEmpty>
+    1796:	81 11       	cpse	r24, r1
+    1798:	f4 cf       	rjmp	.-24     	; 0x1782 <main+0x15e>
+    	{
+	    	while(!usartIsReceiverBufferEmpty())
+    179a:	bb 24       	eor	r11, r11
+    179c:	b3 94       	inc	r11
+    179e:	ba 0c       	add	r11, r10
+    17a0:	0e 94 da 0a 	call	0x15b4	; 0x15b4 <usartGetDataFromReceiverBuffer>
+    17a4:	e5 e6       	ldi	r30, 0x65	; 101
+    17a6:	f0 e0       	ldi	r31, 0x00	; 0
+    17a8:	ec 0f       	add	r30, r28
+    17aa:	fd 1f       	adc	r31, r29
+    17ac:	ea 0d       	add	r30, r10
+    17ae:	f1 1d       	adc	r31, r1
+    17b0:	80 83       	st	Z, r24
+	    	{
+>>>>>>> firmware-changes-chopper
     17b2:	e5 e6       	ldi	r30, 0x65	; 101
     17b4:	f0 e0       	ldi	r31, 0x00	; 0
     17b6:	ec 0f       	add	r30, r28
@@ -11281,12 +11816,18 @@ inline void seta_freq(uint16 freqReq)		//função para definição da frequencia
     17c0:	80 81       	ld	r24, Z
     17c2:	8a 32       	cpi	r24, 0x2A	; 42
     17c4:	11 f0       	breq	.+4      	; 0x17ca <main+0x1a6>
+<<<<<<< HEAD
 >>>>>>> refs/remotes/origin/master
 >>>>>>> eb0a63735974dada6f69fdef94e129260db79bc1
+=======
+
+    while(1)
+>>>>>>> firmware-changes-chopper
     {
     	if(flags.mode == SERIAL_MODE)
     	{
 	    	while(!usartIsReceiverBufferEmpty())
+<<<<<<< HEAD
 	    	{
 				frameData[frameIndex++] = usartGetDataFromReceiverBuffer();
 <<<<<<< HEAD
@@ -11519,10 +12060,121 @@ inline void seta_freq(uint16 freqReq)		//função para definição da frequencia
     1862:	f9 cf       	rjmp	.-14     	; 0x1856 <main+0x232>
 >>>>>>> refs/remotes/origin/master
 >>>>>>> eb0a63735974dada6f69fdef94e129260db79bc1
+=======
+    17c6:	ab 2c       	mov	r10, r11
+    17c8:	e4 cf       	rjmp	.-56     	; 0x1792 <main+0x16e>
+	    	{
+				frameData[frameIndex++] = usartGetDataFromReceiverBuffer();
+				if ((frameData[frameIndex-1] == FINALDOPACOTE))
+    17ca:	a6 96       	adiw	r28, 0x26	; 38
+    17cc:	8f ad       	ldd	r24, Y+63	; 0x3f
+    17ce:	a6 97       	sbiw	r28, 0x26	; 38
+    17d0:	80 34       	cpi	r24, 0x40	; 64
+    17d2:	09 f0       	breq	.+2      	; 0x17d6 <main+0x1b2>
+    17d4:	44 c1       	rjmp	.+648    	; 0x1a5e <main+0x43a>
+				{//se esta no final da palavra
+					if(frameData[0] == INICIODOPACOTE )
+    17d6:	be 01       	movw	r22, r28
+    17d8:	6b 59       	subi	r22, 0x9B	; 155
+    17da:	7f 4f       	sbci	r23, 0xFF	; 255
+    17dc:	ce 01       	movw	r24, r28
+    17de:	01 96       	adiw	r24, 0x01	; 1
+    17e0:	0e 94 98 0d 	call	0x1b30	; 0x1b30 <strcpy>
+					{//verifica se o inicio da palavra esta correto
+    17e4:	4b 81       	ldd	r20, Y+3	; 0x03
+    17e6:	40 53       	subi	r20, 0x30	; 48
+    17e8:	8a 81       	ldd	r24, Y+2	; 0x02
+    17ea:	88 0f       	add	r24, r24
+    17ec:	80 56       	subi	r24, 0x60	; 96
+    17ee:	98 2f       	mov	r25, r24
+    17f0:	99 0f       	add	r25, r25
+    17f2:	99 0f       	add	r25, r25
+    17f4:	98 0f       	add	r25, r24
+    17f6:	49 0f       	add	r20, r25
+						strcpy(recebido,frameData);
+    17f8:	a4 e0       	ldi	r26, 0x04	; 4
+    17fa:	ba 12       	cpse	r11, r26
+    17fc:	68 c0       	rjmp	.+208    	; 0x18ce <main+0x2aa>
+						pos = (recebido[2]-48) + (recebido[1] - 48)*10;
+						if(frameIndex == GETWORDSIZE)
+    17fe:	8a 81       	ldd	r24, Y+2	; 0x02
+    1800:	9b 81       	ldd	r25, Y+3	; 0x03
+    1802:	9a 83       	std	Y+2, r25	; 0x02
+    1804:	89 83       	std	Y+1, r24	; 0x01
+						{
+    1806:	1b 82       	std	Y+3, r1	; 0x03
+							memcpy( recebido,  (recebido+1), 2);
+    1808:	50 e0       	ldi	r21, 0x00	; 0
+    180a:	4e 30       	cpi	r20, 0x0E	; 14
+    180c:	51 05       	cpc	r21, r1
+    180e:	08 f0       	brcs	.+2      	; 0x1812 <main+0x1ee>
+    1810:	44 c0       	rjmp	.+136    	; 0x189a <main+0x276>
+    1812:	fa 01       	movw	r30, r20
+    1814:	ec 5c       	subi	r30, 0xCC	; 204
+    1816:	ff 4f       	sbci	r31, 0xFF	; 255
+    1818:	0c 94 69 0d 	jmp	0x1ad2	; 0x1ad2 <__tablejump2__>
+							recebido[2] = '\0';//isola o id
+							switch (pos)
+							{
+    181c:	66 e1       	ldi	r22, 0x16	; 22
+    181e:	71 e0       	ldi	r23, 0x01	; 1
+    1820:	3e c0       	rjmp	.+124    	; 0x189e <main+0x27a>
+								case 0:
+									strcpy(msgToSend,"OK");
+									break;
+    1822:	60 91 3a 01 	lds	r22, 0x013A
+    1826:	70 91 3b 01 	lds	r23, 0x013B
+    182a:	ce 01       	movw	r24, r28
+    182c:	89 56       	subi	r24, 0x69	; 105
+    182e:	9f 4f       	sbci	r25, 0xFF	; 255
+    1830:	0e 94 ca 00 	call	0x194	; 0x194 <uint16ToString4>
+								case 1:
+    1834:	39 c0       	rjmp	.+114    	; 0x18a8 <main+0x284>
+									uint16ToString4(msgToSend,status.freq);
+									break;
+    1836:	60 91 06 01 	lds	r22, 0x0106
+    183a:	28 c0       	rjmp	.+80     	; 0x188c <main+0x268>
+								case 2:
+									uint8ToString4(msgToSend,maxCurrent);
+									break;
+    183c:	60 91 04 01 	lds	r22, 0x0104
+    1840:	25 c0       	rjmp	.+74     	; 0x188c <main+0x268>
+								case 3:
+									uint8ToString4(msgToSend,maxDC);
+									break;
+    1842:	60 91 05 01 	lds	r22, 0x0105
+    1846:	22 c0       	rjmp	.+68     	; 0x188c <main+0x268>
+								case 4:
+									uint8ToString4(msgToSend,minDC);
+									break;
+    1848:	60 91 03 01 	lds	r22, 0x0103
+    184c:	1f c0       	rjmp	.+62     	; 0x188c <main+0x268>
+								case 5:
+									uint8ToString4(msgToSend,maxDV);
+									break;
+    184e:	80 91 39 01 	lds	r24, 0x0139
+    1852:	84 ff       	sbrs	r24, 4
+    1854:	07 c0       	rjmp	.+14     	; 0x1864 <main+0x240>
+								case 6 :
+    1856:	69 e1       	ldi	r22, 0x19	; 25
+    1858:	71 e0       	ldi	r23, 0x01	; 1
+    185a:	21 c0       	rjmp	.+66     	; 0x189e <main+0x27a>
+									if(flags.on)
+										strcpy(msgToSend, "0001");
+									else
+										strcpy(msgToSend, "0000");
+									break;
+    185c:	80 91 39 01 	lds	r24, 0x0139
+    1860:	85 fd       	sbrc	r24, 5
+    1862:	f9 cf       	rjmp	.-14     	; 0x1856 <main+0x232>
+								case 5:
+									uint8ToString4(msgToSend,maxDV);
+>>>>>>> firmware-changes-chopper
 									break;
 								case 6 :
 									if(flags.on)
 										strcpy(msgToSend, "0001");
+<<<<<<< HEAD
 									else
 										strcpy(msgToSend, "0000");
 <<<<<<< HEAD
@@ -11540,10 +12192,18 @@ inline void seta_freq(uint16 freqReq)		//função para definição da frequencia
     1868:	1a c0       	rjmp	.+52     	; 0x189e <main+0x27a>
 >>>>>>> refs/remotes/origin/master
 >>>>>>> eb0a63735974dada6f69fdef94e129260db79bc1
+=======
+    1864:	6e e1       	ldi	r22, 0x1E	; 30
+    1866:	71 e0       	ldi	r23, 0x01	; 1
+    1868:	1a c0       	rjmp	.+52     	; 0x189e <main+0x27a>
+								case 7:
+									if(flags.dms)
+>>>>>>> firmware-changes-chopper
 										strcpy(msgToSend, "0001");
 									else
 										strcpy(msgToSend, "0000");
 									break;
+<<<<<<< HEAD
 								case 8:
 									uint8ToString4(msgToSend,maxTemp);
 <<<<<<< HEAD
@@ -11681,10 +12341,72 @@ inline void seta_freq(uint16 freqReq)		//função para definição da frequencia
     192a:	9f 4f       	sbci	r25, 0xFF	; 255
     192c:	c1 c0       	rjmp	.+386    	; 0x1ab0 <main+0x434>
 =======
+=======
+    186a:	60 91 02 01 	lds	r22, 0x0102
+    186e:	0e c0       	rjmp	.+28     	; 0x188c <main+0x268>
+								case 8:
+									uint8ToString4(msgToSend,maxTemp);
+									break;
+    1870:	60 91 00 01 	lds	r22, 0x0100
+    1874:	0b c0       	rjmp	.+22     	; 0x188c <main+0x268>
+								case 9:
+									uint8ToString4(msgToSend,minVoltage);
+									break;
+    1876:	60 91 3d 01 	lds	r22, 0x013D
+    187a:	08 c0       	rjmp	.+16     	; 0x188c <main+0x268>
+								case 10:
+									uint8ToString4(msgToSend,status.dc);
+									break;
+    187c:	60 91 3e 01 	lds	r22, 0x013E
+    1880:	05 c0       	rjmp	.+10     	; 0x188c <main+0x268>
+								case 11:
+									uint8ToString4(msgToSend,status.temperature);
+									break;
+    1882:	60 91 3c 01 	lds	r22, 0x013C
+    1886:	02 c0       	rjmp	.+4      	; 0x188c <main+0x268>
+								case 12:
+									uint8ToString4(msgToSend,status.current);
+									break;
+    1888:	60 91 3f 01 	lds	r22, 0x013F
+    188c:	70 e0       	ldi	r23, 0x00	; 0
+    188e:	ce 01       	movw	r24, r28
+    1890:	89 56       	subi	r24, 0x69	; 105
+    1892:	9f 4f       	sbci	r25, 0xFF	; 255
+    1894:	0e 94 fe 00 	call	0x1fc	; 0x1fc <uint8ToString4>
+								case 13:
+    1898:	07 c0       	rjmp	.+14     	; 0x18a8 <main+0x284>
+									uint8ToString4(msgToSend,status.voltage);
+									break;
+    189a:	63 e2       	ldi	r22, 0x23	; 35
+    189c:	71 e0       	ldi	r23, 0x01	; 1
+    189e:	ce 01       	movw	r24, r28
+    18a0:	89 56       	subi	r24, 0x69	; 105
+    18a2:	9f 4f       	sbci	r25, 0xFF	; 255
+    18a4:	0e 94 98 0d 	call	0x1b30	; 0x1b30 <strcpy>
+								default:
+									strcpy(msgToSend,"ERRO");
+    18a8:	be 01       	movw	r22, r28
+    18aa:	69 56       	subi	r22, 0x69	; 105
+    18ac:	7f 4f       	sbci	r23, 0xFF	; 255
+    18ae:	ce 01       	movw	r24, r28
+    18b0:	01 96       	adiw	r24, 0x01	; 1
+    18b2:	0e 94 8d 0d 	call	0x1b1a	; 0x1b1a <strcat>
+							}
+    18b6:	be 01       	movw	r22, r28
+    18b8:	6f 5f       	subi	r22, 0xFF	; 255
+    18ba:	7f 4f       	sbci	r23, 0xFF	; 255
+    18bc:	ce 01       	movw	r24, r28
+    18be:	89 56       	subi	r24, 0x69	; 105
+    18c0:	9f 4f       	sbci	r25, 0xFF	; 255
+    18c2:	0e 94 98 0d 	call	0x1b30	; 0x1b30 <strcpy>
+							strcat(recebido,msgToSend);
+							strcpy(msgToSend,recebido);
+>>>>>>> firmware-changes-chopper
     18c6:	ce 01       	movw	r24, r28
     18c8:	89 56       	subi	r24, 0x69	; 105
     18ca:	9f 4f       	sbci	r25, 0xFF	; 255
     18cc:	c1 c0       	rjmp	.+386    	; 0x1a50 <main+0x42c>
+<<<<<<< HEAD
 >>>>>>> refs/remotes/origin/master
 >>>>>>> eb0a63735974dada6f69fdef94e129260db79bc1
 						}
@@ -11939,6 +12661,125 @@ inline void seta_freq(uint16 freqReq)		//função para definição da frequencia
     1a16:	11 24       	eor	r1, r1
     1a18:	dc cf       	rjmp	.-72     	; 0x19d2 <main+0x356>
 =======
+=======
+
+							stringTransmit(msgToSend);
+						}
+						else
+    18ce:	b8 e0       	ldi	r27, 0x08	; 8
+    18d0:	bb 12       	cpse	r11, r27
+    18d2:	c1 c0       	rjmp	.+386    	; 0x1a56 <main+0x432>
+						{
+							if(frameIndex == SETWORDSIZE)
+    18d4:	8c 81       	ldd	r24, Y+4	; 0x04
+    18d6:	9d 81       	ldd	r25, Y+5	; 0x05
+    18d8:	ae 81       	ldd	r26, Y+6	; 0x06
+    18da:	bf 81       	ldd	r27, Y+7	; 0x07
+    18dc:	89 83       	std	Y+1, r24	; 0x01
+    18de:	9a 83       	std	Y+2, r25	; 0x02
+    18e0:	ab 83       	std	Y+3, r26	; 0x03
+    18e2:	bc 83       	std	Y+4, r27	; 0x04
+							{
+    18e4:	1d 82       	std	Y+5, r1	; 0x05
+								memcpy((void *) recebido, (void *) (recebido+3), 4);//isola somente o valor, usando 4 caracteres
+								recebido[4] = '\0';
+    18e6:	50 e0       	ldi	r21, 0x00	; 0
+    18e8:	fa 01       	movw	r30, r20
+    18ea:	31 97       	sbiw	r30, 0x01	; 1
+    18ec:	ea 30       	cpi	r30, 0x0A	; 10
+    18ee:	f1 05       	cpc	r31, r1
+    18f0:	08 f0       	brcs	.+2      	; 0x18f4 <main+0x2d0>
+    18f2:	ac c0       	rjmp	.+344    	; 0x1a4c <main+0x428>
+    18f4:	ee 5b       	subi	r30, 0xBE	; 190
+    18f6:	ff 4f       	sbci	r31, 0xFF	; 255
+    18f8:	0c 94 69 0d 	jmp	0x1ad2	; 0x1ad2 <__tablejump2__>
+
+								switch (pos){
+    18fc:	ce 01       	movw	r24, r28
+    18fe:	01 96       	adiw	r24, 0x01	; 1
+    1900:	0e 94 29 01 	call	0x252	; 0x252 <string4ToUint16>
+    1904:	bc 01       	movw	r22, r24
+    1906:	90 93 36 01 	sts	0x0136, r25
+    190a:	80 93 35 01 	sts	0x0135, r24
+									case 1:
+    190e:	84 5f       	subi	r24, 0xF4	; 244
+    1910:	91 40       	sbci	r25, 0x01	; 1
+    1912:	85 3f       	cpi	r24, 0xF5	; 245
+    1914:	91 40       	sbci	r25, 0x01	; 1
+    1916:	08 f0       	brcs	.+2      	; 0x191a <main+0x2f6>
+    1918:	a4 c0       	rjmp	.+328    	; 0x1a62 <main+0x43e>
+										freqReq = string4ToUint16(recebido);
+										if (freqReq >= MIN_FREQ && freqReq <= MAX_FREQ)
+    191a:	70 93 3b 01 	sts	0x013B, r23
+    191e:	60 93 3a 01 	sts	0x013A, r22
+										{
+    1922:	c7 01       	movw	r24, r14
+    1924:	0e 94 33 0d 	call	0x1a66	; 0x1a66 <__udivmodhi4>
+    1928:	cb 01       	movw	r24, r22
+    192a:	0e 94 0c 08 	call	0x1018	; 0x1018 <timer1SetCompareAValue>
+    192e:	37 c0       	rjmp	.+110    	; 0x199e <main+0x37a>
+											status.freq = freqReq;
+											timer1SetCompareAValue((F_CPU/1024)/status.freq);
+											timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
+										}
+										break;
+    1930:	ce 01       	movw	r24, r28
+    1932:	01 96       	adiw	r24, 0x01	; 1
+    1934:	0e 94 54 01 	call	0x2a8	; 0x2a8 <string4Touint8>
+    1938:	80 93 06 01 	sts	0x0106, r24
+									case 2:
+    193c:	92 c0       	rjmp	.+292    	; 0x1a62 <main+0x43e>
+										maxCurrent = string4Touint8(recebido);
+										break;
+    193e:	ce 01       	movw	r24, r28
+    1940:	01 96       	adiw	r24, 0x01	; 1
+    1942:	0e 94 54 01 	call	0x2a8	; 0x2a8 <string4Touint8>
+    1946:	80 93 04 01 	sts	0x0104, r24
+									case 3:
+    194a:	90 91 34 01 	lds	r25, 0x0134
+    194e:	89 17       	cp	r24, r25
+    1950:	08 f4       	brcc	.+2      	; 0x1954 <main+0x330>
+    1952:	79 c0       	rjmp	.+242    	; 0x1a46 <main+0x422>
+										maxDC = string4Touint8(recebido);
+										if(dcReq > maxDC)
+											status.dc = 100;
+    1954:	90 93 3d 01 	sts	0x013D, r25
+										else
+    1958:	a0 90 3d 01 	lds	r10, 0x013D
+    195c:	b1 2c       	mov	r11, r1
+    195e:	0e 94 15 08 	call	0x102a	; 0x102a <timer1GetCompareAValue>
+    1962:	9c 01       	movw	r18, r24
+    1964:	2a 9d       	mul	r18, r10
+    1966:	c0 01       	movw	r24, r0
+    1968:	2b 9d       	mul	r18, r11
+    196a:	90 0d       	add	r25, r0
+    196c:	3a 9d       	mul	r19, r10
+    196e:	90 0d       	add	r25, r0
+    1970:	11 24       	eor	r1, r1
+    1972:	b8 01       	movw	r22, r16
+    1974:	0e 94 33 0d 	call	0x1a66	; 0x1a66 <__udivmodhi4>
+    1978:	cb 01       	movw	r24, r22
+    197a:	0e 94 1a 08 	call	0x1034	; 0x1034 <timer1SetCompareBValue>
+											status.dc = dcReq;
+    197e:	71 c0       	rjmp	.+226    	; 0x1a62 <main+0x43e>
+										timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
+										break;
+    1980:	ce 01       	movw	r24, r28
+    1982:	01 96       	adiw	r24, 0x01	; 1
+    1984:	0e 94 54 01 	call	0x2a8	; 0x2a8 <string4Touint8>
+    1988:	80 93 05 01 	sts	0x0105, r24
+									case 4:
+    198c:	90 91 34 01 	lds	r25, 0x0134
+    1990:	98 17       	cp	r25, r24
+    1992:	18 f4       	brcc	.+6      	; 0x199a <main+0x376>
+										minDC = string4Touint8(recebido);
+    1994:	10 92 3d 01 	sts	0x013D, r1
+    1998:	02 c0       	rjmp	.+4      	; 0x199e <main+0x37a>
+										if(dcReq < minDC)
+											status.dc = 0;
+    199a:	90 93 3d 01 	sts	0x013D, r25
+										else
+>>>>>>> firmware-changes-chopper
     199e:	a0 90 3d 01 	lds	r10, 0x013D
     19a2:	b1 2c       	mov	r11, r1
     19a4:	0e 94 15 08 	call	0x102a	; 0x102a <timer1GetCompareAValue>
@@ -11951,6 +12792,7 @@ inline void seta_freq(uint16 freqReq)		//função para definição da frequencia
     19b4:	90 0d       	add	r25, r0
     19b6:	11 24       	eor	r1, r1
     19b8:	dc cf       	rjmp	.-72     	; 0x1972 <main+0x34e>
+<<<<<<< HEAD
 >>>>>>> refs/remotes/origin/master
 >>>>>>> eb0a63735974dada6f69fdef94e129260db79bc1
 										break;
@@ -12022,10 +12864,16 @@ inline void seta_freq(uint16 freqReq)		//função para definição da frequencia
 										break;
     194c:	12 c0       	rjmp	.+36     	; 0x1972 <main+0x3fa>
 =======
+=======
+											status.dc = dcReq;
+										timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
+										break;
+>>>>>>> firmware-changes-chopper
     19ba:	ce 01       	movw	r24, r28
     19bc:	01 96       	adiw	r24, 0x01	; 1
     19be:	0e 94 54 01 	call	0x2a8	; 0x2a8 <string4Touint8>
     19c2:	80 93 03 01 	sts	0x0103, r24
+<<<<<<< HEAD
 >>>>>>> eb0a63735974dada6f69fdef94e129260db79bc1
 										break;
     1a26:	4d c0       	rjmp	.+154    	; 0x1ac2 <main+0x446>
@@ -12111,10 +12959,77 @@ inline void seta_freq(uint16 freqReq)		//função para definição da frequencia
 										break;
     195a:	0b c0       	rjmp	.+22     	; 0x1972 <main+0x3fa>
 =======
+=======
+									case 5:
+    19c6:	4d c0       	rjmp	.+154    	; 0x1a62 <main+0x43e>
+										maxDV = string4Touint8(recebido);
+										break;
+    19c8:	8c 81       	ldd	r24, Y+4	; 0x04
+    19ca:	81 33       	cpi	r24, 0x31	; 49
+    19cc:	21 f4       	brne	.+8      	; 0x19d6 <main+0x3b2>
+									case 6 :
+										if(recebido[3] == '1')
+    19ce:	80 91 39 01 	lds	r24, 0x0139
+    19d2:	80 61       	ori	r24, 0x10	; 16
+    19d4:	0d c0       	rjmp	.+26     	; 0x19f0 <main+0x3cc>
+										{
+											flags.on = 1;
+    19d6:	80 33       	cpi	r24, 0x30	; 48
+    19d8:	09 f0       	breq	.+2      	; 0x19dc <main+0x3b8>
+    19da:	43 c0       	rjmp	.+134    	; 0x1a62 <main+0x43e>
+										}
+										if(recebido[3] == '0')
+    19dc:	80 91 39 01 	lds	r24, 0x0139
+    19e0:	8f 7e       	andi	r24, 0xEF	; 239
+    19e2:	06 c0       	rjmp	.+12     	; 0x19f0 <main+0x3cc>
+										{
+											flags.on = 0;
+										}
+										break;
+    19e4:	8c 81       	ldd	r24, Y+4	; 0x04
+    19e6:	81 33       	cpi	r24, 0x31	; 49
+    19e8:	31 f4       	brne	.+12     	; 0x19f6 <main+0x3d2>
+									case 7:
+										if(recebido[3] == '1')
+    19ea:	80 91 39 01 	lds	r24, 0x0139
+    19ee:	80 62       	ori	r24, 0x20	; 32
+    19f0:	80 93 39 01 	sts	0x0139, r24
+    19f4:	36 c0       	rjmp	.+108    	; 0x1a62 <main+0x43e>
+										{
+											flags.dms = 1;
+    19f6:	80 33       	cpi	r24, 0x30	; 48
+    19f8:	a1 f5       	brne	.+104    	; 0x1a62 <main+0x43e>
+										}
+										if(recebido[3] == '0')
+    19fa:	80 91 39 01 	lds	r24, 0x0139
+    19fe:	8f 7d       	andi	r24, 0xDF	; 223
+    1a00:	f7 cf       	rjmp	.-18     	; 0x19f0 <main+0x3cc>
+										{
+											flags.dms = 0;
+										}
+										break;
+    1a02:	ce 01       	movw	r24, r28
+    1a04:	01 96       	adiw	r24, 0x01	; 1
+    1a06:	0e 94 54 01 	call	0x2a8	; 0x2a8 <string4Touint8>
+    1a0a:	80 93 02 01 	sts	0x0102, r24
+									case 8:
+    1a0e:	29 c0       	rjmp	.+82     	; 0x1a62 <main+0x43e>
+										maxTemp = string4Touint8(recebido);
+										break;
+    1a10:	ce 01       	movw	r24, r28
+    1a12:	01 96       	adiw	r24, 0x01	; 1
+    1a14:	0e 94 54 01 	call	0x2a8	; 0x2a8 <string4Touint8>
+    1a18:	80 93 00 01 	sts	0x0100, r24
+									case 9:
+    1a1c:	22 c0       	rjmp	.+68     	; 0x1a62 <main+0x43e>
+										minVoltage = string4Touint8(recebido);
+										break;
+>>>>>>> firmware-changes-chopper
     1a1e:	ce 01       	movw	r24, r28
     1a20:	01 96       	adiw	r24, 0x01	; 1
     1a22:	0e 94 54 01 	call	0x2a8	; 0x2a8 <string4Touint8>
     1a26:	80 93 34 01 	sts	0x0134, r24
+<<<<<<< HEAD
 >>>>>>> eb0a63735974dada6f69fdef94e129260db79bc1
 										status.dc = dcReq;
     1a8a:	80 93 3d 01 	sts	0x013D, r24
@@ -12140,10 +13055,33 @@ inline void seta_freq(uint16 freqReq)		//função para definição da frequencia
     1a4a:	86 cf       	rjmp	.-244    	; 0x1958 <main+0x334>
 >>>>>>> refs/remotes/origin/master
 >>>>>>> eb0a63735974dada6f69fdef94e129260db79bc1
+=======
+									case 10:
+    1a2a:	80 93 3d 01 	sts	0x013D, r24
+										dcReq = string4Touint8(recebido);
+    1a2e:	90 91 05 01 	lds	r25, 0x0105
+    1a32:	89 17       	cp	r24, r25
+    1a34:	18 f4       	brcc	.+6      	; 0x1a3c <main+0x418>
+										status.dc = dcReq;
+    1a36:	10 92 3d 01 	sts	0x013D, r1
+    1a3a:	8e cf       	rjmp	.-228    	; 0x1958 <main+0x334>
+										if(status.dc < minDC)
+											status.dc = 0;
+    1a3c:	90 91 04 01 	lds	r25, 0x0104
+    1a40:	98 17       	cp	r25, r24
+    1a42:	08 f0       	brcs	.+2      	; 0x1a46 <main+0x422>
+    1a44:	89 cf       	rjmp	.-238    	; 0x1958 <main+0x334>
+										else
+    1a46:	d0 92 3d 01 	sts	0x013D, r13
+    1a4a:	86 cf       	rjmp	.-244    	; 0x1958 <main+0x334>
+										timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
+										break;
+>>>>>>> firmware-changes-chopper
 									case 11:
 									case 12:
 									case 13:
 
+<<<<<<< HEAD
 									default:
 										stringTransmit("ERRO");
 <<<<<<< HEAD
@@ -12158,10 +13096,13 @@ inline void seta_freq(uint16 freqReq)		//função para definição da frequencia
     1960:	0e 94 b0 00 	call	0x160	; 0x160 <stringTransmit>
     1964:	06 c0       	rjmp	.+12     	; 0x1972 <main+0x3fa>
 =======
+=======
+>>>>>>> firmware-changes-chopper
     1a4c:	83 e2       	ldi	r24, 0x23	; 35
     1a4e:	91 e0       	ldi	r25, 0x01	; 1
     1a50:	0e 94 b2 00 	call	0x164	; 0x164 <stringTransmit>
     1a54:	06 c0       	rjmp	.+12     	; 0x1a62 <main+0x43e>
+<<<<<<< HEAD
 >>>>>>> refs/remotes/origin/master
 >>>>>>> eb0a63735974dada6f69fdef94e129260db79bc1
 								}
@@ -12184,10 +13125,23 @@ inline void seta_freq(uint16 freqReq)		//função para definição da frequencia
     1a5a:	0e 94 b2 00 	call	0x164	; 0x164 <stringTransmit>
 >>>>>>> refs/remotes/origin/master
 >>>>>>> eb0a63735974dada6f69fdef94e129260db79bc1
+=======
+									default:
+										stringTransmit("ERRO");
+								}
+							}
+							else
+    1a56:	88 e2       	ldi	r24, 0x28	; 40
+    1a58:	91 e0       	ldi	r25, 0x01	; 1
+    1a5a:	0e 94 b2 00 	call	0x164	; 0x164 <stringTransmit>
+								stringTransmit("wrong size");	
+								esvaziaBuffer();
+>>>>>>> firmware-changes-chopper
 							}
 						}
 					}
 					else
+<<<<<<< HEAD
 					{//se o inicio da palavra nao esta correto
 						esvaziaBuffer();
 <<<<<<< HEAD
@@ -12476,6 +13430,8 @@ inline void seta_freq(uint16 freqReq)		//função para definição da frequencia
 00001a50 <__stop_program>:
     1a50:	ff cf       	rjmp	.-2      	; 0x1a50 <__stop_program>
 =======
+=======
+>>>>>>> firmware-changes-chopper
     1a5e:	0e 94 aa 00 	call	0x154	; 0x154 <esvaziaBuffer>
     1a62:	a1 2c       	mov	r10, r1
     1a64:	96 ce       	rjmp	.-724    	; 0x1792 <main+0x16e>
