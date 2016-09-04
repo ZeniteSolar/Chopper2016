@@ -22,18 +22,18 @@
 
 #define F_CPU 			16000000UL
 
-#define CURRENT_CHANNEL ADC_CHANNEL_0
+#define TEMP_CHANNEL	ADC_CHANNEL_0
 #define POT_CHANNEL 	ADC_CHANNEL_1 
-#define VOLTAGE_CHANNEL ADC_CHANNEL_2
-#define TEMP_CHANNEL	ADC_CHANNEL_3
+#define CURRENT_CHANNEL ADC_CHANNEL_2
+#define VOLTAGE_CHANNEL ADC_CHANNEL_3
 
 #define FIRST_CHANNEL	CURRENT_CHANNEL
 #define LAST_CHANNEL	TEMP_CHANNEL
 
-#define CURRENT_BIT 	PC0
+#define CURRENT_BIT 	PC2
 #define POT_BIT 		PC1
-#define VOLTAGE_BIT 	PC2
-#define TEMP_BIT		PC3
+#define VOLTAGE_BIT 	PC3
+#define TEMP_BIT		PC0
 
 #define ON_PIN			PIND
 #define DMS_PIN			PIND
@@ -103,7 +103,7 @@ uint8 maxDC = 90;
 uint8 maxDV = 7;				//define a variação máxima, x V/s				
 uint8 maxTemp = 70;				//temperatura maxima, desliga o sistema
 uint8 criticalTemp = 60;		//temperatura critica
-uint8 minVotage = 30;
+uint8 minVoltage = 30;
 
 void seta_dc(uint8 d_cycle)		//função para definição do Duty Cicle do PWM
 {
@@ -309,7 +309,7 @@ int main(void)
 									uint8ToString4(msgToSend,maxTemp);
 									break;
 								case 9:
-									uint8ToString4(msgToSend,minVotage);
+									uint8ToString4(msgToSend,minVoltage);
 									break;
 								case 10:
 									uint8ToString4(msgToSend,status.dc);
@@ -371,7 +371,7 @@ int main(void)
 										maxTemp = string4Touint8(recebido);
 										break;
 									case 9:
-										minVotage = string4Touint8(recebido);
+										minVoltage = string4Touint8(recebido);
 										break;
 									case 10:
 										//seta_dc(string4Touint8(recebido));
@@ -462,7 +462,6 @@ ISR(TIMER0_OVF_vect)
 			status.on = 1;								//e o potenciometro esteja numa posicao correspondente a menos de 10% do DC do PWM.
 	if(status.on)		//inicia o acionamento do motor, com os as condições preliminares acima satisfeitas.
 	{
-		//stringTransmit("@teste*");
     	if(status.dc != dcReq)
     	{
     		if(dcReq > status.dc && dcReq > (minDC + 5))
@@ -488,14 +487,13 @@ ISR(TIMER0_OVF_vect)
 		if(status.dc != 0)					//se o sistema ainda nao esta desligado
 			seta_dc(0);						//desliga o sistema
 	}
-	/*if(status.dc>minDC && status.current>maxCurrent)
+	if(status.dc>=minDC && (status.current>maxCurrent || status.voltage<minVoltage))
+	{
 		if(status.dc==100)
 			seta_dc(status.dc-(100 - maxDC));
 		else
 			seta_dc(status.dc-2);
-*/
-	//if(status.voltage<minVotage)
-	//	seta_dc(status.dc-1);
+	}
 	if(status.temperature > criticalTemp && !flags.warning)
 	{
 		flags.warning = 1;
