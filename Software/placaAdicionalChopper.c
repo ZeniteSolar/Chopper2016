@@ -30,10 +30,10 @@
 #define FIRST_CHANNEL	CURRENT_CHANNEL
 #define LAST_CHANNEL	TEMP_CHANNEL
 
-#define CURRENT_BIT 	PC0
+#define TEMP_BIT		PC0
 #define POT_BIT 		PC1
-#define VOLTAGE_BIT 	PC2
-#define TEMP_BIT		PC3
+#define CURRENT_BIT 	PC2
+#define VOLTAGE_BIT 	PC3
 
 #define ON_PIN			PIND
 #define DMS_PIN			PIND
