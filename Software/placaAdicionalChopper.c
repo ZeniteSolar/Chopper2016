@@ -12,6 +12,9 @@
 #include <string.h>
 //#include "bibliotecas/can.h"
 
+#define EMA(ma, a, n)	ma += (a - ma) >> n
+#define EMA_GRADE 1
+
 #define BYTES_TO_RECEIVE 	18 // Number of bytes that uC have to receive on communication
 
 #define SETWORDSIZE 		8  // Number of bits of word to set parameter, used in the comunication with PC
@@ -27,26 +30,23 @@
 #define CURRENT_CHANNEL ADC_CHANNEL_2
 #define VOLTAGE_CHANNEL ADC_CHANNEL_3
 
-#define FIRST_CHANNEL	CURRENT_CHANNEL
-#define LAST_CHANNEL	TEMP_CHANNEL
-
-#define CURRENT_BIT 	PC2
-#define POT_BIT 		PC1
-#define VOLTAGE_BIT 	PC3
 #define TEMP_BIT		PC0
+#define POT_BIT 		PC1
+#define CURRENT_BIT 	PC2
+#define VOLTAGE_BIT 	PC3
 
 #define ON_PIN			PIND
-#define DMS_PIN			PIND
 #define ON_PORT			PORTD
-#define DMS_PORT		PORTD
 #define ON_BIT 			PD5
+
+#define DMS_PIN			PIND
+#define DMS_PORT		PORTD
 #define DMS_BIT 		PD4
 
 //definem em qual pino sairá o PWM
 #define PWM_DDR 		DDRB
 #define PWM_PORT 		PORTB
 #define PWM_BIT 		PB1
-
 
 #define BUZZER_DDR 		DDRC
 #define BUZZER_PORT 	PORTC
@@ -82,7 +82,7 @@ typedef struct system_flags flags_t;
 struct system_status
 {
 	uint16 freq;				//freq do pwm
-	uint8 current;
+	uint16 current;
 	uint8 dc;
 	uint8 temperature;
 	uint8 voltage;
@@ -90,10 +90,9 @@ struct system_status
 };
 typedef struct system_status status_t;
 
-
 flags_t flags;
 status_t status;
-int16 cont = 0;
+int16 cont = maxCont;
 
 uint8 channel = TEMP_CHANNEL;	//canal do ad
 uint8 maxCurrent = 100;
@@ -125,13 +124,15 @@ inline void seta_freq(uint16 freqReq)		//função para definição da frequencia
 {
 	if(freqReq < MIN_FREQ)
 		status.freq = MIN_FREQ;
-	else
+	else{
 		if(freqReq > MAX_FREQ)
 			status.freq = MAX_FREQ;
 		else
 			status.freq = freqReq;
+	}
+	seta_dc(0);//faz com que o dc va a 0 na mudanca de frequencia
 	timer1SetCompareAValue((F_CPU/1024)/status.freq);
-	timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
+	//timer1SetCompareBValue((status.dc * (timer1GetCompareAValue()))/100);//bota o dc
 }
 
 //esvazia o buffer de entrada da usart
@@ -249,12 +250,6 @@ int main(void)
 	setBit(BUZZER_PORT,BUZZER_BIT);
 	_delay_ms(1000);
 	clrBit(BUZZER_PORT,BUZZER_BIT);
-
-	/*
-	//pino usado somente para teste no proteus
-	setBit(DDRD,PD0);			
-	setBit(PORTD,PD0);			
-	*/
 
     while(1)
     {
@@ -437,7 +432,7 @@ ISR(ADC_vect)
 
 ISR(TIMER1_COMPA_vect)
 {
-	if(status.dc > 0 && flags.on && flags.dms)
+	if(status.dc != 0 && status.on)
 		setBit(PWM_PORT,PWM_BIT);		//Inicia o período em nível alto do PWM
 }
 
@@ -455,27 +450,25 @@ ISR(TIMER0_OVF_vect)
 		flags.on = isBitClr(ON_PIN,ON_BIT);
 		flags.dms = isBitClr(DMS_PIN,DMS_BIT);
 	}
-	if(!(flags.on && flags.dms))					//informa ao sistema para nao acionar o motor caso botão ON e DMS estejam desligados.
+	if(!(flags.on && flags.dms) || status.temperature > maxTemp)//informa ao sistema para nao acionar o motor caso botão ON e DMS estejam desligados.
 		status.on = 0;
 	else
 		if(dcReq<minDC && !status.on)		//informa ao sistema para acionar o motor apenas quando botão ON e DMS estejam ligados
-			status.on = 1;								//e o potenciometro esteja numa posicao correspondente a menos de 10% do DC do PWM.
+			status.on = 1;					//e o potenciometro esteja numa posicao correspondente a menos de 10% do DC do PWM.
 	if(status.on)		//inicia o acionamento do motor, com os as condições preliminares acima satisfeitas.
 	{
     	if(status.dc != dcReq)
     	{
-    		if(dcReq > status.dc && dcReq > (minDC + 5))
+    		if(dcReq > status.dc && dcReq > (minDC + 5))//se esta em ascendente
     		{
-    			if(cont == maxCont)
+    			if(!--cont)
     			{
+    				cont = maxCont;
     				if(status.dc == 0)
     					seta_dc(minDC);
     				else
     					seta_dc(status.dc+1);
-    				cont = 0;
     			}
-    			else
-    				cont++;
     		}
     		else
     			if (dcReq < status.dc)
@@ -492,8 +485,9 @@ ISR(TIMER0_OVF_vect)
 		if(status.dc==100)
 			seta_dc(status.dc-(100 - maxDC));
 		else
-			seta_dc(status.dc-2);
+			seta_dc(status.dc-3);
 	}
+	/*
 	if(status.temperature > criticalTemp && !flags.warning)
 	{
 		flags.warning = 1;
@@ -505,6 +499,7 @@ ISR(TIMER0_OVF_vect)
 			flags.warning = 0;
 			//clrBit(BUZZER_PORT,BUZZER_BIT);
 		}
+	*/
 }
 
 ISR(USART_RX_vect)
