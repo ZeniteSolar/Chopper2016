@@ -96,7 +96,7 @@ int16 cont = maxCont;
 
 uint8 channel = TEMP_CHANNEL;	//canal do ad
 uint8 maxCurrent = 100;
-uint8 minDC = 10;
+uint8 minDC = 5;
 uint8 dcReq = 0;				//armazena o valor do dc requisitado
 uint8 maxDC = 90;
 uint8 maxDV = 7;				//define a variação máxima, x V/s				
@@ -192,8 +192,8 @@ uint8 string4Touint8(char* str)
 
 int main(void)
 {
-	_delay_ms(1000);
-	flags.mode = SERIAL_MODE;
+	//_delay_ms(1000);
+	flags.mode = POT_MODE;
 	status.freq = 1000;
 	status.on = 0;			//indica que o sistema inicia sem acionar o motor
 	status.dc = 0;
@@ -227,16 +227,12 @@ int main(void)
 	timer0Config(TIMER_A_MODE_NORMAL, TIMER_A_PRESCALER_1024);			
 	timer0ClearOverflowInterruptRequest();								//limpa a interrupcao de OVF
 	timer0ActivateOverflowInterrupt();
-
-	//se estiver no modo Serial configura a usart							
-	if (flags.mode == SERIAL_MODE)
-	{
-		// CONFIGURA A USART
-		usartConfig(USART_MODE_ASYNCHRONOUS,USART_BAUD_9600 ,USART_DATA_BITS_8,USART_PARITY_NONE,USART_STOP_BIT_SINGLE);
-		usartEnableReceiver();
-		usartEnableTransmitter();
-		usartActivateReceptionCompleteInterrupt();
-	}
+						
+	// CONFIGURA A USART
+	usartConfig(USART_MODE_ASYNCHRONOUS,USART_BAUD_9600 ,USART_DATA_BITS_8,USART_PARITY_NONE,USART_STOP_BIT_SINGLE);
+	usartEnableReceiver();
+	usartEnableTransmitter();
+	usartActivateReceptionCompleteInterrupt();
 
 	sei();
 	
@@ -253,83 +249,83 @@ int main(void)
 
     while(1)
     {
-    	if(flags.mode == SERIAL_MODE)
+    	
+    	while(!usartIsReceiverBufferEmpty())
     	{
-	    	while(!usartIsReceiverBufferEmpty())
-	    	{
-				frameData[frameIndex++] = usartGetDataFromReceiverBuffer();
-				if ((frameData[frameIndex-1] == FINALDOPACOTE))
-				{//se esta no final da palavra
-					if(frameData[0] == INICIODOPACOTE )
-					{//verifica se o inicio da palavra esta correto
-						strcpy(recebido,frameData);
-						pos = (recebido[2]-48) + (recebido[1] - 48)*10;
-						if(frameIndex == GETWORDSIZE)
+			frameData[frameIndex++] = usartGetDataFromReceiverBuffer();
+			if ((frameData[frameIndex-1] == FINALDOPACOTE))
+			{//se esta no final da palavra
+				if(frameData[0] == INICIODOPACOTE )
+				{//verifica se o inicio da palavra esta correto
+					strcpy(recebido,frameData);
+					pos = (recebido[2]-48) + (recebido[1] - 48)*10;
+					if(frameIndex == GETWORDSIZE)
+					{
+						memcpy( recebido,  (recebido+1), 2);
+						recebido[2] = '\0';//isola o id
+						switch (pos)
 						{
-							memcpy( recebido,  (recebido+1), 2);
-							recebido[2] = '\0';//isola o id
-							switch (pos)
-							{
-								case 0:
-									strcpy(msgToSend,"OK");
-									break;
-								case 1:
-									uint16ToString4(msgToSend,status.freq);
-									break;
-								case 2:
-									uint8ToString4(msgToSend,maxCurrent);
-									break;
-								case 3:
-									uint8ToString4(msgToSend,maxDC);
-									break;
-								case 4:
-									uint8ToString4(msgToSend,minDC);
-									break;
-								case 5:
-									uint8ToString4(msgToSend,maxDV);
-									break;
-								case 6 :
-									if(flags.on)
-										strcpy(msgToSend, "0001");
-									else
-										strcpy(msgToSend, "0000");
-									break;
-								case 7:
-									if(flags.dms)
-										strcpy(msgToSend, "0001");
-									else
-										strcpy(msgToSend, "0000");
-									break;
-								case 8:
-									uint8ToString4(msgToSend,maxTemp);
-									break;
-								case 9:
-									uint8ToString4(msgToSend,minVoltage);
-									break;
-								case 10:
-									uint8ToString4(msgToSend,status.dc);
-									break;
-								case 11:
-									uint8ToString4(msgToSend,status.temperature);
-									break;
-								case 12:
-									uint8ToString4(msgToSend,status.current);
-									break;
-								case 13:
-									uint8ToString4(msgToSend,status.voltage);
-									break;
-								default:
-									strcpy(msgToSend,"ERRO");
-							}
-							strcat(recebido,msgToSend);
-							strcpy(msgToSend,recebido);
-
-							stringTransmit(msgToSend);
+							case 0:
+								strcpy(msgToSend,"OK");
+								break;
+							case 1:
+								uint16ToString4(msgToSend,status.freq);
+								break;
+							case 2:
+								uint8ToString4(msgToSend,maxCurrent);
+								break;
+							case 3:
+								uint8ToString4(msgToSend,maxDC);
+								break;
+							case 4:
+								uint8ToString4(msgToSend,minDC);
+								break;
+							case 5:
+								uint8ToString4(msgToSend,maxDV);
+								break;
+							case 6 :
+								if(flags.on)
+									strcpy(msgToSend, "0001");
+								else
+									strcpy(msgToSend, "0000");
+								break;
+							case 7:
+								if(flags.dms)
+									strcpy(msgToSend, "0001");
+								else
+									strcpy(msgToSend, "0000");
+								break;
+							case 8:
+								uint8ToString4(msgToSend,maxTemp);
+								break;
+							case 9:
+								uint8ToString4(msgToSend,minVoltage);
+								break;
+							case 10:
+								uint8ToString4(msgToSend,status.dc);
+								break;
+							case 11:
+								uint8ToString4(msgToSend,status.temperature);
+								break;
+							case 12:
+								uint8ToString4(msgToSend,status.current);
+								break;
+							case 13:
+								uint8ToString4(msgToSend,status.voltage);
+								break;
+							default:
+								strcpy(msgToSend,"ERRO");
 						}
-						else
+						strcat(recebido,msgToSend);
+						strcpy(msgToSend,recebido);
+
+						stringTransmit(msgToSend);
+					}
+					else
+					{
+						if(frameIndex == SETWORDSIZE)
 						{
-							if(frameIndex == SETWORDSIZE)
-							{
+							if(flags.mode == SERIAL_MODE){
 								memcpy((void *) recebido, (void *) (recebido+3), 4);//isola somente o valor, usando 4 caracteres
 								recebido[4] = '\0';
 
@@ -380,22 +376,22 @@ int main(void)
 										stringTransmit("ERRO");
 								}
 							}
-							else
-							{
-								stringTransmit("wrong size");	
-								esvaziaBuffer();
-							}
+						}
+						else
+						{
+							stringTransmit("wrong size");	
+							esvaziaBuffer();
 						}
 					}
-					else
-					{//se o inicio da palavra nao esta correto
-						esvaziaBuffer();
-					}
-					frameIndex = 0;
 				}
+				else
+				{//se o inicio da palavra nao esta correto
+					esvaziaBuffer();
+				}
+				frameIndex = 0;
 			}
 		}
-    }
+	}
 }
 
 ISR(ADC_vect)
@@ -450,7 +446,9 @@ ISR(TIMER0_OVF_vect)
 		flags.on = isBitClr(ON_PIN,ON_BIT);
 		flags.dms = isBitClr(DMS_PIN,DMS_BIT);
 	}
-	if(!(flags.on && flags.dms) || status.temperature > maxTemp)//informa ao sistema para nao acionar o motor caso botão ON e DMS estejam desligados.
+
+	//adicionado
+	if(!(flags.on && flags.dms))// || status.temperature > maxTemp)//informa ao sistema para nao acionar o motor caso botão ON e DMS estejam desligados.
 		status.on = 0;
 	else
 		if(dcReq<minDC && !status.on)		//informa ao sistema para acionar o motor apenas quando botão ON e DMS estejam ligados
