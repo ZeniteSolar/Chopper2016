@@ -418,7 +418,7 @@ ISR(ADC_vect)
 			break;
 		case POT_CHANNEL:
 			if(flags.mode == POT_MODE)
-				dcReq = (1023 / 10) - (ADC/10);
+				dcReq = (1023 / 10) - (ADC/10); 		//logica inversa do pot, para desligar em caso de rompimento do cabo
 			channel = VOLTAGE_CHANNEL;
 			break;
 		case VOLTAGE_CHANNEL:
