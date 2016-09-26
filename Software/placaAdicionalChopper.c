@@ -43,6 +43,8 @@
 #define DMS_PORT		PORTD
 #define DMS_BIT 		PD4
 
+#define FAULT_BIT PD3
+
 //definem em qual pino sairá o PWM
 #define PWM_DDR 		DDRB
 #define PWM_PORT 		PORTB
@@ -102,7 +104,7 @@ uint8 maxDC = 90;
 uint8 maxDV = 7;				//define a variação máxima, x V/s				
 uint8 maxTemp = 70;				//temperatura maxima, desliga o sistema
 uint8 criticalTemp = 60;		//temperatura critica
-uint8 minVoltage = 30;
+uint8 minVoltage = 30;			// Este valor é relativo à tensão de alimentação do sistema (no momento, 36V)
 
 void seta_dc(uint8 d_cycle)		//função para definição do Duty Cicle do PWM
 {
@@ -207,6 +209,8 @@ int main(void)
 	
 	// CONFIGURA ADC
 	clrBit(DDRC,POT_BIT);		//SETA O PINO DO ADC COMO ENTRADA
+	clrBit(DDRD,FAULT_BIT);     //SETA O PINO DO FAULT DO DRIVER COMO ENTRADA
+	clrBit(PORTD,FAULT_BIT);	//DESABILITA O PULL-UP NO PINO PD3 DO ATmega328
 	adcConfig(ADC_MODE_SINGLE_CONVERSION, ADC_REFRENCE_POWER_SUPPLY , ADC_PRESCALER_128);
 	adcSelectChannel(POT_CHANNEL);
 	adcClearInterruptRequest();
@@ -404,7 +408,7 @@ ISR(ADC_vect)
 			break;
 		case POT_CHANNEL:
 			if(flags.mode == POT_MODE)
-				dcReq = ADC / 10;
+				dcReq = (1023 / 10) - (ADC/10);
 			channel = VOLTAGE_CHANNEL;
 			break;
 		case VOLTAGE_CHANNEL:
