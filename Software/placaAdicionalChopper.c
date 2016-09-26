@@ -12,7 +12,7 @@
 #include <string.h>
 //#include "bibliotecas/can.h"
 
-#define EMA(ma, a, n)	ma += (a - ma) >> n
+#define EMA(ma, a, n)	ma += ((a - ma) >> n)
 #define EMA_GRADE 1
 
 #define BYTES_TO_RECEIVE 	18 // Number of bytes that uC have to receive on communication
@@ -87,7 +87,7 @@ struct system_status
 	uint16 current;
 	uint8 dc;
 	uint8 temperature;
-	uint8 voltage;
+	uint16 voltage;
 	uint8 on;
 };
 typedef struct system_status status_t;
@@ -104,7 +104,7 @@ uint8 maxDC = 90;
 uint8 maxDV = 7;				//define a variação máxima, x V/s				
 uint8 maxTemp = 70;				//temperatura maxima, desliga o sistema
 uint8 criticalTemp = 60;		//temperatura critica
-uint8 minVoltage = 30;			// Este valor é relativo à tensão de alimentação do sistema (no momento, 36V)
+uint8 minVoltage = 210;			// Este valor é relativo à tensão de alimentação do sistema (no momento, 36V)
 
 void seta_dc(uint8 d_cycle)		//função para definição do Duty Cicle do PWM
 {
@@ -412,7 +412,8 @@ ISR(ADC_vect)
 			channel = VOLTAGE_CHANNEL;
 			break;
 		case VOLTAGE_CHANNEL:
-			status.voltage = ADC / 21;//calculado com base na relação dos resistores do sensor e a escala do ADC
+
+			status.voltage = EMA(status.voltage,10*ADC/21,2);					//calculado apartir da relação de media movel
 			channel = TEMP_CHANNEL;
 			break;
 		case TEMP_CHANNEL:
@@ -452,7 +453,7 @@ ISR(TIMER0_OVF_vect)
 	}
 
 	//adicionado
-	if(!(flags.on && flags.dms))// || status.temperature > maxTemp)//informa ao sistema para nao acionar o motor caso botão ON e DMS estejam desligados.
+	if(!(flags.on && !flags.dms))// || status.temperature > maxTemp)//informa ao sistema para nao acionar o motor caso botão ON e DMS estejam desligados.
 		status.on = 0;
 	else
 		if(dcReq<minDC && !status.on)		//informa ao sistema para acionar o motor apenas quando botão ON e DMS estejam ligados
