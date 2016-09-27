@@ -43,7 +43,7 @@
 #define DMS_PORT		PORTD
 #define DMS_BIT 		PD4
 
-#define FAULT_BIT PD3
+#define FAULT_BIT 		PD3
 
 //definem em qual pino sairá o PWM
 #define PWM_DDR 		DDRB
@@ -244,6 +244,8 @@ int main(void)
 
 	setBit(ON_PORT,ON_BIT);				//habilita o pull-up da chave on
 	setBit(DMS_PORT,DMS_BIT);			//habilita o pull-up da chave dms
+
+	setBit(PORTC,POT_BIT);				//habilita o pull-up do potenciometro
 
 	//configura o buzzer e da sinal de alerta de ligação
 	setBit(BUZZER_DDR,BUZZER_BIT);			
