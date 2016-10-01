@@ -104,7 +104,7 @@ uint8 maxDC = 90;
 uint8 maxDV = 7;				//define a variação máxima, x V/s				
 uint8 maxTemp = 70;				//temperatura maxima, desliga o sistema
 uint8 criticalTemp = 60;		//temperatura critica
-uint8 minVoltage = 210;			// Este valor é relativo à tensão de alimentação do sistema (no momento, 36V)
+uint8 minVoltage = 210;			// Este valor é relativo à 10*(tensão de alimentação do sistema) (no momento, 36V)
 
 void seta_dc(uint8 d_cycle)		//função para definição do Duty Cicle do PWM
 {
