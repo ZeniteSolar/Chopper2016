@@ -5,7 +5,7 @@
 ## General Flags
 PROJECT = placaAdicionalChopper
 MCU = atmega328p
-TARGET = placaAdicionalChopper.elf
+TARGET = ${PROJECT}.elf
 CC = avr-gcc
 
 CPP = avr-g++
@@ -24,7 +24,7 @@ ASMFLAGS += -x assembler-with-cpp -Wa,-gdwarf2
 
 ## Linker flags
 LDFLAGS = $(COMMON)
-LDFLAGS +=  -Wl,-Map=placaAdicionalChopper.map
+LDFLAGS +=  -Wl,-Map=${PROJECT}.map
 
 
 ## Intel Hex file production flags
@@ -36,24 +36,26 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = placaAdicionalChopper.o ATmega328.o
+OBJECTS = ${PROJECT}.o ATmega328.o mcp2515.o spi.o mcp2515_set_mode.o
+OBJECTS += mcp2515_get_message.o mcp2515_read_id.o mcp2515_buffer.o 
+OBJECTS += mcp2515_write_id.o mcp2515_send_message.o
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
 
 ## Build
-all: $(TARGET) placaAdicionalChopper.hex placaAdicionalChopper.eep placaAdicionalChopper.lss size
+all: $(TARGET) ${PROJECT}.hex ${PROJECT}.eep ${PROJECT}.lss size
 
 ## Compile
-placaAdicionalChopper.o: ../placaAdicionalChopper.c
+${PROJECT}.o: ../${PROJECT}.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
-ATmega328.o: ../bibliotecas/ATmega328.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+%.o: ../bibliotecas/%.c
+	echo $< $@
+	$(CC) $(INCLUDES) $(CFLAGS) -c $<
 	
 ##Link
 $(TARGET): $(OBJECTS)
-	echo "aqui"
 	 $(CC) $(LDFLAGS) $(OBJECTS) $(LINKONLYOBJECTS) $(LIBDIRS) $(LIBS) -o $(TARGET)
 
 %.hex: $(TARGET)
@@ -72,13 +74,13 @@ size: ${TARGET}
 ## Clean target
 .PHONY: clean
 clean:
-	-rm -rf $(OBJECTS) placaAdicionalChopper.elf dep/* placaAdicionalChopper.hex placaAdicionalChopper.eep placaAdicionalChopper.lss placaAdicionalChopper.map
+	-rm -rf $(OBJECTS) ${TARGET} dep/* ${PROJECT}.hex ${PROJECT}.eep ${PROJECT}.lss ${PROJECT}.map
 
 grava: 
-	sudo avrdude -c arduino -p m328p -P ~/../../dev/ttyACM0 -U flash:w:"placaAdicionalChopper.hex":a
+	sudo avrdude -c arduino -p m328p -P ~/../../dev/ttyACM0 -U flash:w:"${PROJECT}.hex":a
 
 grava1: 
-	sudo avrdude -c arduino -p m328p -P ~/../../dev/ttyACM1 -U flash:w:"placaAdicionalChopper.hex":a
+	sudo avrdude -c arduino -p m328p -P ~/../../dev/ttyACM1 -U flash:w:"${PROJECT}.hex":a
 	
 ## Other dependencies
 ##-include $(shell mkdir dep 2>/dev/null) $(wildcard dep/*)

@@ -9,6 +9,7 @@
 //Include header files
 #include "bibliotecas/globalDefines.h"
 #include "bibliotecas/ATmega328.h"
+#include "bibliotecas/can.h"
 #include <string.h>
 //#include "bibliotecas/can.h"
 
@@ -67,8 +68,10 @@
 
 #define MAX_FREQ 		1000
 #define MIN_FREQ 		500
-//uint8 mode = SERIAL;
 
+ #define CAN_ON_BIT		5
+ #define CAN_DMS_BIT	6
+ #define ID_MI_CHOPPER  0x3000ul
  // Bit field flags
 struct system_flags
 {
@@ -77,6 +80,7 @@ struct system_flags
 	uint8 mode			: 2;//modos de operação, definem quem controla o acionamento
 	uint8 on			: 1;
 	uint8 dms	    	: 1;
+	uint8 can_connected	: 1;
 	uint8 				: 0;//completa a variavel
 };
 typedef struct system_flags flags_t;
@@ -95,6 +99,7 @@ typedef struct system_status status_t;
 flags_t flags;
 status_t status;
 int16 cont = maxCont;
+uint8 cont_can = 60;			//variavel usada para confirmar a conecção can a cada segundo
 
 uint8 channel = TEMP_CHANNEL;	//canal do ad
 uint8 maxCurrent = 100;
@@ -199,6 +204,7 @@ int main(void)
 	status.freq = 1000;
 	status.on = 0;			//indica que o sistema inicia sem acionar o motor
 	status.dc = 0;
+	status.voltage = 0;
 
 	// VARIAVEIS LOCAIS;
 	char frameData[50];
@@ -238,6 +244,10 @@ int main(void)
 	usartEnableTransmitter();
 	usartActivateReceptionCompleteInterrupt();
 
+	// Initialize MCP2515
+	can_init(BITRATE_125_KBPS);
+	can_set_mode(NORMAL_MODE);
+
 	sei();
 	
 	setBit(PWM_DDR,PWM_BIT);			//define o pino do pwm como saída
@@ -255,7 +265,17 @@ int main(void)
 
     while(1)
     {
-    	
+    	if (can_check_message()){
+    		can_t msg;
+    		can_get_message(&msg);
+    		if(msg.id == ID_MI_CHOPPER){
+    			flags.can_connected = 1;
+    			flags.dms = msg.data[1] | 1 << CAN_DMS_BIT;
+    			flags.on = msg.data[1] | 1 << CAN_ON_BIT;
+    			dcReq = (1023 - (((msg.data[1] & 0b00000011 ) << 8) | msg.data[0]))/10;
+    			can_send_message(&msg);
+    		}
+    	}
     	while(!usartIsReceiverBufferEmpty())
     	{
 			frameData[frameIndex++] = usartGetDataFromReceiverBuffer();
@@ -415,7 +435,7 @@ ISR(ADC_vect)
 			break;
 		case VOLTAGE_CHANNEL:
 
-			status.voltage = EMA(status.voltage,10*ADC/21,2);					//calculado apartir da relação de media movel
+			EMA(status.voltage,(10*ADC)/21,2);			//calculado apartir da relação de media movel
 			channel = TEMP_CHANNEL;
 			break;
 		case TEMP_CHANNEL:
@@ -424,11 +444,6 @@ ISR(ADC_vect)
 			channel = CURRENT_CHANNEL;
 			break;
 	}
-	/*if(channel == LAST_CHANNEL)
-		channel = FIRST_CHANNEL;
-	else
-		channel ++;
-	*/
 	adcSelectChannel(channel);
 	adcStartConversion();
 }
@@ -450,15 +465,29 @@ ISR(TIMER0_OVF_vect)
 {
 	if(flags.mode == POT_MODE)
 	{
-		flags.on = isBitClr(ON_PIN,ON_BIT);
+		flags.on  = isBitClr(ON_PIN ,ON_BIT );
 		flags.dms = isBitClr(DMS_PIN,DMS_BIT);
 	}
-
-	//adicionado
+	else
+		if(flags.mode == CAN_MODE){
+			if(!--cont_can)
+			{
+				cont_can = 60;
+				if(flags.can_connected == 0)
+				{
+					status.on = 0;			//reseta o sistema
+					flags.mode = POT_MODE;  
+				}
+				else
+				{
+					flags.can_connected = 0;
+				}
+			}
+		}
 	if(!(flags.on && !flags.dms))// || status.temperature > maxTemp)//informa ao sistema para nao acionar o motor caso botão ON e DMS estejam desligados.
 		status.on = 0;
 	else
-		if(dcReq<minDC && !status.on)		//informa ao sistema para acionar o motor apenas quando botão ON e DMS estejam ligados
+		if(dcReq < minDC && !status.on)		//informa ao sistema para acionar o motor apenas quando botão ON e DMS estejam ligados
 			status.on = 1;					//e o potenciometro esteja numa posicao correspondente a menos de 10% do DC do PWM.
 	if(status.on)		//inicia o acionamento do motor, com os as condições preliminares acima satisfeitas.
 	{
@@ -485,10 +514,10 @@ ISR(TIMER0_OVF_vect)
 		if(status.dc != 0)					//se o sistema ainda nao esta desligado
 			seta_dc(0);						//desliga o sistema
 	}
-	if(status.dc>=minDC && (status.current>maxCurrent || status.voltage<minVoltage))
+	if(status.dc >= minDC && (status.current > maxCurrent || status.voltage < minVoltage))
 	{
-		if(status.dc==100)
-			seta_dc(status.dc-(100 - maxDC));
+		if(status.dc == 100)
+			seta_dc(maxDC);
 		else
 			seta_dc(status.dc-3);
 	}
