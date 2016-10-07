@@ -71,7 +71,8 @@
 
  #define CAN_ON_BIT		5
  #define CAN_DMS_BIT	6
- #define ID_MI_CHOPPER  0x3000ul
+ #define ID_MI_CHOPPER  0x3000ul//para teste
+
  // Bit field flags
 struct system_flags
 {
@@ -199,7 +200,6 @@ uint8 string4Touint8(char* str)
 
 int main(void)
 {
-	//_delay_ms(1000);
 	flags.mode = POT_MODE;
 	status.freq = 1000;
 	status.on = 0;			//indica que o sistema inicia sem acionar o motor
@@ -244,12 +244,10 @@ int main(void)
 	usartEnableTransmitter();
 	usartActivateReceptionCompleteInterrupt();
 
-	// Initialize MCP2515
+	// Initializa MCP2515
 	can_init(BITRATE_125_KBPS);
 	can_set_mode(NORMAL_MODE);
 
-	sei();
-	
 	setBit(PWM_DDR,PWM_BIT);			//define o pino do pwm como saída
 
 	setBit(ON_PORT,ON_BIT);				//habilita o pull-up da chave on
@@ -262,13 +260,20 @@ int main(void)
 	setBit(BUZZER_PORT,BUZZER_BIT);
 	_delay_ms(1000);
 	clrBit(BUZZER_PORT,BUZZER_BIT);
+	
+	sei();
 
-    while(1)
+    for(;;)
     {
     	if (can_check_message()){
     		can_t msg;
     		can_get_message(&msg);
     		if(msg.id == ID_MI_CHOPPER){
+    			if(flags.mode != CAN_MODE)
+    			{ 
+    				status.on = 0;			//reseta o sistema
+    				flags.mode = CAN_MODE;
+    			}
     			flags.can_connected = 1;
     			flags.dms = msg.data[1] | 1 << CAN_DMS_BIT;
     			flags.on = msg.data[1] | 1 << CAN_ON_BIT;
@@ -355,7 +360,8 @@ int main(void)
 								memcpy((void *) recebido, (void *) (recebido+3), 4);//isola somente o valor, usando 4 caracteres
 								recebido[4] = '\0';
 
-								switch (pos){
+								switch (pos)
+								{
 									case 1:
 										seta_freq(string4ToUint16(recebido));
 										break;
@@ -434,7 +440,6 @@ ISR(ADC_vect)
 			channel = VOLTAGE_CHANNEL;
 			break;
 		case VOLTAGE_CHANNEL:
-
 			EMA(status.voltage,(10*ADC)/21,2);			//calculado apartir da relação de media movel
 			channel = TEMP_CHANNEL;
 			break;
