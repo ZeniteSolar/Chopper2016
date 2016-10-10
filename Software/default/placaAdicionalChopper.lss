@@ -7114,7 +7114,7 @@ int main(void)
 	setBit(PORTC,POT_BIT);				//habilita o pull-up do potenciometro
     1c04:	41 9a       	sbi	0x08, 1	; 8
 
-	//configura o buzzer e da sinal de alerta de ligação
+	//configura o led e liga ele
 	setBit(LED_DDR,LED_BIT);			
     1c06:	3d 9a       	sbi	0x07, 5	; 7
 	setBit(LED_PORT,LED_BIT);
