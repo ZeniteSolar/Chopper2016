@@ -256,6 +256,10 @@ int main(void)
 	setBit(PORTC,POT_BIT);				//habilita o pull-up do potenciometro
 
 	//configura o buzzer e da sinal de alerta de ligação
+	setBit(LED_DDR,LED_BIT);			
+	setBit(LED_PORT,LED_BIT);
+
+	//configura o buzzer e da sinal de alerta de ligação
 	setBit(BUZZER_DDR,BUZZER_BIT);			
 	setBit(BUZZER_PORT,BUZZER_BIT);
 	_delay_ms(1000);
@@ -265,7 +269,7 @@ int main(void)
 
     for(;;)
     {
-    	if (can_check_message()){
+    	if (can_check_message()){//se chegou uma msg pelo protocolo CAN
     		can_t msg;
     		can_get_message(&msg);
     		if(msg.id == ID_MI_CHOPPER){
@@ -475,7 +479,7 @@ ISR(TIMER0_OVF_vect)
 	}
 	else
 		if(flags.mode == CAN_MODE){
-			if(!--cont_can)
+			if(!--cont_can)//acontece a cada segundo
 			{
 				cont_can = 60;
 				if(flags.can_connected == 0)
